@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>録画アプリ</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, 'Segoe UI', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 48px;
+    }
+
+    h1 {
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      color: #fff;
+      letter-spacing: 0.02em;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    /* デバイスバッジ */
+    .device-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .device-badge.pc  { background: #1e1e4a; color: #8888ff; border: 1px solid #4444aa; }
+    .device-badge.sp  { background: #1a2e1a; color: #66cc88; border: 1px solid #336633; }
+
+    .card {
+      background: #1a1a2e;
+      border: 1px solid #2a2a45;
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .option-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      flex: 1;
+      padding: 12px 8px;
+      border: 2px solid #2a2a45;
+      border-radius: 10px;
+      background: #111122;
+      color: #999;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .option-btn:active { transform: scale(0.96); }
+    .option-btn.active {
+      border-color: #6c6cff;
+      background: #1e1e4a;
+      color: #fff;
+    }
+    .option-btn .icon { font-size: 1.5rem; line-height: 1; }
+    .option-btn .label { font-size: 0.78rem; font-weight: 500; text-align: center; }
+    .option-btn:disabled, .option-btn.locked {
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #2a2a45;
+      margin-bottom: 20px;
+    }
+
+    /* カメラプレビュー（スマホ用） */
+    #camera-preview-wrap {
+      display: none;
+      position: relative;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
+      aspect-ratio: 16/9;
+    }
+    #camera-preview-wrap.visible { display: block; }
+    #camera-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #preview-label {
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #fff;
+      background: rgba(0,0,0,0.5);
+      padding: 2px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    button.primary {
+      flex: 1;
+      padding: 15px;
+      background: #6c6cff;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    button.primary:active:not(:disabled) { transform: scale(0.97); }
+    button.primary:disabled { background: #333366; color: #555; cursor: not-allowed; }
+
+    button.danger {
+      flex: 1;
+      padding: 15px;
+      background: #cc3355;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    button.danger:active:not(:disabled) { transform: scale(0.97); }
+    button.danger:disabled { background: #331122; color: #555; cursor: not-allowed; }
+
+    .status-bar {
+      margin-top: 16px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      text-align: center;
+      display: none;
+      line-height: 1.5;
+    }
+    .status-bar.recording {
+      display: block;
+      background: #1a0a10;
+      border: 1px solid #cc3355;
+      color: #ff6680;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    .status-bar.info {
+      display: block;
+      background: #0a1020;
+      border: 1px solid #3355cc;
+      color: #8899ff;
+    }
+    .status-bar.warn {
+      display: block;
+      background: #1a1400;
+      border: 1px solid #aa8800;
+      color: #ffcc44;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.55; }
+    }
+
+    /* 録画一覧 */
+    .recordings-section {
+      width: 100%;
+      max-width: 520px;
+      margin-top: 24px;
+    }
+    .recordings-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .recording-item {
+      background: #1a1a2e;
+      border: 1px solid #2a2a45;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .recording-item video {
+      width: 88px;
+      height: 50px;
+      border-radius: 6px;
+      background: #000;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .recording-info { flex: 1; min-width: 0; }
+    .recording-name {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #ccc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .recording-meta { font-size: 0.72rem; color: #666; margin-top: 4px; }
+
+    .download-btn {
+      padding: 8px 14px;
+      background: transparent;
+      border: 1px solid #5b5bcc;
+      color: #8888ff;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .download-btn:hover { background: #2a2a55; color: #fff; }
+
+    .rec-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: #cc3355;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    .timer { font-variant-numeric: tabular-nums; font-weight: 700; }
+
+    .empty-hint {
+      text-align: center;
+      color: #444;
+      font-size: 0.84rem;
+      padding: 20px 0;
+    }
+
+    /* スマホで操作しやすくするため最小タップ領域を確保 */
+    @media (max-width: 480px) {
+      body { padding: 20px 12px 40px; }
+      .card { padding: 18px; }
+      button.primary, button.danger { padding: 17px; font-size: 1.05rem; }
+    }
+  </style>
+</head>
+<body>
+  <h1>録画アプリ</h1>
+  <p class="subtitle" id="subtitle-text"></p>
+  <div class="device-badge" id="device-badge"></div>
+
+  <div class="card">
+    <!-- 録画対象の選択（PC用） -->
+    <div id="section-target">
+      <div class="section-label">録画対象</div>
+      <div class="option-group" id="group-target">
+        <button class="option-btn active" id="btn-browser" onclick="setTarget('browser')">
+          <span class="icon">🪟</span>
+          <span class="label">ブラウザのみ</span>
+        </button>
+        <button class="option-btn" id="btn-screen" onclick="setTarget('screen')">
+          <span class="icon">🖥️</span>
+          <span class="label">画面全体</span>
+        </button>
+      </div>
+      <hr class="divider">
+    </div>
+
+    <!-- カメラ選択（スマホ用） -->
+    <div id="section-camera" style="display:none">
+      <div class="section-label">カメラ</div>
+      <div class="option-group">
+        <button class="option-btn active" id="btn-camera-back" onclick="setCamera('back')">
+          <span class="icon">📷</span>
+          <span class="label">背面カメラ</span>
+        </button>
+        <button class="option-btn" id="btn-camera-front" onclick="setCamera('front')">
+          <span class="icon">🤳</span>
+          <span class="label">前面カメラ</span>
+        </button>
+      </div>
+      <hr class="divider">
+      <!-- カメラプレビュー -->
+      <div id="camera-preview-wrap">
+        <video id="camera-preview" autoplay muted playsinline></video>
+        <span id="preview-label">PREVIEW</span>
+      </div>
+    </div>
+
+    <!-- 音声 -->
+    <div class="section-label">音声</div>
+    <div class="option-group">
+      <button class="option-btn active" id="btn-audio-on" onclick="setAudio(true)">
+        <span class="icon">🎙️</span>
+        <span class="label">音声あり</span>
+      </button>
+      <button class="option-btn" id="btn-audio-off" onclick="setAudio(false)">
+        <span class="icon">🔇</span>
+        <span class="label">音声なし</span>
+      </button>
+    </div>
+
+    <hr class="divider">
+
+    <div class="controls">
+      <button class="primary" id="start-btn" onclick="startRecording()">● 録画開始</button>
+      <button class="danger"  id="stop-btn"  onclick="stopRecording()" disabled>■ 録画停止</button>
+    </div>
+
+    <div class="status-bar" id="status-bar"></div>
+  </div>
+
+  <div class="recordings-section">
+    <div class="recordings-title">録画済みファイル</div>
+    <div id="recordings-list">
+      <div class="empty-hint" id="empty-hint">録画がありません</div>
+    </div>
+  </div>
+
+  <script>
+    // ---- デバイス検出 ----
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+      || (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.userAgent)) // iPad
+      || !('getDisplayMedia' in navigator.mediaDevices);
+
+    // ---- 状態 ----
+    let mediaRecorder  = null;
+    let recordedChunks = [];
+    let stream         = null;
+    let micStream      = null;
+    let previewStream  = null;
+    let audioContext   = null;
+    let timerInterval  = null;
+    let elapsedSeconds = 0;
+
+    let target       = 'browser'; // PC: 'browser' | 'screen'
+    let cameraFacing = 'back';    // SP: 'back' | 'front'
+    let audioEnabled = true;
+
+    // ---- 初期化 ----
+    function init() {
+      const badge    = document.getElementById('device-badge');
+      const subtitle = document.getElementById('subtitle-text');
+
+      if (isMobile) {
+        badge.textContent = '📱 スマートフォンモード';
+        badge.className = 'device-badge sp';
+        subtitle.textContent = 'カメラ・マイクを使って録画できます';
+        document.getElementById('section-target').style.display = 'none';
+        document.getElementById('section-camera').style.display = 'block';
+        startPreview();
+      } else {
+        badge.textContent = '🖥️ PCモード';
+        badge.className = 'device-badge pc';
+        subtitle.textContent = 'ブラウザ or 全画面、音声の有無を選んで録画できます';
+      }
+    }
+
+    // ---- PC: 録画対象 ----
+    function setTarget(val) {
+      target = val;
+      document.getElementById('btn-browser').classList.toggle('active', val === 'browser');
+      document.getElementById('btn-screen').classList.toggle('active', val === 'screen');
+    }
+
+    // ---- SP: カメラ切り替え ----
+    function setCamera(val) {
+      cameraFacing = val;
+      document.getElementById('btn-camera-back').classList.toggle('active', val === 'back');
+      document.getElementById('btn-camera-front').classList.toggle('active', val === 'front');
+      if (previewStream) startPreview(); // プレビューを切り替え
+    }
+
+    // ---- SP: カメラプレビュー ----
+    async function startPreview() {
+      if (previewStream) {
+        previewStream.getTracks().forEach(t => t.stop());
+        previewStream = null;
+      }
+      try {
+        previewStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: cameraFacing === 'back' ? 'environment' : 'user' },
+          audio: false
+        });
+        const preview = document.getElementById('camera-preview');
+        preview.srcObject = previewStream;
+        document.getElementById('camera-preview-wrap').classList.add('visible');
+      } catch (e) {
+        console.warn('プレビュー開始失敗:', e);
+      }
+    }
+
+    // ---- 音声 ----
+    function setAudio(val) {
+      audioEnabled = val;
+      document.getElementById('btn-audio-on').classList.toggle('active',  val === true);
+      document.getElementById('btn-audio-off').classList.toggle('active', val === false);
+    }
+
+    // ---- 録画開始 ----
+    async function startRecording() {
+      try {
+        if (isMobile) {
+          await startMobileRecording();
+        } else {
+          await startDesktopRecording();
+        }
+      } catch (err) {
+        if (err.name === 'NotAllowedError' || err.name === 'AbortError') {
+          showStatus('録画がキャンセルされました。', 'info');
+        } else {
+          showStatus('エラー: ' + err.message, 'info');
+        }
+      }
+    }
+
+    // ---- PC 録画 ----
+    async function startDesktopRecording() {
+      const displayStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: audioEnabled,
+        ...(target === 'browser' ? { preferCurrentTab: true } : {})
+      });
+
+      displayStream.getVideoTracks()[0].addEventListener('ended', () => {
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') stopRecording();
+      });
+
+      const videoTrack = displayStream.getVideoTracks()[0];
+      const tracks = [videoTrack];
+
+      if (audioEnabled) {
+        const { audioTrack, warnings } = await buildMixedAudio(displayStream);
+        if (audioTrack) tracks.push(audioTrack);
+        if (warnings) showStatus(warnings, 'warn');
+      }
+
+      beginCapture(new MediaStream(tracks));
+    }
+
+    // ---- SP 録画 ----
+    async function startMobileRecording() {
+      // プレビューを止めて録画用ストリームを取得
+      if (previewStream) {
+        previewStream.getTracks().forEach(t => t.stop());
+        previewStream = null;
+        document.getElementById('camera-preview-wrap').classList.remove('visible');
+      }
+
+      const videoConstraints = {
+        facingMode: cameraFacing === 'back' ? 'environment' : 'user',
+        width:  { ideal: 1280 },
+        height: { ideal: 720 }
+      };
+
+      const camStream = await navigator.mediaDevices.getUserMedia({
+        video: videoConstraints,
+        audio: audioEnabled
+      });
+
+      beginCapture(camStream);
+    }
+
+    // ---- AudioContext でマイク＋システム音声をミックス（PC用）----
+    async function buildMixedAudio(displayStream) {
+      audioContext = new AudioContext();
+      const destination = audioContext.createMediaStreamDestination();
+      let warnings = '';
+
+      const systemTracks = displayStream.getAudioTracks();
+      if (systemTracks.length > 0) {
+        const src = audioContext.createMediaStreamSource(new MediaStream(systemTracks));
+        src.connect(destination);
+      }
+
+      let micOk = false;
+      try {
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        const micSrc = audioContext.createMediaStreamSource(micStream);
+        micSrc.connect(destination);
+        micOk = true;
+      } catch (e) {
+        console.warn('マイク取得失敗:', e);
+      }
+
+      if (!micOk && systemTracks.length === 0) {
+        warnings = '⚠ マイクの許可がないため音声なしで録画します。アドレスバー左の🔒からマイクを許可してください。';
+      } else if (!micOk) {
+        warnings = '⚠ マイク利用不可。システム音声のみで録画します。';
+      }
+
+      const audioTrack = destination.stream.getAudioTracks()[0] || null;
+      return { audioTrack, warnings };
+    }
+
+    // ---- MediaRecorder を起動 ----
+    function beginCapture(captureStream) {
+      stream = captureStream;
+      const mimeType = getSupportedMimeType();
+      mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+      recordedChunks = [];
+
+      mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+      mediaRecorder.onstop = saveRecording;
+      mediaRecorder.start(200);
+
+      elapsedSeconds = 0;
+      timerInterval = setInterval(() => { elapsedSeconds++; updateRecordingStatus(); }, 1000);
+      setControlsRecording(true);
+      updateRecordingStatus();
+    }
+
+    // ---- 録画停止 ----
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+      if (stream)     { stream.getTracks().forEach(t => t.stop());    stream = null; }
+      if (micStream)  { micStream.getTracks().forEach(t => t.stop()); micStream = null; }
+      if (audioContext) { audioContext.close(); audioContext = null; }
+      clearInterval(timerInterval);
+      setControlsRecording(false);
+      clearStatus();
+
+      // SP: 録画停止後にプレビュー再開
+      if (isMobile) startPreview();
+    }
+
+    // ---- 保存 ----
+    function saveRecording() {
+      const mimeType = mediaRecorder.mimeType || 'video/webm';
+      const ext  = mimeType.includes('mp4') ? 'mp4' : 'webm';
+      const blob = new Blob(recordedChunks, { type: mimeType });
+      const url  = URL.createObjectURL(blob);
+
+      const now       = new Date();
+      const fileName  = `録画_${formatDateForFilename(now)}.${ext}`;
+      const duration  = formatTime(elapsedSeconds);
+      const sizeMB    = (blob.size / 1024 / 1024).toFixed(1);
+      const modeLabel = isMobile
+        ? (cameraFacing === 'back' ? '背面カメラ' : '前面カメラ')
+        : (target === 'browser' ? 'ブラウザ' : '全画面');
+      const audioLabel = audioEnabled ? '音声あり' : '音声なし';
+
+      const emptyHint = document.getElementById('empty-hint');
+      if (emptyHint) emptyHint.remove();
+
+      const list = document.getElementById('recordings-list');
+      const item = document.createElement('div');
+      item.className = 'recording-item';
+      item.innerHTML = `
+        <video src="${url}" controls muted playsinline></video>
+        <div class="recording-info">
+          <div class="recording-name">${fileName}</div>
+          <div class="recording-meta">${duration} · ${sizeMB} MB · ${modeLabel} · ${audioLabel}</div>
+        </div>
+        <a href="${url}" download="${fileName}">
+          <button class="download-btn">⬇ 保存</button>
+        </a>
+      `;
+      list.prepend(item);
+    }
+
+    // ---- UI ----
+    function setControlsRecording(isRec) {
+      document.getElementById('start-btn').disabled = isRec;
+      document.getElementById('stop-btn').disabled  = !isRec;
+      const lockIds = isMobile
+        ? ['btn-camera-back', 'btn-camera-front', 'btn-audio-on', 'btn-audio-off']
+        : ['btn-browser', 'btn-screen', 'btn-audio-on', 'btn-audio-off'];
+      lockIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('locked', isRec);
+      });
+    }
+
+    function updateRecordingStatus() {
+      const bar = document.getElementById('status-bar');
+      bar.className = 'status-bar recording';
+      bar.innerHTML = `<span class="rec-dot"></span>録画中 &nbsp;<span class="timer">${formatTime(elapsedSeconds)}</span>`;
+    }
+
+    function showStatus(msg, type = 'info') {
+      const bar = document.getElementById('status-bar');
+      bar.className = `status-bar ${type}`;
+      bar.textContent = msg;
+    }
+
+    function clearStatus() {
+      document.getElementById('status-bar').className = 'status-bar';
+    }
+
+    // ---- ユーティリティ ----
+    function formatTime(sec) {
+      return `${String(Math.floor(sec / 60)).padStart(2,'0')}:${String(sec % 60).padStart(2,'0')}`;
+    }
+    function formatDateForFilename(d) {
+      return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+    }
+    function p(n) { return String(n).padStart(2, '0'); }
+
+    function getSupportedMimeType() {
+      const types = [
+        'video/mp4;codecs=avc1,mp4a',
+        'video/webm;codecs=vp9,opus',
+        'video/webm;codecs=vp8,opus',
+        'video/webm',
+        'video/mp4'
+      ];
+      for (const t of types) if (MediaRecorder.isTypeSupported(t)) return t;
+      return null;
+    }
+
+    // ---- 起動 ----
+    init();
+  </script>
+</body>
+</html>
