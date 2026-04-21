@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>年利180% 投資シミュレーター</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --card: #21263a;
+      --border: #2e3450;
+      --accent: #5b7fff;
+      --accent2: #ff7c5b;
+      --green: #3dd68c;
+      --yellow: #f5c842;
+      --text: #e6e9f4;
+      --muted: #7a849e;
+      --radius: 14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--green);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+    }
+    .badge.orange { background: var(--accent2); }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .input-grid { grid-template-columns: 1fr; }
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    input[type="number"] {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      padding: 10px 12px;
+      width: 100%;
+      outline: none;
+    }
+
+    input[type="number"]:focus {
+      border-color: var(--accent);
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 14px;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 14px;
+    }
+
+    .btn:active { opacity: 0.85; }
+
+    .error-box {
+      background: rgba(255, 80, 80, 0.15);
+      border: 1px solid #ff5050;
+      border-radius: 10px;
+      color: #ff9090;
+      font-size: 0.85rem;
+      padding: 12px;
+      margin-bottom: 16px;
+      display: none;
+      word-break: break-all;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 480px) {
+      .results-grid { grid-template-columns: 1fr; }
+    }
+
+    .result-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .result-box.hl-green { border-color: var(--green); background: rgba(61,214,140,0.07); }
+    .result-box.hl-blue  { border-color: var(--accent); background: rgba(91,127,255,0.07); }
+
+    .result-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .result-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .result-value.blue   { color: var(--accent); }
+    .result-value.yellow { color: var(--yellow); }
+    .result-value.orange { color: var(--accent2); }
+
+    .yen {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .result-sub {
+      font-size: 0.73rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .comparison-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .comparison-row:last-child { border-bottom: none; }
+    .comp-label { color: var(--muted); font-size: 0.82rem; }
+    .comp-value { font-weight: 700; font-size: 0.95rem; }
+    .comp-yen   { font-size: 0.78rem; color: var(--muted); }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* Canvas chart */
+    .chart-wrap { width: 100%; margin-bottom: 10px; }
+    canvas { display: block; width: 100%; border-radius: 6px; }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-dot  { width: 12px; height: 3px; border-radius: 2px; }
+
+    .assumptions {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 10px;
+      line-height: 1.9;
+    }
+
+    /* Table */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      min-width: 380px;
+    }
+
+    thead tr { background: var(--surface); }
+
+    th {
+      padding: 9px 8px;
+      text-align: right;
+      color: var(--muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    th:first-child { text-align: left; }
+
+    td {
+      padding: 7px 8px;
+      text-align: right;
+      border-top: 1px solid var(--border);
+      color: var(--text);
+    }
+    td:first-child { text-align: left; color: var(--muted); }
+
+    tr:hover td { background: rgba(255,255,255,0.03); }
+    tr.reinvest td { background: rgba(61,214,140,0.07); }
+    tr.reinvest td:first-child { color: var(--green); font-weight: 600; }
+
+    .td-yen { display: block; font-size: 0.68rem; color: var(--muted); }
+
+    .show-more-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      padding: 8px;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<h1>年利180% 投資シミュレーター</h1>
+<p class="subtitle">日利受取・再投資・出金手数料モデル</p>
+
+<!-- エラー表示 -->
+<div class="error-box" id="errorBox"></div>
+
+<!-- 入力 -->
+<div class="card">
+  <div class="card-title">⚙️ シミュレーション設定</div>
+  <div class="input-grid">
+    <div class="input-group">
+      <label>初期投資額（$）</label>
+      <input type="number" id="principal" value="1000" min="1" step="100" />
+    </div>
+    <div class="input-group">
+      <label>運用日数（日）</label>
+      <input type="number" id="days" value="365" min="1" step="1" />
+    </div>
+    <div class="input-group">
+      <label>年利（%）</label>
+      <input type="number" id="annualRate" value="180" min="0.1" step="0.1" />
+    </div>
+    <div class="input-group">
+      <label>出金手数料（%）</label>
+      <input type="number" id="fee" value="5" min="0" max="99" step="0.1" />
+    </div>
+    <div class="input-group">
+      <label>再投資トリガー（$）</label>
+      <input type="number" id="reinvestThreshold" value="100" min="1" step="10" />
+    </div>
+    <div class="input-group">
+      <label>円換算レート（円/$）</label>
+      <input type="number" id="jpyRate" value="155" min="1" step="1" />
+    </div>
+  </div>
+  <button class="btn" onclick="simulate()">📊 シミュレーション実行</button>
+</div>
+
+<!-- 結果サマリー -->
+<div class="card hidden" id="summaryCard">
+  <div class="card-title">📈 結果サマリー <span class="badge" id="daysLabel"></span></div>
+  <div class="results-grid" id="summaryGrid"></div>
+  <div class="assumptions" id="assumptionsText"></div>
+</div>
+
+<!-- 複利比較 -->
+<div class="card hidden" id="compCard">
+  <div class="card-title">⚖️ 複利との比較</div>
+  <div id="compRows"></div>
+</div>
+
+<!-- グラフ -->
+<div class="card hidden" id="chartCard">
+  <div class="card-title">📉 残高推移グラフ</div>
+  <div class="chart-wrap">
+    <canvas id="chart" height="220"></canvas>
+  </div>
+  <div class="chart-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#3dd68c"></div>このシミュレーション</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#5b7fff"></div>完全複利</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div>単利</div>
+  </div>
+</div>
+
+<!-- 日別テーブル -->
+<div class="card hidden" id="tableCard">
+  <div class="card-title">📋 日別明細 <span class="badge orange">再投資日は緑色</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>日</th>
+          <th>元本($)<br><span style="font-weight:400;font-size:0.7rem">(円)</span></th>
+          <th>日利($)<br><span style="font-weight:400;font-size:0.7rem">(円)</span></th>
+          <th>累積利益($)<br><span style="font-weight:400;font-size:0.7rem">(円)</span></th>
+          <th>出金額($)<br><span style="font-weight:400;font-size:0.7rem">(円)</span></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+  <button class="show-more-btn hidden" id="showMoreBtn" onclick="toggleFullTable()"></button>
+</div>
+
+<script>
+// ========== ユーティリティ ==========
+function commaInt(n) {
+  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+function commaDec(n) {
+  var s = n.toFixed(2).split('.');
+  s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return s.join('.');
+}
+function fmtUSD(v)       { return '$' + commaDec(v); }
+function fmtJPY(v, rate) { return '\u00a5' + commaInt(v * rate); }
+function fmtPct(v)       { return (v >= 0 ? '+' : '') + v.toFixed(1) + '%'; }
+
+// ========== シミュレーションコア ==========
+function runSimulation(principal, days, annualRate, feePercent, threshold) {
+  var dailyRate = annualRate / 100 / 365;
+  var feeRate   = feePercent / 100;
+  var p         = principal;
+  var pending   = 0;
+  var totalReinv = 0;
+  var rows      = [];
+
+  for (var d = 1; d <= days; d++) {
+    var interest = p * dailyRate;
+    pending += interest;
+
+    var reinvested  = 0;
+    var didReinvest = false;
+
+    if (pending >= threshold) {
+      var batches = Math.floor(pending / threshold);
+      reinvested  = batches * threshold;
+      p          += reinvested;
+      pending    -= reinvested;
+      totalReinv += reinvested;
+      didReinvest = true;
+    }
+
+    rows.push({
+      day:        d,
+      principal:  p,
+      interest:   interest,
+      pending:    pending,
+      cashout:    (p + pending) * (1 - feeRate),
+      didReinvest: didReinvest
+    });
+  }
+
+  return {
+    rows:           rows,
+    finalPrincipal: p,
+    finalPending:   pending,
+    finalAssets:    p + pending,
+    cashout:        (p + pending) * (1 - feeRate),
+    profit:         (p + pending) * (1 - feeRate) - principal,
+    totalReinv:     totalReinv
+  };
+}
+
+function compoundValue(principal, annualRate, days) {
+  var r = annualRate / 100 / 365;
+  return principal * Math.pow(1 + r, days);
+}
+
+// ========== グローバル状態 ==========
+var lastRows       = [];
+var lastJpyRate    = 155;
+var fullTableVisible = false;
+
+// ========== メイン ==========
+function simulate() {
+  try {
+    var errorBox = document.getElementById('errorBox');
+    errorBox.style.display = 'none';
+
+    var principal  = parseFloat(document.getElementById('principal').value);
+    var days       = parseInt(document.getElementById('days').value, 10);
+    var annualRate = parseFloat(document.getElementById('annualRate').value);
+    var fee        = parseFloat(document.getElementById('fee').value);
+    var threshold  = parseFloat(document.getElementById('reinvestThreshold').value);
+    var jpyRate    = parseFloat(document.getElementById('jpyRate').value);
+
+    if (isNaN(principal) || principal <= 0) principal = 1000;
+    if (isNaN(days)      || days <= 0)      days      = 365;
+    if (isNaN(annualRate)|| annualRate <= 0) annualRate = 180;
+    if (isNaN(fee)       || fee < 0)         fee       = 5;
+    if (isNaN(threshold) || threshold <= 0)  threshold = 100;
+    if (isNaN(jpyRate)   || jpyRate <= 0)    jpyRate   = 155;
+
+    lastJpyRate      = jpyRate;
+    fullTableVisible = false;
+
+    var sim         = runSimulation(principal, days, annualRate, fee, threshold);
+    lastRows        = sim.rows;
+
+    var profitPct   = (sim.cashout / principal - 1) * 100;
+    var compRaw     = compoundValue(principal, annualRate, days);
+    var compCashout = compRaw * (1 - fee / 100);
+    var simpleRaw   = principal * (1 + annualRate / 100 * days / 365);
+    var simpleCashout = simpleRaw * (1 - fee / 100);
+
+    // サマリー
+    document.getElementById('daysLabel').textContent = days + '日間';
+    document.getElementById('summaryCard').classList.remove('hidden');
+
+    var nextReinv = threshold - (sim.finalPending % threshold);
+    if (nextReinv >= threshold) nextReinv = 0;
+
+    document.getElementById('summaryGrid').innerHTML =
+      '<div class="result-box hl-green">' +
+        '<div class="result-label">最終出金額（手数料後）</div>' +
+        '<div class="result-value">' + fmtUSD(sim.cashout) + '<span class="yen">(' + fmtJPY(sim.cashout, jpyRate) + ')</span></div>' +
+        '<div class="result-sub">税引前利益: ' + fmtUSD(sim.profit) + ' (' + fmtJPY(sim.profit, jpyRate) + ')<br>' + fmtPct(profitPct) + '</div>' +
+      '</div>' +
+      '<div class="result-box hl-blue">' +
+        '<div class="result-label">総資産（出金前）</div>' +
+        '<div class="result-value blue">' + fmtUSD(sim.finalAssets) + '<span class="yen">(' + fmtJPY(sim.finalAssets, jpyRate) + ')</span></div>' +
+        '<div class="result-sub">元本: ' + fmtUSD(principal) + ' (' + fmtJPY(principal, jpyRate) + ')<br>利益: ' + fmtUSD(sim.finalAssets - principal) + ' (' + fmtJPY(sim.finalAssets - principal, jpyRate) + ')</div>' +
+      '</div>' +
+      '<div class="result-box">' +
+        '<div class="result-label">再投資回数</div>' +
+        '<div class="result-value yellow">' + (sim.totalReinv > 0 ? Math.round(sim.totalReinv / threshold) : 0) + '回</div>' +
+        '<div class="result-sub">再投資総額: ' + fmtUSD(sim.totalReinv) + '<br>(' + fmtJPY(sim.totalReinv, jpyRate) + ')</div>' +
+      '</div>' +
+      '<div class="result-box">' +
+        '<div class="result-label">未払い利益（積立中）</div>' +
+        '<div class="result-value orange">' + fmtUSD(sim.finalPending) + '<span class="yen">(' + fmtJPY(sim.finalPending, jpyRate) + ')</span></div>' +
+        '<div class="result-sub">次の再投資まで: ' + fmtUSD(nextReinv) + ' 不足</div>' +
+      '</div>';
+
+    document.getElementById('assumptionsText').innerHTML =
+      '<strong>前提条件：</strong><br>' +
+      '年利 ' + annualRate + '% → 日利 ' + (annualRate / 365).toFixed(4) + '% ／ ' +
+      '再投資トリガー: $' + threshold + '（' + fmtJPY(threshold, jpyRate) + '） ／ ' +
+      '出金手数料: ' + fee + '% ／ 換算レート: ' + jpyRate + '円/$<br>' +
+      '運用開始元本: ' + fmtUSD(principal) + '（' + fmtJPY(principal, jpyRate) + '）<br>' +
+      '※ 元本に対して毎日日利を計算。利益が$' + threshold + '貯まると自動で元本に追加。出金時は総額に' + fee + '%手数料。';
+
+    // 複利比較
+    document.getElementById('compCard').classList.remove('hidden');
+    document.getElementById('compRows').innerHTML =
+      makeCompRow('このシミュレーション', '日利受取 + $' + threshold + '再投資 + ' + fee + '%手数料',
+        sim.cashout, jpyRate, profitPct, '#3dd68c', 'rgba(61,214,140,0.15)') +
+      makeCompRow('完全複利（日次）', '毎日全額再投資 + ' + fee + '%手数料',
+        compCashout, jpyRate, (compCashout / principal - 1) * 100, '#5b7fff', 'rgba(91,127,255,0.15)') +
+      makeCompRow('単利（再投資なし）', '日利を別口座で受取 + ' + fee + '%手数料',
+        simpleCashout, jpyRate, (simpleCashout / principal - 1) * 100, '#f5c842', 'rgba(245,200,66,0.15)') +
+      makeCompRow('元本のみ（投資なし）', '何もしない場合',
+        principal, jpyRate, 0, '#7a849e', 'rgba(122,132,158,0.15)');
+
+    // グラフ
+    document.getElementById('chartCard').classList.remove('hidden');
+    drawChart(sim.rows, principal, annualRate, fee);
+
+    // テーブル
+    document.getElementById('tableCard').classList.remove('hidden');
+    renderTable(sim.rows, false, jpyRate);
+
+  } catch (e) {
+    var errorBox = document.getElementById('errorBox');
+    errorBox.style.display = 'block';
+    errorBox.textContent = 'エラーが発生しました: ' + (e.message || e);
+  }
+}
+
+function makeCompRow(title, label, value, jpyRate, pctVal, color, tagBg) {
+  return '<div class="comparison-row">' +
+    '<div>' +
+      '<div style="font-weight:600">' + title + '</div>' +
+      '<div class="comp-label">' + label + '</div>' +
+    '</div>' +
+    '<div style="text-align:right">' +
+      '<div class="comp-value" style="color:' + color + '">' + fmtUSD(value) + '</div>' +
+      '<div class="comp-yen">(' + fmtJPY(value, jpyRate) + ')</div>' +
+      '<span class="tag" style="background:' + tagBg + ';color:' + color + '">' + fmtPct(pctVal) + '</span>' +
+    '</div>' +
+  '</div>';
+}
+
+// ========== テーブル ==========
+function renderTable(rows, full, jpyRate) {
+  if (jpyRate !== undefined) lastJpyRate = jpyRate;
+  var rate  = lastJpyRate;
+  var tbody = document.getElementById('tableBody');
+  var btn   = document.getElementById('showMoreBtn');
+
+  var displayRows;
+  if (full || rows.length <= 30) {
+    displayRows = rows;
+    btn.classList.add('hidden');
+  } else {
+    displayRows = rows.slice(0, 20).concat([null]).concat(rows.slice(-5));
+    btn.classList.remove('hidden');
+    btn.textContent = '\u25bc 全 ' + rows.length + ' 日を表示';
+  }
+
+  var html = '';
+  for (var i = 0; i < displayRows.length; i++) {
+    var row = displayRows[i];
+    if (row === null) {
+      html += '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:6px">・・・</td></tr>';
+      continue;
+    }
+    var cls = row.didReinvest ? ' class="reinvest"' : '';
+    html += '<tr' + cls + '>' +
+      '<td>' + row.day + '日' + (row.didReinvest ? ' ♻' : '') + '</td>' +
+      '<td>' + commaDec(row.principal)  + '<span class="td-yen">' + fmtJPY(row.principal, rate)  + '</span></td>' +
+      '<td>+' + commaDec(row.interest)  + '<span class="td-yen">' + fmtJPY(row.interest, rate)   + '</span></td>' +
+      '<td>' + commaDec(row.pending)    + '<span class="td-yen">' + fmtJPY(row.pending, rate)    + '</span></td>' +
+      '<td>' + commaDec(row.cashout)    + '<span class="td-yen">' + fmtJPY(row.cashout, rate)    + '</span></td>' +
+    '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function toggleFullTable() {
+  fullTableVisible = !fullTableVisible;
+  renderTable(lastRows, fullTableVisible);
+  var btn = document.getElementById('showMoreBtn');
+  if (fullTableVisible) {
+    btn.textContent = '\u25b2 折りたたむ';
+    btn.classList.remove('hidden');
+  } else {
+    btn.textContent = '\u25bc 全 ' + lastRows.length + ' 日を表示';
+  }
+}
+
+// ========== グラフ（純Canvas） ==========
+function drawChart(rows, principal, annualRate, fee) {
+  var canvas = document.getElementById('chart');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  var feeRate = fee / 100;
+  var W = canvas.parentElement.clientWidth || 300;
+  var H = 220;
+  canvas.width  = W;
+  canvas.height = H;
+
+  // データ間引き（最大100点）
+  var N    = rows.length;
+  var step = Math.max(1, Math.floor(N / 100));
+  var pts  = [];
+  for (var i = 0; i < N; i += step) pts.push(rows[i]);
+  if (pts[pts.length - 1] !== rows[N - 1]) pts.push(rows[N - 1]);
+
+  var simData    = [];
+  var compData   = [];
+  var simpleData = [];
+  for (var j = 0; j < pts.length; j++) {
+    simData.push(pts[j].cashout);
+    var cv = principal * Math.pow(1 + annualRate / 100 / 365, pts[j].day);
+    compData.push(cv * (1 - feeRate));
+    var sv = principal * (1 + annualRate / 100 * pts[j].day / 365);
+    simpleData.push(sv * (1 - feeRate));
+  }
+
+  var allVals = simData.concat(compData).concat(simpleData);
+  var maxVal  = 0;
+  for (var k = 0; k < allVals.length; k++) {
+    if (allVals[k] > maxVal) maxVal = allVals[k];
+  }
+  maxVal *= 1.08;
+
+  var PAD_L = 54, PAD_R = 12, PAD_T = 12, PAD_B = 28;
+  var gW = W - PAD_L - PAD_R;
+  var gH = H - PAD_T - PAD_B;
+
+  // 背景
+  ctx.fillStyle = '#1a1d27';
+  ctx.fillRect(0, 0, W, H);
+
+  // グリッド線
+  ctx.strokeStyle = '#2e3450';
+  ctx.lineWidth = 1;
+  var ticks = 4;
+  for (var t = 0; t <= ticks; t++) {
+    var gy = PAD_T + gH * t / ticks;
+    ctx.beginPath();
+    ctx.moveTo(PAD_L, gy);
+    ctx.lineTo(PAD_L + gW, gy);
+    ctx.stroke();
+
+    // Y軸ラベル
+    var yVal = maxVal * (1 - t / ticks);
+    var label = yVal >= 1000 ? '$' + Math.round(yVal / 1000) + 'k' : '$' + Math.round(yVal);
+    ctx.fillStyle = '#7a849e';
+    ctx.font = '10px Arial';
+    ctx.textAlign = 'right';
+    ctx.fillText(label, PAD_L - 4, gy + 3);
+  }
+
+  // X軸ラベル
+  ctx.fillStyle = '#7a849e';
+  ctx.font = '10px Arial';
+  ctx.textAlign = 'center';
+  var xLabels = [0, Math.floor(pts.length / 2), pts.length - 1];
+  for (var xi = 0; xi < xLabels.length; xi++) {
+    var idx = xLabels[xi];
+    var xp  = PAD_L + gW * idx / (pts.length - 1 || 1);
+    ctx.fillText(pts[idx].day + '日', xp, H - 6);
+  }
+
+  // 折れ線描画
+  function drawLine(data, color, dash) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth   = 2;
+    ctx.setLineDash(dash || []);
+    ctx.beginPath();
+    for (var di = 0; di < data.length; di++) {
+      var px = PAD_L + gW * di / (data.length - 1 || 1);
+      var py = PAD_T + gH * (1 - data[di] / maxVal);
+      if (di === 0) ctx.moveTo(px, py);
+      else          ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // 塗りつぶし（シミュレーション）
+  ctx.fillStyle = 'rgba(61,214,140,0.1)';
+  ctx.beginPath();
+  for (var fi = 0; fi < simData.length; fi++) {
+    var fpx = PAD_L + gW * fi / (simData.length - 1 || 1);
+    var fpy = PAD_T + gH * (1 - simData[fi] / maxVal);
+    if (fi === 0) ctx.moveTo(fpx, fpy);
+    else          ctx.lineTo(fpx, fpy);
+  }
+  ctx.lineTo(PAD_L + gW, PAD_T + gH);
+  ctx.lineTo(PAD_L, PAD_T + gH);
+  ctx.closePath();
+  ctx.fill();
+
+  drawLine(simpleData, '#f5c842', [4, 4]);
+  drawLine(compData,   '#5b7fff', [6, 3]);
+  drawLine(simData,    '#3dd68c');
+}
+
+// ========== 起動 ==========
+window.onload = function() { simulate(); };
+</script>
+</body>
+</html>
