@@ -8,17 +8,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --card: #21263a;
-      --border: #2e3450;
-      --accent: #5b7fff;
-      --accent2: #ff7c5b;
-      --green: #3dd68c;
-      --yellow: #f5c842;
-      --text: #e6e9f4;
-      --muted: #7a849e;
-      --radius: 14px;
+      --bg:      #f0f4ff;
+      --white:   #ffffff;
+      --border:  #dde3f5;
+      --blue:    #4f6ef7;
+      --blue2:   #7c9bff;
+      --green:   #0fb981;
+      --orange:  #ff6b3d;
+      --purple:  #9b5cf6;
+      --yellow:  #f59e0b;
+      --text:    #1a2040;
+      --muted:   #6b7a9e;
+      --radius:  16px;
     }
 
     body {
@@ -29,54 +30,82 @@
       line-height: 1.6;
       min-height: 100vh;
       padding: 16px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ===== ヘッダー ===== */
+    .header {
+      text-align: center;
+      padding: 24px 0 20px;
+    }
+
+    .header-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin: 0 auto 12px;
+      box-shadow: 0 6px 20px rgba(79,110,247,0.35);
     }
 
     h1 {
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: var(--green);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
     }
 
     .subtitle {
-      text-align: center;
       color: var(--muted);
-      font-size: 0.85rem;
-      margin-bottom: 20px;
+      font-size: 0.82rem;
     }
 
+    /* ===== カード ===== */
     .card {
-      background: var(--card);
+      background: var(--white);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 18px;
-      margin-bottom: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 12px rgba(79,110,247,0.07);
     }
 
     .card-title {
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .badge {
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: 20px;
-      margin-left: 6px;
+    .card-title-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
     }
-    .badge.orange { background: var(--accent2); }
 
+    /* ===== 入力 ===== */
     .input-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
+      margin-bottom: 16px;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 400px) {
       .input-grid { grid-template-columns: 1fr; }
     }
 
@@ -87,53 +116,59 @@
     }
 
     label {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--muted);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     input[type="number"] {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
       color: var(--text);
       font-size: 1rem;
+      font-weight: 600;
       padding: 10px 12px;
       width: 100%;
       outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     input[type="number"]:focus {
-      border-color: var(--accent);
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(79,110,247,0.12);
     }
 
+    /* ===== ボタン ===== */
     .btn {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--blue), var(--purple));
       color: #fff;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 1rem;
-      font-weight: 600;
-      padding: 14px;
+      font-weight: 700;
+      padding: 15px;
       width: 100%;
       cursor: pointer;
-      margin-top: 14px;
+      box-shadow: 0 4px 16px rgba(79,110,247,0.35);
+      letter-spacing: 0.02em;
     }
 
-    .btn:active { opacity: 0.85; }
+    .btn:active { opacity: 0.88; transform: scale(0.98); }
 
+    /* ===== エラー ===== */
     .error-box {
-      background: rgba(255, 80, 80, 0.15);
-      border: 1px solid #ff5050;
+      background: #fff0f0;
+      border: 1.5px solid #ffaaaa;
       border-radius: 10px;
-      color: #ff9090;
+      color: #c0392b;
       font-size: 0.85rem;
       padding: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       display: none;
-      word-break: break-all;
     }
 
+    /* ===== 結果サマリー ===== */
     .results-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -141,159 +176,227 @@
       margin-bottom: 14px;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 400px) {
       .results-grid { grid-template-columns: 1fr; }
     }
 
     .result-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
+      border-radius: 12px;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .result-box.hl-green { border-color: var(--green); background: rgba(61,214,140,0.07); }
-    .result-box.hl-blue  { border-color: var(--accent); background: rgba(91,127,255,0.07); }
+    .result-box::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      opacity: 0.12;
+      transform: translate(15px, -15px);
+    }
+
+    .rb-green  { background: linear-gradient(135deg, #e8faf3, #d0f5e5); border: 1.5px solid #a8e6cc; }
+    .rb-green::before { background: var(--green); }
+
+    .rb-blue   { background: linear-gradient(135deg, #eef2ff, #dce5ff); border: 1.5px solid #b4c6ff; }
+    .rb-blue::before { background: var(--blue); }
+
+    .rb-yellow { background: linear-gradient(135deg, #fffbea, #fff3cc); border: 1.5px solid #ffd97a; }
+    .rb-yellow::before { background: var(--yellow); }
+
+    .rb-orange { background: linear-gradient(135deg, #fff2ee, #ffe4db); border: 1.5px solid #ffb49a; }
+    .rb-orange::before { background: var(--orange); }
 
     .result-label {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 700;
       color: var(--muted);
       margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .result-value {
       font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--green);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
     }
-    .result-value.blue   { color: var(--accent); }
-    .result-value.yellow { color: var(--yellow); }
-    .result-value.orange { color: var(--accent2); }
 
     .yen {
       display: block;
       font-size: 0.78rem;
+      font-weight: 600;
       color: var(--muted);
-      margin-top: 1px;
+      margin-top: 2px;
     }
 
     .result-sub {
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       color: var(--muted);
-      margin-top: 3px;
+      margin-top: 5px;
+      line-height: 1.6;
     }
 
+    .pill {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-top: 4px;
+    }
+
+    .pill-green  { background: rgba(15,185,129,0.15); color: #0a8f62; }
+    .pill-blue   { background: rgba(79,110,247,0.15); color: var(--blue); }
+    .pill-yellow { background: rgba(245,158,11,0.15); color: #b57b08; }
+    .pill-gray   { background: rgba(107,122,158,0.15); color: var(--muted); }
+
+    /* ===== 前提条件 ===== */
+    .assumptions {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-top: 12px;
+      line-height: 1.9;
+      border: 1px solid var(--border);
+    }
+
+    /* ===== 複利比較 ===== */
     .comparison-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 0;
+      padding: 12px 0;
       border-bottom: 1px solid var(--border);
     }
     .comparison-row:last-child { border-bottom: none; }
-    .comp-label { color: var(--muted); font-size: 0.82rem; }
-    .comp-value { font-weight: 700; font-size: 0.95rem; }
-    .comp-yen   { font-size: 0.78rem; color: var(--muted); }
 
-    .tag {
-      display: inline-block;
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 600;
-      margin-top: 2px;
-    }
+    .comp-left { flex: 1; }
+    .comp-title { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .comp-label { font-size: 0.75rem; color: var(--muted); }
 
-    /* Canvas chart */
-    .chart-wrap { width: 100%; margin-bottom: 10px; }
-    canvas { display: block; width: 100%; border-radius: 6px; }
+    .comp-right { text-align: right; }
+    .comp-value { font-weight: 800; font-size: 1rem; color: var(--text); }
+    .comp-yen   { font-size: 0.75rem; color: var(--muted); }
+
+    /* ===== グラフ ===== */
+    .chart-wrap { width: 100%; }
+    canvas { display: block; width: 100%; border-radius: 8px; }
 
     .chart-legend {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      font-size: 0.75rem;
+      gap: 12px;
+      font-size: 0.76rem;
       color: var(--muted);
-      margin-top: 8px;
-    }
-    .legend-item { display: flex; align-items: center; gap: 5px; }
-    .legend-dot  { width: 12px; height: 3px; border-radius: 2px; }
-
-    .assumptions {
-      font-size: 0.75rem;
-      color: var(--muted);
-      background: var(--surface);
-      border-radius: 8px;
-      padding: 10px 12px;
       margin-top: 10px;
-      line-height: 1.9;
     }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-weight: 600; }
+    .legend-dot  { width: 14px; height: 3px; border-radius: 2px; }
 
-    /* Table */
+    /* ===== テーブル ===== */
     .table-wrap {
       overflow-x: auto;
-      border-radius: 8px;
-      border: 1px solid var(--border);
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.8rem;
-      min-width: 380px;
+      min-width: 360px;
     }
 
-    thead tr { background: var(--surface); }
+    thead tr { background: var(--bg); }
 
     th {
-      padding: 9px 8px;
+      padding: 10px 8px;
       text-align: right;
       color: var(--muted);
-      font-weight: 500;
+      font-weight: 700;
+      font-size: 0.73rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
       white-space: nowrap;
     }
     th:first-child { text-align: left; }
 
     td {
-      padding: 7px 8px;
+      padding: 8px 8px;
       text-align: right;
       border-top: 1px solid var(--border);
       color: var(--text);
+      font-weight: 600;
     }
-    td:first-child { text-align: left; color: var(--muted); }
+    td:first-child { text-align: left; color: var(--muted); font-weight: 500; }
 
-    tr:hover td { background: rgba(255,255,255,0.03); }
-    tr.reinvest td { background: rgba(61,214,140,0.07); }
-    tr.reinvest td:first-child { color: var(--green); font-weight: 600; }
+    tr:hover td { background: rgba(79,110,247,0.04); }
 
-    .td-yen { display: block; font-size: 0.68rem; color: var(--muted); }
+    tr.reinvest td { background: rgba(15,185,129,0.06); }
+    tr.reinvest td:first-child { color: var(--green); font-weight: 700; }
+
+    .td-yen { display: block; font-size: 0.67rem; color: var(--muted); font-weight: 400; }
 
     .show-more-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
       color: var(--muted);
       font-size: 0.85rem;
-      padding: 8px;
+      font-weight: 600;
+      padding: 9px;
       width: 100%;
       cursor: pointer;
-      margin-top: 8px;
+      margin-top: 10px;
     }
+    .show-more-btn:active { opacity: 0.75; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .badge-blue   { background: rgba(79,110,247,0.12); color: var(--blue); }
+    .badge-orange { background: rgba(255,107,61,0.12); color: var(--orange); }
 
     .hidden { display: none; }
+
+    /* 区切りライン */
+    .divider {
+      border: none;
+      border-top: 1.5px solid var(--border);
+      margin: 4px 0 14px;
+    }
   </style>
 </head>
 <body>
 
-<h1>年利180% 投資シミュレーター</h1>
-<p class="subtitle">日利受取・再投資・出金手数料モデル</p>
+<!-- ヘッダー -->
+<div class="header">
+  <div class="header-icon">📈</div>
+  <h1>投資シミュレーター</h1>
+  <p class="subtitle">年利180%・日利受取・$100再投資・出金5%手数料モデル</p>
+</div>
 
 <!-- エラー表示 -->
 <div class="error-box" id="errorBox"></div>
 
-<!-- 入力 -->
+<!-- 設定 + ボタン -->
 <div class="card">
-  <div class="card-title">⚙️ シミュレーション設定</div>
+  <div class="card-title">
+    <span class="card-title-icon" style="background:rgba(79,110,247,0.12)">⚙️</span>
+    シミュレーション設定
+  </div>
   <div class="input-grid">
     <div class="input-group">
       <label>初期投資額（$）</label>
@@ -320,47 +423,63 @@
       <input type="number" id="jpyRate" value="155" min="1" step="1" />
     </div>
   </div>
+
+  <!-- ボタンは入力のすぐ下 -->
   <button class="btn" onclick="simulate()">📊 シミュレーション実行</button>
 </div>
 
 <!-- 結果サマリー -->
 <div class="card hidden" id="summaryCard">
-  <div class="card-title">📈 結果サマリー <span class="badge" id="daysLabel"></span></div>
+  <div class="card-title">
+    <span class="card-title-icon" style="background:rgba(15,185,129,0.12)">💰</span>
+    結果サマリー
+    <span class="badge badge-blue" id="daysLabel"></span>
+  </div>
   <div class="results-grid" id="summaryGrid"></div>
   <div class="assumptions" id="assumptionsText"></div>
 </div>
 
 <!-- 複利比較 -->
 <div class="card hidden" id="compCard">
-  <div class="card-title">⚖️ 複利との比較</div>
+  <div class="card-title">
+    <span class="card-title-icon" style="background:rgba(155,92,246,0.12)">⚖️</span>
+    複利との比較
+  </div>
   <div id="compRows"></div>
 </div>
 
 <!-- グラフ -->
 <div class="card hidden" id="chartCard">
-  <div class="card-title">📉 残高推移グラフ</div>
+  <div class="card-title">
+    <span class="card-title-icon" style="background:rgba(245,158,11,0.12)">📉</span>
+    残高推移グラフ
+  </div>
   <div class="chart-wrap">
     <canvas id="chart" height="220"></canvas>
   </div>
   <div class="chart-legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#3dd68c"></div>このシミュレーション</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#5b7fff"></div>完全複利</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div>単利</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0fb981"></div>このシミュレーション</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4f6ef7"></div>完全複利</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>単利</div>
   </div>
 </div>
 
 <!-- 日別テーブル -->
 <div class="card hidden" id="tableCard">
-  <div class="card-title">📋 日別明細 <span class="badge orange">再投資日は緑色</span></div>
+  <div class="card-title">
+    <span class="card-title-icon" style="background:rgba(255,107,61,0.12)">📋</span>
+    日別明細
+    <span class="badge badge-orange">再投資日は緑色</span>
+  </div>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
           <th>日</th>
-          <th>元本($)<br><span style="font-weight:400;font-size:0.7rem">(円)</span></th>
-          <th>日利($)<br><span style="font-weight:400;font-size:0.7rem">(円)</span></th>
-          <th>累積利益($)<br><span style="font-weight:400;font-size:0.7rem">(円)</span></th>
-          <th>出金額($)<br><span style="font-weight:400;font-size:0.7rem">(円)</span></th>
+          <th>元本($)<br><span style="font-weight:400">(円)</span></th>
+          <th>日利($)<br><span style="font-weight:400">(円)</span></th>
+          <th>累積利益($)<br><span style="font-weight:400">(円)</span></th>
+          <th>出金額($)<br><span style="font-weight:400">(円)</span></th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -370,7 +489,7 @@
 </div>
 
 <script>
-// ========== ユーティリティ ==========
+// ===== ユーティリティ =====
 function commaInt(n) {
   return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
@@ -383,7 +502,7 @@ function fmtUSD(v)       { return '$' + commaDec(v); }
 function fmtJPY(v, rate) { return '\u00a5' + commaInt(v * rate); }
 function fmtPct(v)       { return (v >= 0 ? '+' : '') + v.toFixed(1) + '%'; }
 
-// ========== シミュレーションコア ==========
+// ===== シミュレーション =====
 function runSimulation(principal, days, annualRate, feePercent, threshold) {
   var dailyRate = annualRate / 100 / 365;
   var feeRate   = feePercent / 100;
@@ -409,41 +528,34 @@ function runSimulation(principal, days, annualRate, feePercent, threshold) {
     }
 
     rows.push({
-      day:        d,
-      principal:  p,
-      interest:   interest,
-      pending:    pending,
-      cashout:    (p + pending) * (1 - feeRate),
+      day: d, principal: p, interest: interest,
+      pending: pending, cashout: (p + pending) * (1 - feeRate),
       didReinvest: didReinvest
     });
   }
 
   return {
-    rows:           rows,
-    finalPrincipal: p,
-    finalPending:   pending,
-    finalAssets:    p + pending,
-    cashout:        (p + pending) * (1 - feeRate),
-    profit:         (p + pending) * (1 - feeRate) - principal,
-    totalReinv:     totalReinv
+    rows: rows, finalPrincipal: p, finalPending: pending,
+    finalAssets: p + pending,
+    cashout: (p + pending) * (1 - feeRate),
+    profit:  (p + pending) * (1 - feeRate) - principal,
+    totalReinv: totalReinv
   };
 }
 
 function compoundValue(principal, annualRate, days) {
-  var r = annualRate / 100 / 365;
-  return principal * Math.pow(1 + r, days);
+  return principal * Math.pow(1 + annualRate / 100 / 365, days);
 }
 
-// ========== グローバル状態 ==========
-var lastRows       = [];
-var lastJpyRate    = 155;
+// ===== グローバル状態 =====
+var lastRows = [];
+var lastJpyRate = 155;
 var fullTableVisible = false;
 
-// ========== メイン ==========
+// ===== メイン =====
 function simulate() {
   try {
-    var errorBox = document.getElementById('errorBox');
-    errorBox.style.display = 'none';
+    document.getElementById('errorBox').style.display = 'none';
 
     var principal  = parseFloat(document.getElementById('principal').value);
     var days       = parseInt(document.getElementById('days').value, 10);
@@ -455,70 +567,60 @@ function simulate() {
     if (isNaN(principal) || principal <= 0) principal = 1000;
     if (isNaN(days)      || days <= 0)      days      = 365;
     if (isNaN(annualRate)|| annualRate <= 0) annualRate = 180;
-    if (isNaN(fee)       || fee < 0)         fee       = 5;
-    if (isNaN(threshold) || threshold <= 0)  threshold = 100;
-    if (isNaN(jpyRate)   || jpyRate <= 0)    jpyRate   = 155;
+    if (isNaN(fee)       || fee < 0)        fee        = 5;
+    if (isNaN(threshold) || threshold <= 0) threshold  = 100;
+    if (isNaN(jpyRate)   || jpyRate <= 0)   jpyRate    = 155;
 
-    lastJpyRate      = jpyRate;
+    lastJpyRate = jpyRate;
     fullTableVisible = false;
 
-    var sim         = runSimulation(principal, days, annualRate, fee, threshold);
-    lastRows        = sim.rows;
-
-    var profitPct   = (sim.cashout / principal - 1) * 100;
-    var compRaw     = compoundValue(principal, annualRate, days);
-    var compCashout = compRaw * (1 - fee / 100);
-    var simpleRaw   = principal * (1 + annualRate / 100 * days / 365);
-    var simpleCashout = simpleRaw * (1 - fee / 100);
+    var sim           = runSimulation(principal, days, annualRate, fee, threshold);
+    lastRows          = sim.rows;
+    var profitPct     = (sim.cashout / principal - 1) * 100;
+    var compCashout   = compoundValue(principal, annualRate, days) * (1 - fee / 100);
+    var simpleCashout = principal * (1 + annualRate / 100 * days / 365) * (1 - fee / 100);
+    var nextReinv     = threshold - (sim.finalPending % threshold);
+    if (nextReinv >= threshold) nextReinv = 0;
 
     // サマリー
     document.getElementById('daysLabel').textContent = days + '日間';
     document.getElementById('summaryCard').classList.remove('hidden');
-
-    var nextReinv = threshold - (sim.finalPending % threshold);
-    if (nextReinv >= threshold) nextReinv = 0;
-
     document.getElementById('summaryGrid').innerHTML =
-      '<div class="result-box hl-green">' +
-        '<div class="result-label">最終出金額（手数料後）</div>' +
-        '<div class="result-value">' + fmtUSD(sim.cashout) + '<span class="yen">(' + fmtJPY(sim.cashout, jpyRate) + ')</span></div>' +
-        '<div class="result-sub">税引前利益: ' + fmtUSD(sim.profit) + ' (' + fmtJPY(sim.profit, jpyRate) + ')<br>' + fmtPct(profitPct) + '</div>' +
-      '</div>' +
-      '<div class="result-box hl-blue">' +
-        '<div class="result-label">総資産（出金前）</div>' +
-        '<div class="result-value blue">' + fmtUSD(sim.finalAssets) + '<span class="yen">(' + fmtJPY(sim.finalAssets, jpyRate) + ')</span></div>' +
-        '<div class="result-sub">元本: ' + fmtUSD(principal) + ' (' + fmtJPY(principal, jpyRate) + ')<br>利益: ' + fmtUSD(sim.finalAssets - principal) + ' (' + fmtJPY(sim.finalAssets - principal, jpyRate) + ')</div>' +
-      '</div>' +
-      '<div class="result-box">' +
-        '<div class="result-label">再投資回数</div>' +
-        '<div class="result-value yellow">' + (sim.totalReinv > 0 ? Math.round(sim.totalReinv / threshold) : 0) + '回</div>' +
-        '<div class="result-sub">再投資総額: ' + fmtUSD(sim.totalReinv) + '<br>(' + fmtJPY(sim.totalReinv, jpyRate) + ')</div>' +
-      '</div>' +
-      '<div class="result-box">' +
-        '<div class="result-label">未払い利益（積立中）</div>' +
-        '<div class="result-value orange">' + fmtUSD(sim.finalPending) + '<span class="yen">(' + fmtJPY(sim.finalPending, jpyRate) + ')</span></div>' +
-        '<div class="result-sub">次の再投資まで: ' + fmtUSD(nextReinv) + ' 不足</div>' +
-      '</div>';
+      makeResultBox('rb-green', '最終出金額（手数料後）',
+        fmtUSD(sim.cashout), fmtJPY(sim.cashout, jpyRate),
+        '税引前利益: ' + fmtUSD(sim.profit) + '<br>(' + fmtJPY(sim.profit, jpyRate) + ')',
+        fmtPct(profitPct), 'pill-green') +
+      makeResultBox('rb-blue', '総資産（出金前）',
+        fmtUSD(sim.finalAssets), fmtJPY(sim.finalAssets, jpyRate),
+        '元本: ' + fmtUSD(principal) + '<br>利益: ' + fmtUSD(sim.finalAssets - principal),
+        '', '') +
+      makeResultBox('rb-yellow', '再投資回数',
+        (sim.totalReinv > 0 ? Math.round(sim.totalReinv / threshold) : 0) + '回', '',
+        '再投資総額: ' + fmtUSD(sim.totalReinv) + '<br>(' + fmtJPY(sim.totalReinv, jpyRate) + ')',
+        '', '') +
+      makeResultBox('rb-orange', '未払い利益（積立中）',
+        fmtUSD(sim.finalPending), fmtJPY(sim.finalPending, jpyRate),
+        '次の再投資まで: ' + fmtUSD(nextReinv) + ' 不足',
+        '', '');
 
     document.getElementById('assumptionsText').innerHTML =
       '<strong>前提条件：</strong><br>' +
       '年利 ' + annualRate + '% → 日利 ' + (annualRate / 365).toFixed(4) + '% ／ ' +
       '再投資トリガー: $' + threshold + '（' + fmtJPY(threshold, jpyRate) + '） ／ ' +
-      '出金手数料: ' + fee + '% ／ 換算レート: ' + jpyRate + '円/$<br>' +
-      '運用開始元本: ' + fmtUSD(principal) + '（' + fmtJPY(principal, jpyRate) + '）<br>' +
-      '※ 元本に対して毎日日利を計算。利益が$' + threshold + '貯まると自動で元本に追加。出金時は総額に' + fee + '%手数料。';
+      '出金手数料: ' + fee + '% ／ レート: ' + jpyRate + '円/$<br>' +
+      '元本: ' + fmtUSD(principal) + '（' + fmtJPY(principal, jpyRate) + '）';
 
     // 複利比較
     document.getElementById('compCard').classList.remove('hidden');
     document.getElementById('compRows').innerHTML =
       makeCompRow('このシミュレーション', '日利受取 + $' + threshold + '再投資 + ' + fee + '%手数料',
-        sim.cashout, jpyRate, profitPct, '#3dd68c', 'rgba(61,214,140,0.15)') +
+        sim.cashout, jpyRate, profitPct, '#0fb981', 'pill-green') +
       makeCompRow('完全複利（日次）', '毎日全額再投資 + ' + fee + '%手数料',
-        compCashout, jpyRate, (compCashout / principal - 1) * 100, '#5b7fff', 'rgba(91,127,255,0.15)') +
+        compCashout, jpyRate, (compCashout / principal - 1) * 100, '#4f6ef7', 'pill-blue') +
       makeCompRow('単利（再投資なし）', '日利を別口座で受取 + ' + fee + '%手数料',
-        simpleCashout, jpyRate, (simpleCashout / principal - 1) * 100, '#f5c842', 'rgba(245,200,66,0.15)') +
+        simpleCashout, jpyRate, (simpleCashout / principal - 1) * 100, '#f59e0b', 'pill-yellow') +
       makeCompRow('元本のみ（投資なし）', '何もしない場合',
-        principal, jpyRate, 0, '#7a849e', 'rgba(122,132,158,0.15)');
+        principal, jpyRate, 0, '#6b7a9e', 'pill-gray');
 
     // グラフ
     document.getElementById('chartCard').classList.remove('hidden');
@@ -528,28 +630,42 @@ function simulate() {
     document.getElementById('tableCard').classList.remove('hidden');
     renderTable(sim.rows, false, jpyRate);
 
+    // 結果へスクロール
+    document.getElementById('summaryCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
   } catch (e) {
-    var errorBox = document.getElementById('errorBox');
-    errorBox.style.display = 'block';
-    errorBox.textContent = 'エラーが発生しました: ' + (e.message || e);
+    var eb = document.getElementById('errorBox');
+    eb.style.display = 'block';
+    eb.textContent = 'エラー: ' + (e.message || e);
   }
 }
 
-function makeCompRow(title, label, value, jpyRate, pctVal, color, tagBg) {
+function makeResultBox(cls, label, value, yen, sub, pillText, pillCls) {
+  return '<div class="result-box ' + cls + '">' +
+    '<div class="result-label">' + label + '</div>' +
+    '<div class="result-value">' + value +
+      (yen ? '<span class="yen">(' + yen + ')</span>' : '') +
+    '</div>' +
+    (sub ? '<div class="result-sub">' + sub + '</div>' : '') +
+    (pillText ? '<div><span class="pill ' + pillCls + '">' + pillText + '</span></div>' : '') +
+  '</div>';
+}
+
+function makeCompRow(title, label, value, jpyRate, pctVal, color, pillCls) {
   return '<div class="comparison-row">' +
-    '<div>' +
-      '<div style="font-weight:600">' + title + '</div>' +
+    '<div class="comp-left">' +
+      '<div class="comp-title">' + title + '</div>' +
       '<div class="comp-label">' + label + '</div>' +
     '</div>' +
-    '<div style="text-align:right">' +
+    '<div class="comp-right">' +
       '<div class="comp-value" style="color:' + color + '">' + fmtUSD(value) + '</div>' +
       '<div class="comp-yen">(' + fmtJPY(value, jpyRate) + ')</div>' +
-      '<span class="tag" style="background:' + tagBg + ';color:' + color + '">' + fmtPct(pctVal) + '</span>' +
+      '<span class="pill ' + pillCls + '">' + fmtPct(pctVal) + '</span>' +
     '</div>' +
   '</div>';
 }
 
-// ========== テーブル ==========
+// ===== テーブル =====
 function renderTable(rows, full, jpyRate) {
   if (jpyRate !== undefined) lastJpyRate = jpyRate;
   var rate  = lastJpyRate;
@@ -570,16 +686,16 @@ function renderTable(rows, full, jpyRate) {
   for (var i = 0; i < displayRows.length; i++) {
     var row = displayRows[i];
     if (row === null) {
-      html += '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:6px">・・・</td></tr>';
+      html += '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:8px;font-size:0.85rem">・・・</td></tr>';
       continue;
     }
     var cls = row.didReinvest ? ' class="reinvest"' : '';
     html += '<tr' + cls + '>' +
       '<td>' + row.day + '日' + (row.didReinvest ? ' ♻' : '') + '</td>' +
-      '<td>' + commaDec(row.principal)  + '<span class="td-yen">' + fmtJPY(row.principal, rate)  + '</span></td>' +
-      '<td>+' + commaDec(row.interest)  + '<span class="td-yen">' + fmtJPY(row.interest, rate)   + '</span></td>' +
-      '<td>' + commaDec(row.pending)    + '<span class="td-yen">' + fmtJPY(row.pending, rate)    + '</span></td>' +
-      '<td>' + commaDec(row.cashout)    + '<span class="td-yen">' + fmtJPY(row.cashout, rate)    + '</span></td>' +
+      '<td>' + commaDec(row.principal) + '<span class="td-yen">' + fmtJPY(row.principal, rate) + '</span></td>' +
+      '<td>+' + commaDec(row.interest) + '<span class="td-yen">' + fmtJPY(row.interest, rate) + '</span></td>' +
+      '<td>' + commaDec(row.pending)   + '<span class="td-yen">' + fmtJPY(row.pending, rate)   + '</span></td>' +
+      '<td>' + commaDec(row.cashout)   + '<span class="td-yen">' + fmtJPY(row.cashout, rate)   + '</span></td>' +
     '</tr>';
   }
   tbody.innerHTML = html;
@@ -597,7 +713,7 @@ function toggleFullTable() {
   }
 }
 
-// ========== グラフ（純Canvas） ==========
+// ===== グラフ（純Canvas） =====
 function drawChart(rows, principal, annualRate, fee) {
   var canvas = document.getElementById('chart');
   if (!canvas) return;
@@ -610,106 +726,94 @@ function drawChart(rows, principal, annualRate, fee) {
   canvas.width  = W;
   canvas.height = H;
 
-  // データ間引き（最大100点）
   var N    = rows.length;
   var step = Math.max(1, Math.floor(N / 100));
   var pts  = [];
   for (var i = 0; i < N; i += step) pts.push(rows[i]);
   if (pts[pts.length - 1] !== rows[N - 1]) pts.push(rows[N - 1]);
 
-  var simData    = [];
-  var compData   = [];
-  var simpleData = [];
+  var simData = [], compData = [], simpleData = [];
   for (var j = 0; j < pts.length; j++) {
     simData.push(pts[j].cashout);
-    var cv = principal * Math.pow(1 + annualRate / 100 / 365, pts[j].day);
-    compData.push(cv * (1 - feeRate));
-    var sv = principal * (1 + annualRate / 100 * pts[j].day / 365);
-    simpleData.push(sv * (1 - feeRate));
+    compData.push(principal * Math.pow(1 + annualRate / 100 / 365, pts[j].day) * (1 - feeRate));
+    simpleData.push(principal * (1 + annualRate / 100 * pts[j].day / 365) * (1 - feeRate));
   }
 
   var allVals = simData.concat(compData).concat(simpleData);
   var maxVal  = 0;
-  for (var k = 0; k < allVals.length; k++) {
-    if (allVals[k] > maxVal) maxVal = allVals[k];
-  }
+  for (var k = 0; k < allVals.length; k++) { if (allVals[k] > maxVal) maxVal = allVals[k]; }
   maxVal *= 1.08;
 
-  var PAD_L = 54, PAD_R = 12, PAD_T = 12, PAD_B = 28;
+  var PAD_L = 56, PAD_R = 14, PAD_T = 14, PAD_B = 30;
   var gW = W - PAD_L - PAD_R;
   var gH = H - PAD_T - PAD_B;
 
   // 背景
-  ctx.fillStyle = '#1a1d27';
+  ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, W, H);
 
-  // グリッド線
-  ctx.strokeStyle = '#2e3450';
+  // グリッド
+  ctx.strokeStyle = '#e8edff';
   ctx.lineWidth = 1;
-  var ticks = 4;
-  for (var t = 0; t <= ticks; t++) {
-    var gy = PAD_T + gH * t / ticks;
-    ctx.beginPath();
-    ctx.moveTo(PAD_L, gy);
-    ctx.lineTo(PAD_L + gW, gy);
-    ctx.stroke();
-
-    // Y軸ラベル
-    var yVal = maxVal * (1 - t / ticks);
-    var label = yVal >= 1000 ? '$' + Math.round(yVal / 1000) + 'k' : '$' + Math.round(yVal);
-    ctx.fillStyle = '#7a849e';
+  for (var t = 0; t <= 4; t++) {
+    var gy = PAD_T + gH * t / 4;
+    ctx.beginPath(); ctx.moveTo(PAD_L, gy); ctx.lineTo(PAD_L + gW, gy); ctx.stroke();
+    var yVal = maxVal * (1 - t / 4);
+    var lbl  = yVal >= 1000 ? '$' + Math.round(yVal / 1000) + 'k' : '$' + Math.round(yVal);
+    ctx.fillStyle = '#6b7a9e';
     ctx.font = '10px Arial';
     ctx.textAlign = 'right';
-    ctx.fillText(label, PAD_L - 4, gy + 3);
+    ctx.fillText(lbl, PAD_L - 4, gy + 4);
   }
 
   // X軸ラベル
-  ctx.fillStyle = '#7a849e';
+  ctx.fillStyle = '#6b7a9e';
   ctx.font = '10px Arial';
   ctx.textAlign = 'center';
-  var xLabels = [0, Math.floor(pts.length / 2), pts.length - 1];
-  for (var xi = 0; xi < xLabels.length; xi++) {
-    var idx = xLabels[xi];
+  var xIdxs = [0, Math.floor(pts.length / 2), pts.length - 1];
+  for (var xi = 0; xi < xIdxs.length; xi++) {
+    var idx = xIdxs[xi];
     var xp  = PAD_L + gW * idx / (pts.length - 1 || 1);
-    ctx.fillText(pts[idx].day + '日', xp, H - 6);
+    ctx.fillText(pts[idx].day + '日', xp, H - 8);
   }
 
-  // 折れ線描画
+  function px(i) { return PAD_L + gW * i / (simData.length - 1 || 1); }
+  function py(v) { return PAD_T + gH * (1 - v / maxVal); }
+
+  // 塗りつぶし（シミュレーション）
+  var grad = ctx.createLinearGradient(0, PAD_T, 0, PAD_T + gH);
+  grad.addColorStop(0, 'rgba(15,185,129,0.18)');
+  grad.addColorStop(1, 'rgba(15,185,129,0.01)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  for (var fi = 0; fi < simData.length; fi++) {
+    if (fi === 0) ctx.moveTo(px(fi), py(simData[fi]));
+    else          ctx.lineTo(px(fi), py(simData[fi]));
+  }
+  ctx.lineTo(px(simData.length - 1), PAD_T + gH);
+  ctx.lineTo(PAD_L, PAD_T + gH);
+  ctx.closePath();
+  ctx.fill();
+
   function drawLine(data, color, dash) {
     ctx.strokeStyle = color;
-    ctx.lineWidth   = 2;
+    ctx.lineWidth   = 2.5;
     ctx.setLineDash(dash || []);
     ctx.beginPath();
     for (var di = 0; di < data.length; di++) {
-      var px = PAD_L + gW * di / (data.length - 1 || 1);
-      var py = PAD_T + gH * (1 - data[di] / maxVal);
-      if (di === 0) ctx.moveTo(px, py);
-      else          ctx.lineTo(px, py);
+      if (di === 0) ctx.moveTo(px(di), py(data[di]));
+      else          ctx.lineTo(px(di), py(data[di]));
     }
     ctx.stroke();
     ctx.setLineDash([]);
   }
 
-  // 塗りつぶし（シミュレーション）
-  ctx.fillStyle = 'rgba(61,214,140,0.1)';
-  ctx.beginPath();
-  for (var fi = 0; fi < simData.length; fi++) {
-    var fpx = PAD_L + gW * fi / (simData.length - 1 || 1);
-    var fpy = PAD_T + gH * (1 - simData[fi] / maxVal);
-    if (fi === 0) ctx.moveTo(fpx, fpy);
-    else          ctx.lineTo(fpx, fpy);
-  }
-  ctx.lineTo(PAD_L + gW, PAD_T + gH);
-  ctx.lineTo(PAD_L, PAD_T + gH);
-  ctx.closePath();
-  ctx.fill();
-
-  drawLine(simpleData, '#f5c842', [4, 4]);
-  drawLine(compData,   '#5b7fff', [6, 3]);
-  drawLine(simData,    '#3dd68c');
+  drawLine(simpleData, '#f59e0b', [5, 4]);
+  drawLine(compData,   '#4f6ef7', [7, 3]);
+  drawLine(simData,    '#0fb981');
 }
 
-// ========== 起動 ==========
+// ===== 起動 =====
 window.onload = function() { simulate(); };
 </script>
 </body>
