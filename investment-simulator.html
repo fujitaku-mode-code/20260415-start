@@ -433,7 +433,7 @@
 
     .milestone-body {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       border-top: 1px solid rgba(0,0,0,0.07);
     }
 
@@ -585,6 +585,7 @@
       <thead>
         <tr>
           <th>日</th>
+          <th id="thDate" class="hidden">日付</th>
           <th>元本($)<br><span style="font-weight:400">(円)</span></th>
           <th>日利($)<br><span style="font-weight:400">(円)</span></th>
           <th>累積利益($)<br><span style="font-weight:400">(円)</span></th>
@@ -659,6 +660,7 @@ function compoundValue(principal, annualRate, days) {
 // ===== グローバル状態 =====
 var lastRows = [];
 var lastJpyRate = 155;
+var lastStartDate = null;
 var fullTableVisible = false;
 
 // ===== メイン =====
@@ -734,6 +736,7 @@ function simulate() {
     // マイルストーン
     var startDateVal = document.getElementById('startDate').value;
     var startDate    = startDateVal ? new Date(startDateVal + 'T00:00:00') : new Date();
+    lastStartDate    = startDate;
     renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate);
 
     // グラフ
@@ -780,11 +783,24 @@ function makeCompRow(title, label, value, jpyRate, pctVal, color, pillCls) {
 }
 
 // ===== テーブル =====
+function rowDate(day) {
+  if (!lastStartDate) return '';
+  var d = new Date(lastStartDate.getTime());
+  d.setDate(d.getDate() + day);
+  return (d.getMonth() + 1) + '/' + d.getDate();
+}
+
 function renderTable(rows, full, jpyRate) {
   if (jpyRate !== undefined) lastJpyRate = jpyRate;
-  var rate  = lastJpyRate;
-  var tbody = document.getElementById('tableBody');
-  var btn   = document.getElementById('showMoreBtn');
+  var rate     = lastJpyRate;
+  var hasDate  = !!lastStartDate;
+  var tbody    = document.getElementById('tableBody');
+  var btn      = document.getElementById('showMoreBtn');
+  var thDate   = document.getElementById('thDate');
+
+  // 日付列ヘッダーの表示切替
+  if (hasDate) thDate.classList.remove('hidden');
+  else         thDate.classList.add('hidden');
 
   var displayRows;
   if (full || rows.length <= 30) {
@@ -796,16 +812,19 @@ function renderTable(rows, full, jpyRate) {
     btn.textContent = '\u25bc 全 ' + rows.length + ' 日を表示';
   }
 
+  var cols = hasDate ? 6 : 5;
   var html = '';
   for (var i = 0; i < displayRows.length; i++) {
     var row = displayRows[i];
     if (row === null) {
-      html += '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:8px;font-size:0.85rem">・・・</td></tr>';
+      html += '<tr><td colspan="' + cols + '" style="text-align:center;color:var(--muted);padding:8px;font-size:0.85rem">・・・</td></tr>';
       continue;
     }
     var cls = row.didReinvest ? ' class="reinvest"' : '';
+    var dateTd = hasDate ? '<td style="color:var(--muted);font-size:0.78rem">' + rowDate(row.day) + '</td>' : '';
     html += '<tr' + cls + '>' +
       '<td>' + row.day + '日' + (row.didReinvest ? ' ♻' : '') + '</td>' +
+      dateTd +
       '<td>' + commaDec(row.principal) + '<span class="td-yen">' + fmtJPY(row.principal, rate) + '</span></td>' +
       '<td>+' + commaDec(row.interest) + '<span class="td-yen">' + fmtJPY(row.interest, rate) + '</span></td>' +
       '<td>' + commaDec(row.pending)   + '<span class="td-yen">' + fmtJPY(row.pending, rate)   + '</span></td>' +
@@ -978,8 +997,7 @@ function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startD
         '</div>' +
         '<div class="milestone-body" style="background:#fff">' +
           makeMilestoneCell('単利', simpVal, simpPct, jpyRate, m.color) +
-          makeMilestoneCell('完全複利', compVal, compPct, jpyRate, m.color) +
-          makeMilestoneCell('このシミュ', simVal, simPct, jpyRate, m.color) +
+          makeMilestoneCell('複利（日次）', compVal, compPct, jpyRate, m.color) +
         '</div>' +
       '</div>';
   }
