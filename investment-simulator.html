@@ -377,6 +377,102 @@
       border-top: 1.5px solid var(--border);
       margin: 4px 0 14px;
     }
+
+    /* ===== 日付入力 ===== */
+    input[type="date"] {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 10px 12px;
+      width: 100%;
+      outline: none;
+    }
+    input[type="date"]:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(79,110,247,0.12);
+    }
+
+    /* ===== マイルストーンテーブル ===== */
+    .milestone-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .milestone-row {
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+    }
+
+    .milestone-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .milestone-date {
+      font-size: 0.78rem;
+      font-weight: 500;
+      opacity: 0.85;
+    }
+
+    .milestone-days {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.35);
+    }
+
+    .milestone-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border-top: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .milestone-cell {
+      padding: 10px 10px;
+      text-align: center;
+      border-right: 1px solid rgba(0,0,0,0.07);
+    }
+    .milestone-cell:last-child { border-right: none; }
+
+    .milestone-cell-label {
+      font-size: 0.67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      opacity: 0.65;
+      margin-bottom: 3px;
+    }
+
+    .milestone-cell-value {
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .milestone-cell-yen {
+      font-size: 0.68rem;
+      opacity: 0.65;
+      margin-top: 1px;
+    }
+
+    .milestone-cell-pct {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 3px;
+      background: rgba(255,255,255,0.4);
+    }
   </style>
 </head>
 <body>
@@ -422,6 +518,10 @@
       <label>円換算レート（円/$）</label>
       <input type="number" id="jpyRate" value="155" min="1" step="1" />
     </div>
+    <div class="input-group" style="grid-column: 1 / -1;">
+      <label>開始日（今日の日付）</label>
+      <input type="date" id="startDate" />
+    </div>
   </div>
 
   <!-- ボタンは入力のすぐ下 -->
@@ -437,6 +537,15 @@
   </div>
   <div class="results-grid" id="summaryGrid"></div>
   <div class="assumptions" id="assumptionsText"></div>
+</div>
+
+<!-- マイルストーン -->
+<div class="card hidden" id="milestoneCard">
+  <div class="card-title">
+    <span class="card-title-icon" style="background:rgba(155,92,246,0.12)">📅</span>
+    期間別シミュレーション（単利・複利・このシミュ）
+  </div>
+  <div class="milestone-grid" id="milestoneGrid"></div>
 </div>
 
 <!-- 複利比較 -->
@@ -621,6 +730,11 @@ function simulate() {
         simpleCashout, jpyRate, (simpleCashout / principal - 1) * 100, '#f59e0b', 'pill-yellow') +
       makeCompRow('元本のみ（投資なし）', '何もしない場合',
         principal, jpyRate, 0, '#6b7a9e', 'pill-gray');
+
+    // マイルストーン
+    var startDateVal = document.getElementById('startDate').value;
+    var startDate    = startDateVal ? new Date(startDateVal + 'T00:00:00') : new Date();
+    renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate);
 
     // グラフ
     document.getElementById('chartCard').classList.remove('hidden');
@@ -813,8 +927,84 @@ function drawChart(rows, principal, annualRate, fee) {
   drawLine(simData,    '#0fb981');
 }
 
+// ===== マイルストーン =====
+function addMonths(date, months) {
+  var d = new Date(date.getTime());
+  d.setMonth(d.getMonth() + months);
+  return d;
+}
+
+function fmtDate(d) {
+  return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate();
+}
+
+function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
+  var card = document.getElementById('milestoneCard');
+  var grid = document.getElementById('milestoneGrid');
+  card.classList.remove('hidden');
+
+  var milestones = [
+    { label: '3ヶ月後',  date: addMonths(startDate, 3),  color: '#0fb981', bg: 'linear-gradient(135deg,#d0f5e8,#b8f0d8)', border: '#82dbb8' },
+    { label: '6ヶ月後',  date: addMonths(startDate, 6),  color: '#4f6ef7', bg: 'linear-gradient(135deg,#dce5ff,#c8d8ff)', border: '#9ab2ff' },
+    { label: '12ヶ月後', date: addMonths(startDate, 12), color: '#9b5cf6', bg: 'linear-gradient(135deg,#ede0ff,#ddc8ff)', border: '#c49aff' },
+    { label: '2年後',    date: addMonths(startDate, 24), color: '#f59e0b', bg: 'linear-gradient(135deg,#fff3cc,#ffe8a0)', border: '#ffd260' }
+  ];
+
+  var html = '';
+  for (var i = 0; i < milestones.length; i++) {
+    var m    = milestones[i];
+    var days = Math.round((m.date - startDate) / 86400000);
+    if (days <= 0) days = 1;
+
+    // このシミュレーション
+    var sim    = runSimulation(principal, days, annualRate, fee, threshold);
+    var simVal = sim.cashout;
+    var simPct = (simVal / principal - 1) * 100;
+
+    // 完全複利
+    var compVal = compoundValue(principal, annualRate, days) * (1 - fee / 100);
+    var compPct = (compVal / principal - 1) * 100;
+
+    // 単利
+    var simpVal = principal * (1 + annualRate / 100 * days / 365) * (1 - fee / 100);
+    var simpPct = (simpVal / principal - 1) * 100;
+
+    html +=
+      '<div class="milestone-row" style="border-color:' + m.border + '">' +
+        '<div class="milestone-header" style="background:' + m.bg + ';color:' + m.color + '">' +
+          '<span>' + m.label + '</span>' +
+          '<span class="milestone-date">' + fmtDate(m.date) + '</span>' +
+          '<span class="milestone-days">' + days + '日</span>' +
+        '</div>' +
+        '<div class="milestone-body" style="background:#fff">' +
+          makeMilestoneCell('単利', simpVal, simpPct, jpyRate, m.color) +
+          makeMilestoneCell('完全複利', compVal, compPct, jpyRate, m.color) +
+          makeMilestoneCell('このシミュ', simVal, simPct, jpyRate, m.color) +
+        '</div>' +
+      '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function makeMilestoneCell(label, value, pct, jpyRate, color) {
+  return '<div class="milestone-cell">' +
+    '<div class="milestone-cell-label">' + label + '</div>' +
+    '<div class="milestone-cell-value" style="color:' + color + '">' + fmtUSD(value) + '</div>' +
+    '<div class="milestone-cell-yen">' + fmtJPY(value, jpyRate) + '</div>' +
+    '<div class="milestone-cell-pct">' + fmtPct(pct) + '</div>' +
+  '</div>';
+}
+
 // ===== 起動 =====
-window.onload = function() { simulate(); };
+window.onload = function() {
+  // 今日の日付をデフォルトにセット
+  var today = new Date();
+  var yyyy  = today.getFullYear();
+  var mm    = ('0' + (today.getMonth() + 1)).slice(-2);
+  var dd    = ('0' + today.getDate()).slice(-2);
+  document.getElementById('startDate').value = yyyy + '-' + mm + '-' + dd;
+  simulate();
+};
 </script>
 </body>
 </html>
