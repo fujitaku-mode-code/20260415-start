@@ -281,11 +281,9 @@
       grid-column: 1 / -1;
       font-size: 0.72rem; font-weight: 700;
       color: #b07800;
-      text-align: center;
-      background: rgba(255,200,0,0.13);
-      border-radius: 8px;
-      padding: 5px 10px;
-      margin-top: -2px;
+      text-align: left;
+      padding: 2px 2px;
+      margin-top: -4px;
     }
 
     /* マイルストーン文字サイズ拡大 */
@@ -297,6 +295,11 @@
     .milestone-cell-value { font-size: 1.05rem !important; }
     .milestone-cell-yen   { font-size: 0.8rem !important; margin-top: 3px !important; }
     .milestone-cell-pct   { font-size: 0.8rem !important; padding: 2px 8px !important; margin-top: 5px !important; }
+
+    .sim-note {
+      font-size: 0.72rem; color: var(--muted);
+      text-align: center; margin-top: 8px;
+    }
 
     .hidden { display: none; }
   </style>
@@ -329,7 +332,7 @@
   <div class="rate-banner">
     <div style="flex:1">
       <div class="rate-label">現在の為替レート</div>
-      <div class="rate-value" id="rateValue">--- 円 / ドル</div>
+      <div class="rate-value" id="rateValue">155 円 / ドル</div>
       <div class="rate-date"  id="rateDate">取得中...</div>
       <div style="font-size:0.7rem;color:var(--muted);margin-top:2px" id="rateTime"></div>
     </div>
@@ -341,10 +344,6 @@
       <label>⭐ 初期投資額（$）</label>
       <input type="number" id="principal" value="1000" min="1" step="100" oninput="updatePrincipalYen()" />
       <div class="input-yen" id="principalYen"></div>
-    </div>
-    <div class="input-group required-field">
-      <label>⭐ 開始日</label>
-      <input type="date" id="startDate" />
     </div>
     <div class="required-hint">※黄色の枠内へ入力</div>
     <div class="input-group">
@@ -366,6 +365,7 @@
   </div>
 
   <button class="btn" onclick="simulate()">📊 シミュレーション実行</button>
+  <p class="sim-note">前提条件：開始日を本日とした場合のシミュレーションです。</p>
 </div>
 
 <!-- 期間別シミュレーション -->
@@ -513,9 +513,9 @@ function fallbackRate() {
   document.getElementById('rateTime').textContent  = nowTimeStr();
 }
 function fetchRate() {
-  document.getElementById('rateDate').textContent = '取得中...';
+  document.getElementById('rateDate').textContent  = '取得中...';
   document.getElementById('rateValue').textContent = gJpyRate + ' 円 / ドル';
-  document.getElementById('rateTime').textContent  = nowTimeStr() + '（設定値）';
+  document.getElementById('rateTime').textContent  = '';
 
   // API 1: open.er-api.com
   var xhr1 = new XMLHttpRequest();
@@ -589,8 +589,7 @@ function simulate() {
     fullTableVisible = false;
     gSimParams = { principal: principal, annualRate: annualRate, fee: fee, days: days, jpyRate: jpyRate };
 
-    var startDateVal = document.getElementById('startDate').value;
-    lastStartDate    = startDateVal ? new Date(startDateVal + 'T00:00:00') : null;
+    lastStartDate = new Date();
 
     var compCashout   = compoundValue(principal, annualRate, days) * (1 - fee / 100);
     var simpleCashout = principal * (1 + annualRate / 100 * days / 365) * (1 - fee / 100);
@@ -605,10 +604,7 @@ function simulate() {
       makeCompRow('複利（日次複利）', '毎日全額が複利で運用',
         compCashout,   jpyRate, (compCashout   / principal - 1) * 100, 'accent',  'pill-accent');
 
-    document.getElementById('assumptionsText').innerHTML =
-      '<strong>前提条件：</strong><br>' +
-      '年利 ' + annualRate + '% ／ 出金手数料: ' + fee + '% ／ レート: ' + jpyRate + '円/$<br>' +
-      '元本: ' + fmtUSD(principal) + '（' + fmtJPY(principal, jpyRate) + '）／ 運用日数: ' + days + '日';
+    document.getElementById('assumptionsText').innerHTML = '';
 
     // マイルストーン
     var startDate = lastStartDate || new Date();
@@ -929,12 +925,6 @@ window.onload = function() {
     var saved = localStorage.getItem('sim_theme');
     if (saved && THEMES[saved]) setTheme(saved);
   } catch(e) {}
-
-  // 今日の日付
-  var t  = new Date();
-  var mm = ('0' + (t.getMonth()+1)).slice(-2);
-  var dd = ('0' + t.getDate()).slice(-2);
-  document.getElementById('startDate').value = t.getFullYear() + '-' + mm + '-' + dd;
 
   fetchRate();
   simulate();
