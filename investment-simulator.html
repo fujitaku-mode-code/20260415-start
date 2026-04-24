@@ -333,6 +333,10 @@
     .step-text b { color: var(--accent); }
     .step-note { font-size: 0.74rem; color: #d32f2f; font-weight: 600; margin-top: 3px; }
     .guide-done { background: rgba(15,185,129,0.1); border: 1.5px solid #0fb981; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 700; color: #0a9e6d; text-align: center; }
+    /* ===== PDF実際の画面 ===== */
+    .pdf-pages { display: flex; flex-direction: column; gap: 16px; margin-bottom: 18px; }
+    .pdf-page { border-radius: 14px; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.13); border: 1.5px solid var(--border); background: #fff; }
+    .pdf-page img { width: 100%; display: block; }
     /* ===== SNSリンク ===== */
     .sns-card { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 10px; text-decoration: none; color: var(--text); transition: background 0.15s; }
     .sns-card:active { background: var(--border); }
@@ -482,24 +486,14 @@
   <!-- ガイド1 -->
   <div class="card">
     <div class="card-title"><span class="card-title-icon" style="background:rgba(79,110,247,0.12)">💳</span>biteradeX → bitget wallet → カードへ入金</div>
-    <div class="guide-title">📋 作業の流れ（全10ステップ）</div>
-    <div class="step-list">
-      <div class="step-item"><div class="step-num">①</div><div class="step-text">bitget walletのアプリを開き、トークンの中の<b>【solチェーンのUSDT】</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">②</div><div class="step-text">左下の<b>【受け取る】</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">③</div><div class="step-text">受け取りアドレス横の<b>【コピーボタン】</b>を押す<div class="step-note">※ SOLチェーンになっていることを念のため確認</div></div></div>
-      <div class="step-item"><div class="step-num">④</div><div class="step-text">bitradeXのアプリを開き、右下の<b>【資産】</b>→ 資産の中の<b>【USDT】</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑤</div><div class="step-text">右下の<b>【出金】</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑥</div><div class="step-text">下部に出てくる出金タイプの<b>【オンチェーン出金】</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑦</div><div class="step-text">
-        ⑦-1 アドレス入力欄に、bitget walletでコピーしたアドレスを<b>貼り付け</b>る<br>
-        <span style="font-size:0.74rem;color:#d32f2f;font-weight:600">※ アドレスの上2文字・下2文字を確認してください</span><br>
-        ⑦-2 ネットワーク選択で<b>【SOL(Solana)】</b>を選ぶ<br>
-        ⑦-3 全額引き出す場合は<b>【全て】</b>ボタンを押す<br>
-        ⑦-4 最下部の<b>【出金ボタン】</b>を押す
-      </div></div>
-      <div class="step-item"><div class="step-num">⑧</div><div class="step-text">bitget walletのアプリを開き、最下部右の<b>【ウォレット】</b>→<b>【カード】</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑨</div><div class="step-text">最下部の<b>【チャージ】</b>ボタンを押す</div></div>
-      <div class="step-item"><div class="step-num">⑩</div><div class="step-text">真ん中右横の<b>【100%】</b>→<b>【次へ】</b>→<b>【承認】</b>を押す</div></div>
+    <div class="guide-title">📋 実際の操作画面（全6ページ）</div>
+    <div class="pdf-pages">
+      <div class="pdf-page"><img src="tools/pdf_images/guide1_p01.jpg" alt="操作手順 1" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide1_p02.jpg" alt="操作手順 2" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide1_p03.jpg" alt="操作手順 3" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide1_p04.jpg" alt="操作手順 4" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide1_p05.jpg" alt="操作手順 5" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide1_p06.jpg" alt="操作手順 6" loading="lazy"></div>
     </div>
     <div class="guide-done">✅ Apple Payに紐づいたデビットカードへの入金完了！</div>
   </div>
@@ -507,24 +501,18 @@
   <!-- ガイド2 -->
   <div class="card">
     <div class="card-title"><span class="card-title-icon" style="background:rgba(155,92,246,0.12)">🤖</span>bitradex AI BOT → USDT変換まで</div>
-    <div class="guide-title">📋 作業の流れ（全16ステップ）</div>
-    <div class="step-list">
-      <div class="step-item"><div class="step-num">①</div><div class="step-text">右下の<b>「資産」</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">②</div><div class="step-text">上部タブの<b>「AI」</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">③</div><div class="step-text">中間タブの<b>「収益プール」</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">④</div><div class="step-text">グラデーション色の右側の<b>「収益の引き出し」</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑤</div><div class="step-text"><b>「MAX」</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑥</div><div class="step-text"><b>「今すぐ引き出す」</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑦</div><div class="step-text">「利益引き出し確認」ダイアログの<b>「確認」</b>ボタンを押す</div></div>
-      <div class="step-item"><div class="step-num">⑧</div><div class="step-text"><b>「交換」</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑨</div><div class="step-text"><b>「MAX」</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑩</div><div class="step-text"><b>「今すぐ交換」</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑪</div><div class="step-text"><b>「振替」</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑫</div><div class="step-text"><b>「矢印ボタン」</b>を押して、上部が<b>「AIアカウント」</b>・下部が<b>「現物」</b>になるよう切り替える</div></div>
-      <div class="step-item"><div class="step-num">⑬</div><div class="step-text">通貨表示を<b>「USDN」→「BTX」</b>に変更する</div></div>
-      <div class="step-item"><div class="step-num">⑭</div><div class="step-text"><b>「全て」</b>を押す</div></div>
-      <div class="step-item"><div class="step-num">⑮</div><div class="step-text"><b>「確認」</b>を押す → BTXに数字が入っていることを確認</div></div>
-      <div class="step-item"><div class="step-num">⑯</div><div class="step-text">市場画面で<b>「BTX/USDT」</b>表示を確認 →<b>「売却」</b>タブ →<b>「成行注文」</b>に変更 →<b>黒ボタン</b>を右端まで移動 →<b>「売却BTX」</b>を押す</div></div>
+    <div class="guide-title">📋 実際の操作画面（全10ページ）</div>
+    <div class="pdf-pages">
+      <div class="pdf-page"><img src="tools/pdf_images/guide2_p01.jpg" alt="操作手順 1" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide2_p02.jpg" alt="操作手順 2" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide2_p03.jpg" alt="操作手順 3" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide2_p04.jpg" alt="操作手順 4" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide2_p05.jpg" alt="操作手順 5" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide2_p06.jpg" alt="操作手順 6" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide2_p07.jpg" alt="操作手順 7" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide2_p08.jpg" alt="操作手順 8" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide2_p09.jpg" alt="操作手順 9" loading="lazy"></div>
+      <div class="pdf-page"><img src="tools/pdf_images/guide2_p10.jpg" alt="操作手順 10" loading="lazy"></div>
     </div>
     <div class="guide-done">✅ USDTに金額が表示されていれば作業完了！</div>
   </div>
