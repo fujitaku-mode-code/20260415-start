@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>投資シミュレーター v6</title>
+  <title>投資シミュレーター v8</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -275,7 +275,7 @@
 
     /* マイルストーン文字サイズ拡大 */
     .milestone-header     { font-size: 1.05rem !important; padding: 12px 16px !important; }
-    .milestone-date       { font-size: 0.9rem !important; }
+    .milestone-date       { font-size: 1.0rem !important; font-weight: 700 !important; }
     .milestone-days       { font-size: 0.82rem !important; padding: 3px 10px !important; }
     .milestone-cell       { padding: 14px 10px !important; }
     .milestone-cell-label { font-size: 0.78rem !important; margin-bottom: 5px !important; }
@@ -636,7 +636,10 @@ function makeCompRow(title, label, value, jpyRate, pctVal, colorKey, pillCls) {
 function addMonths(date, months) {
   var d = new Date(date.getTime()); d.setMonth(d.getMonth() + months); return d;
 }
-function fmtDate(d) { return d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate(); }
+function fmtDate(d) {
+  var w = ['日','月','火','水','木','金','土'];
+  return d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate() + '（' + w[d.getDay()] + '）';
+}
 
 function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
   document.getElementById('milestoneCard').classList.remove('hidden');
