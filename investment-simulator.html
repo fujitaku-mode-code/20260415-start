@@ -3,23 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>年利180% 投資シミュレーター</title>
+  <title>投資シミュレーター</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ===== テーマ変数 ===== */
     :root {
-      --bg:      #f0f4ff;
-      --white:   #ffffff;
-      --border:  #dde3f5;
-      --blue:    #4f6ef7;
-      --blue2:   #7c9bff;
-      --green:   #0fb981;
-      --orange:  #ff6b3d;
-      --purple:  #9b5cf6;
-      --yellow:  #f59e0b;
-      --text:    #1a2040;
-      --muted:   #6b7a9e;
-      --radius:  16px;
+      --bg:         #f0f4ff;
+      --white:      #ffffff;
+      --border:     #dde3f5;
+      --accent:     #4f6ef7;
+      --accent2:    #9b5cf6;
+      --btn-grad:   linear-gradient(135deg, #4f6ef7, #9b5cf6);
+      --rate-bg:    linear-gradient(135deg, #eef2ff, #f5f0ff);
+      --rate-border:#c8d2ff;
+      --text:       #1a2040;
+      --muted:      #6b7a9e;
+      --green:      #0fb981;
+      --orange:     #ff6b3d;
+      --yellow:     #f59e0b;
+      --grid-line:  #e8edff;
+      --radius:     16px;
+    }
+
+    body.theme-black {
+      --bg:          #f4f5f7;
+      --border:      #a8b4c4;
+      --accent:      #1e2a3a;
+      --accent2:     #3d4f66;
+      --btn-grad:    linear-gradient(135deg, #1e2a3a, #3d4f66);
+      --rate-bg:     linear-gradient(135deg, #ecedf0, #e4e6ea);
+      --rate-border: #a8b4c4;
+      --muted:       #546278;
+      --grid-line:   #dde0e6;
+    }
+
+    body.theme-red {
+      --bg:          #fff4f4;
+      --border:      #f5bfc5;
+      --accent:      #e63946;
+      --accent2:     #c1121f;
+      --btn-grad:    linear-gradient(135deg, #e63946, #c1121f);
+      --rate-bg:     linear-gradient(135deg, #fff0f1, #ffe6e8);
+      --rate-border: #f5b0b6;
+      --muted:       #8a5a5e;
+      --grid-line:   #ffe0e2;
     }
 
     body {
@@ -34,448 +62,216 @@
       margin: 0 auto;
     }
 
-    /* ===== ヘッダー ===== */
-    .header {
-      text-align: center;
-      padding: 24px 0 20px;
-    }
-
-    .header-icon {
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, var(--blue), var(--purple));
-      border-radius: 16px;
+    /* ===== テーマ選択バー ===== */
+    .theme-bar {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      margin: 0 auto 12px;
-      box-shadow: 0 6px 20px rgba(79,110,247,0.35);
+      justify-content: flex-end;
+      gap: 8px;
+      margin-bottom: 12px;
     }
-
-    h1 {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-
-    .subtitle {
+    .theme-bar-label {
+      font-size: 0.75rem;
       color: var(--muted);
-      font-size: 0.82rem;
+      font-weight: 600;
+      margin-right: 4px;
     }
+    .theme-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; font-weight: 700; color: #fff;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .theme-btn:active { transform: scale(0.9); }
+    .theme-btn.active { border-color: var(--text); transform: scale(1.1); }
+    .theme-btn-blue  { background: linear-gradient(135deg, #4f6ef7, #9b5cf6); }
+    .theme-btn-black { background: linear-gradient(135deg, #1e2a3a, #3d4f66); }
+    .theme-btn-red   { background: linear-gradient(135deg, #e63946, #c1121f); }
+
+    /* ===== ヘッダー ===== */
+    .header { text-align: center; padding: 8px 0 16px; }
+    .header-icon {
+      width: 52px; height: 52px;
+      background: var(--btn-grad);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin: 0 auto 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    }
+    h1 { font-size: 1.35rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+    .subtitle { color: var(--muted); font-size: 0.82rem; }
 
     /* ===== カード ===== */
     .card {
       background: var(--white);
-      border: 1px solid var(--border);
+      border: 1.5px solid var(--border);
       border-radius: var(--radius);
-      padding: 20px;
+      padding: 18px;
       margin-bottom: 14px;
-      box-shadow: 0 2px 12px rgba(79,110,247,0.07);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-
     .card-title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      font-size: 0.85rem; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
       margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card-title-icon {
+      width: 22px; height: 22px; border-radius: 6px;
+      display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;
     }
 
-    .card-title-icon {
-      width: 24px;
-      height: 24px;
-      border-radius: 6px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
+    /* ===== 為替レートバナー ===== */
+    .rate-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--rate-bg);
+      border: 1.5px solid var(--rate-border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      gap: 8px;
     }
+    .rate-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .rate-value { font-size: 1.1rem; font-weight: 800; color: var(--accent); }
+    .rate-date  { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+    .rate-btn {
+      background: var(--btn-grad); color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 0.8rem; font-weight: 700;
+      padding: 8px 12px; cursor: pointer; white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .rate-btn:active { opacity: 0.8; }
 
     /* ===== 入力 ===== */
     .input-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;
     }
-
-    @media (max-width: 400px) {
-      .input-grid { grid-template-columns: 1fr; }
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    label {
-      font-size: 0.78rem;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    input[type="number"] {
+    @media (max-width: 400px) { .input-grid { grid-template-columns: 1fr; } }
+    .input-group { display: flex; flex-direction: column; gap: 4px; }
+    label { font-size: 0.78rem; color: var(--muted); font-weight: 600; }
+    input[type="number"], input[type="date"] {
       background: var(--bg);
       border: 1.5px solid var(--border);
       border-radius: 10px;
       color: var(--text);
-      font-size: 1rem;
-      font-weight: 600;
-      padding: 10px 12px;
-      width: 100%;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      font-size: 1rem; font-weight: 600;
+      padding: 10px 12px; width: 100%; outline: none;
     }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,0,0,0.06); }
+    .input-yen { font-size: 0.78rem; font-weight: 700; color: var(--accent); padding: 0 2px; }
 
-    input[type="number"]:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(79,110,247,0.12);
-    }
-
-    /* ===== ボタン ===== */
     .btn {
-      background: linear-gradient(135deg, var(--blue), var(--purple));
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 700;
-      padding: 15px;
-      width: 100%;
-      cursor: pointer;
-      box-shadow: 0 4px 16px rgba(79,110,247,0.35);
-      letter-spacing: 0.02em;
+      background: var(--btn-grad); color: #fff;
+      border: none; border-radius: 12px;
+      font-size: 1rem; font-weight: 700; padding: 14px;
+      width: 100%; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
     }
+    .btn:active { opacity: 0.88; }
 
-    .btn:active { opacity: 0.88; transform: scale(0.98); }
-
-    /* ===== エラー ===== */
     .error-box {
-      background: #fff0f0;
-      border: 1.5px solid #ffaaaa;
-      border-radius: 10px;
-      color: #c0392b;
-      font-size: 0.85rem;
-      padding: 12px;
-      margin-bottom: 14px;
-      display: none;
+      background: #fff0f0; border: 1.5px solid #ffaaaa;
+      border-radius: 10px; color: #c0392b;
+      font-size: 0.85rem; padding: 12px; margin-bottom: 14px; display: none;
     }
 
-    /* ===== 結果サマリー ===== */
-    .results-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
+    /* ===== マイルストーン ===== */
+    .milestone-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .milestone-row { border-radius: 12px; border: 1.5px solid var(--border); overflow: hidden; }
+    .milestone-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; font-weight: 700; font-size: 0.95rem;
     }
+    .milestone-date { font-size: 0.78rem; font-weight: 500; opacity: 0.85; }
+    .milestone-days { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: rgba(255,255,255,0.4); }
+    .milestone-body { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid rgba(0,0,0,0.07); }
+    .milestone-cell { padding: 10px; text-align: center; border-right: 1px solid rgba(0,0,0,0.07); }
+    .milestone-cell:last-child { border-right: none; }
+    .milestone-cell-label { font-size: 0.67rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.6; margin-bottom: 3px; }
+    .milestone-cell-value { font-size: 0.9rem; font-weight: 800; }
+    .milestone-cell-yen   { font-size: 0.68rem; opacity: 0.6; margin-top: 1px; }
+    .milestone-cell-pct   { font-size: 0.7rem; font-weight: 700; padding: 1px 6px; border-radius: 20px; display: inline-block; margin-top: 3px; background: rgba(255,255,255,0.45); }
 
-    @media (max-width: 400px) {
-      .results-grid { grid-template-columns: 1fr; }
-    }
+    /* ===== 複利比較 ===== */
+    .comparison-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--border); }
+    .comparison-row:last-child { border-bottom: none; }
+    .comp-left  { flex: 1; }
+    .comp-title { font-weight: 700; font-size: 0.9rem; }
+    .comp-label { font-size: 0.74rem; color: var(--muted); }
+    .comp-right { text-align: right; }
+    .comp-value { font-weight: 800; font-size: 1rem; }
+    .comp-yen   { font-size: 0.74rem; color: var(--muted); }
+    .pill { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 20px; margin-top: 3px; }
+    .pill-accent { background: rgba(0,0,0,0.07); color: var(--accent); }
+    .pill-yellow { background: rgba(245,158,11,0.13); color: #b57b08; }
+    .pill-gray   { background: rgba(107,122,158,0.12); color: var(--muted); }
 
-    .result-box {
-      border-radius: 12px;
-      padding: 14px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .result-box::before {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      width: 60px; height: 60px;
-      border-radius: 50%;
-      opacity: 0.12;
-      transform: translate(15px, -15px);
-    }
-
-    .rb-green  { background: linear-gradient(135deg, #e8faf3, #d0f5e5); border: 1.5px solid #a8e6cc; }
-    .rb-green::before { background: var(--green); }
-
-    .rb-blue   { background: linear-gradient(135deg, #eef2ff, #dce5ff); border: 1.5px solid #b4c6ff; }
-    .rb-blue::before { background: var(--blue); }
-
-    .rb-yellow { background: linear-gradient(135deg, #fffbea, #fff3cc); border: 1.5px solid #ffd97a; }
-    .rb-yellow::before { background: var(--yellow); }
-
-    .rb-orange { background: linear-gradient(135deg, #fff2ee, #ffe4db); border: 1.5px solid #ffb49a; }
-    .rb-orange::before { background: var(--orange); }
-
-    .result-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--muted);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .result-value {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1.2;
-    }
-
-    .yen {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .result-sub {
-      font-size: 0.72rem;
-      color: var(--muted);
-      margin-top: 5px;
-      line-height: 1.6;
-    }
-
-    .pill {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 20px;
-      margin-top: 4px;
-    }
-
-    .pill-green  { background: rgba(15,185,129,0.15); color: #0a8f62; }
-    .pill-blue   { background: rgba(79,110,247,0.15); color: var(--blue); }
-    .pill-yellow { background: rgba(245,158,11,0.15); color: #b57b08; }
-    .pill-gray   { background: rgba(107,122,158,0.15); color: var(--muted); }
-
-    /* ===== 前提条件 ===== */
     .assumptions {
-      font-size: 0.75rem;
-      color: var(--muted);
-      background: var(--bg);
-      border-radius: 10px;
-      padding: 10px 14px;
-      margin-top: 12px;
-      line-height: 1.9;
+      font-size: 0.75rem; color: var(--muted);
+      background: var(--bg); border-radius: 10px;
+      padding: 10px 14px; margin-top: 12px; line-height: 1.9;
       border: 1px solid var(--border);
     }
 
-    /* ===== 複利比較 ===== */
-    .comparison-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .comparison-row:last-child { border-bottom: none; }
-
-    .comp-left { flex: 1; }
-    .comp-title { font-weight: 700; font-size: 0.9rem; color: var(--text); }
-    .comp-label { font-size: 0.75rem; color: var(--muted); }
-
-    .comp-right { text-align: right; }
-    .comp-value { font-weight: 800; font-size: 1rem; color: var(--text); }
-    .comp-yen   { font-size: 0.75rem; color: var(--muted); }
-
     /* ===== グラフ ===== */
-    .chart-wrap { width: 100%; }
-    canvas { display: block; width: 100%; border-radius: 8px; }
-
-    .chart-legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      font-size: 0.76rem;
-      color: var(--muted);
-      margin-top: 10px;
+    .chart-wrap { width: 100%; position: relative; }
+    canvas { display: block; width: 100%; border-radius: 8px; cursor: crosshair; }
+    .chart-tooltip {
+      background: rgba(26,32,64,0.92); color: #fff;
+      font-size: 0.78rem; font-weight: 600;
+      border-radius: 8px; padding: 8px 12px;
+      position: absolute; pointer-events: none; display: none; z-index: 10;
+      white-space: nowrap; box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      min-width: 180px;
     }
-    .legend-item { display: flex; align-items: center; gap: 5px; font-weight: 600; }
-    .legend-dot  { width: 14px; height: 3px; border-radius: 2px; }
+    .chart-tooltip-day  { font-size: 0.68rem; opacity: 0.7; margin-bottom: 5px; }
+    .chart-tooltip-row  { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+    .chart-tooltip-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .chart-legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.76rem; color: var(--muted); margin-top: 10px; }
+    .legend-item  { display: flex; align-items: center; gap: 5px; font-weight: 600; }
+    .legend-line  { width: 18px; height: 3px; border-radius: 2px; }
 
     /* ===== テーブル ===== */
-    .table-wrap {
-      overflow-x: auto;
-      border-radius: 10px;
-      border: 1.5px solid var(--border);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8rem;
-      min-width: 360px;
-    }
-
+    .table-wrap { overflow-x: auto; border-radius: 10px; border: 1.5px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 300px; }
     thead tr { background: var(--bg); }
-
-    th {
-      padding: 10px 8px;
-      text-align: right;
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 0.73rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-    }
-    th:first-child { text-align: left; }
-
-    td {
-      padding: 8px 8px;
-      text-align: right;
-      border-top: 1px solid var(--border);
-      color: var(--text);
-      font-weight: 600;
-    }
+    th { padding: 9px 8px; text-align: right; color: var(--muted); font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+    th:first-child, th:nth-child(2) { text-align: left; }
+    td { padding: 7px 8px; text-align: right; border-top: 1px solid var(--border); color: var(--text); font-weight: 600; }
     td:first-child { text-align: left; color: var(--muted); font-weight: 500; }
-
-    tr:hover td { background: rgba(79,110,247,0.04); }
-
+    td:nth-child(2) { text-align: left; color: var(--muted); font-size: 0.76rem; font-weight: 400; }
+    tr:hover td { background: rgba(0,0,0,0.02); }
     tr.reinvest td { background: rgba(15,185,129,0.06); }
     tr.reinvest td:first-child { color: var(--green); font-weight: 700; }
-
     .td-yen { display: block; font-size: 0.67rem; color: var(--muted); font-weight: 400; }
 
     .show-more-btn {
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      color: var(--muted);
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 9px;
-      width: 100%;
-      cursor: pointer;
-      margin-top: 10px;
+      background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: 10px; color: var(--muted);
+      font-size: 0.85rem; font-weight: 600; padding: 9px;
+      width: 100%; cursor: pointer; margin-top: 10px;
     }
-    .show-more-btn:active { opacity: 0.75; }
 
-    .badge {
-      display: inline-block;
-      font-size: 0.68rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 20px;
-      margin-left: 6px;
-      vertical-align: middle;
-    }
-    .badge-blue   { background: rgba(79,110,247,0.12); color: var(--blue); }
-    .badge-orange { background: rgba(255,107,61,0.12); color: var(--orange); }
+    .badge { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
+    .badge-sub { background: rgba(255,107,61,0.12); color: var(--orange); }
 
     .hidden { display: none; }
-
-    /* 区切りライン */
-    .divider {
-      border: none;
-      border-top: 1.5px solid var(--border);
-      margin: 4px 0 14px;
-    }
-
-    /* ===== 日付入力 ===== */
-    input[type="date"] {
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      font-size: 1rem;
-      font-weight: 600;
-      padding: 10px 12px;
-      width: 100%;
-      outline: none;
-    }
-    input[type="date"]:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(79,110,247,0.12);
-    }
-
-    /* ===== マイルストーンテーブル ===== */
-    .milestone-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .milestone-row {
-      border-radius: 12px;
-      border: 1.5px solid var(--border);
-      overflow: hidden;
-    }
-
-    .milestone-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px;
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .milestone-date {
-      font-size: 0.78rem;
-      font-weight: 500;
-      opacity: 0.85;
-    }
-
-    .milestone-days {
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.35);
-    }
-
-    .milestone-body {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border-top: 1px solid rgba(0,0,0,0.07);
-    }
-
-    .milestone-cell {
-      padding: 10px 10px;
-      text-align: center;
-      border-right: 1px solid rgba(0,0,0,0.07);
-    }
-    .milestone-cell:last-child { border-right: none; }
-
-    .milestone-cell-label {
-      font-size: 0.67rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      opacity: 0.65;
-      margin-bottom: 3px;
-    }
-
-    .milestone-cell-value {
-      font-size: 0.88rem;
-      font-weight: 800;
-    }
-
-    .milestone-cell-yen {
-      font-size: 0.68rem;
-      opacity: 0.65;
-      margin-top: 1px;
-    }
-
-    .milestone-cell-pct {
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 1px 6px;
-      border-radius: 20px;
-      display: inline-block;
-      margin-top: 3px;
-      background: rgba(255,255,255,0.4);
-    }
   </style>
 </head>
-<body>
+<body class="theme-blue">
+
+<!-- テーマ選択 -->
+<div class="theme-bar">
+  <span class="theme-bar-label">テーマ</span>
+  <button class="theme-btn theme-btn-blue  active" id="btn-blue"  onclick="setTheme('blue')"  title="ブルー">青</button>
+  <button class="theme-btn theme-btn-black"         id="btn-black" onclick="setTheme('black')" title="ブラック">黒</button>
+  <button class="theme-btn theme-btn-red"           id="btn-red"   onclick="setTheme('red')"   title="レッド">赤</button>
+</div>
 
 <!-- ヘッダー -->
 <div class="header">
@@ -484,19 +280,30 @@
   <p class="subtitle">年利180%・日利受取・$100再投資・出金5%手数料モデル</p>
 </div>
 
-<!-- エラー表示 -->
 <div class="error-box" id="errorBox"></div>
 
-<!-- 設定 + ボタン -->
+<!-- 設定 -->
 <div class="card">
   <div class="card-title">
-    <span class="card-title-icon" style="background:rgba(79,110,247,0.12)">⚙️</span>
+    <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">⚙️</span>
     シミュレーション設定
   </div>
+
+  <!-- 為替レートバナー -->
+  <div class="rate-banner">
+    <div style="flex:1">
+      <div class="rate-label">現在の為替レート</div>
+      <div class="rate-value" id="rateValue">--- 円 / ドル</div>
+      <div class="rate-date"  id="rateDate">取得中...</div>
+    </div>
+    <button class="rate-btn" onclick="fetchRate()">🔄 更新</button>
+  </div>
+
   <div class="input-grid">
     <div class="input-group">
       <label>初期投資額（$）</label>
-      <input type="number" id="principal" value="1000" min="1" step="100" />
+      <input type="number" id="principal" value="1000" min="1" step="100" oninput="updatePrincipalYen()" />
+      <div class="input-yen" id="principalYen"></div>
     </div>
     <div class="input-group">
       <label>運用日数（日）</label>
@@ -516,69 +323,56 @@
     </div>
     <div class="input-group">
       <label>円換算レート（円/$）</label>
-      <input type="number" id="jpyRate" value="155" min="1" step="1" />
+      <input type="number" id="jpyRate" value="155" min="1" step="1" oninput="updatePrincipalYen()" />
     </div>
-    <div class="input-group" style="grid-column: 1 / -1;">
-      <label>開始日（今日の日付）</label>
+    <div class="input-group" style="grid-column:1/-1">
+      <label>開始日</label>
       <input type="date" id="startDate" />
     </div>
   </div>
 
-  <!-- ボタンは入力のすぐ下 -->
   <button class="btn" onclick="simulate()">📊 シミュレーション実行</button>
 </div>
 
-<!-- 結果サマリー -->
-<div class="card hidden" id="summaryCard">
-  <div class="card-title">
-    <span class="card-title-icon" style="background:rgba(15,185,129,0.12)">💰</span>
-    結果サマリー
-    <span class="badge badge-blue" id="daysLabel"></span>
-  </div>
-  <div class="results-grid" id="summaryGrid"></div>
-  <div class="assumptions" id="assumptionsText"></div>
-</div>
-
-<!-- マイルストーン -->
+<!-- 期間別シミュレーション -->
 <div class="card hidden" id="milestoneCard">
   <div class="card-title">
-    <span class="card-title-icon" style="background:rgba(155,92,246,0.12)">📅</span>
-    期間別シミュレーション（単利・複利・このシミュ）
+    <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
+    期間別シミュレーション（単利・複利）
   </div>
   <div class="milestone-grid" id="milestoneGrid"></div>
 </div>
 
-<!-- 複利比較 -->
+<!-- 複利との比較 -->
 <div class="card hidden" id="compCard">
   <div class="card-title">
-    <span class="card-title-icon" style="background:rgba(155,92,246,0.12)">⚖️</span>
+    <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">⚖️</span>
     複利との比較
   </div>
   <div id="compRows"></div>
+  <div class="assumptions" id="assumptionsText"></div>
 </div>
 
 <!-- グラフ -->
 <div class="card hidden" id="chartCard">
   <div class="card-title">
-    <span class="card-title-icon" style="background:rgba(245,158,11,0.12)">📉</span>
+    <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📉</span>
     残高推移グラフ
+    <span style="font-size:0.72rem;font-weight:400;color:var(--muted);margin-left:4px">（グラフに触れると金額表示）</span>
   </div>
   <div class="chart-wrap">
-    <canvas id="chart" height="220"></canvas>
+    <canvas id="chart" height="230"></canvas>
+    <div class="chart-tooltip" id="chartTooltip"></div>
   </div>
-  <div class="chart-legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#0fb981"></div>このシミュレーション</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#4f6ef7"></div>完全複利</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>単利</div>
-  </div>
+  <div class="chart-legend" id="chartLegend"></div>
 </div>
 
-<!-- 日別テーブル -->
+<!-- 日別明細 -->
 <div class="card hidden" id="tableCard">
   <div class="card-title">
-    <span class="card-title-icon" style="background:rgba(255,107,61,0.12)">📋</span>
+    <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📋</span>
     日別明細
-    <span class="badge badge-orange">再投資日は緑色</span>
+    <span class="badge badge-sub">再投資日は緑色</span>
   </div>
   <div class="table-wrap">
     <table>
@@ -589,7 +383,6 @@
           <th>元本($)<br><span style="font-weight:400">(円)</span></th>
           <th>日利($)<br><span style="font-weight:400">(円)</span></th>
           <th>累積利益($)<br><span style="font-weight:400">(円)</span></th>
-          <th>出金額($)<br><span style="font-weight:400">(円)</span></th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -599,186 +392,235 @@
 </div>
 
 <script>
-// ===== ユーティリティ =====
-function commaInt(n) {
-  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+// ===== テーマ =====
+var THEMES = {
+  blue:  { comp: '#4f6ef7', simple: '#f59e0b', fill: 'rgba(79,110,247,',  grid: '#e8edff' },
+  black: { comp: '#1e2a3a', simple: '#888888', fill: 'rgba(30,42,58,',    grid: '#dde0e6' },
+  red:   { comp: '#e63946', simple: '#f59e0b', fill: 'rgba(230,57,70,',   grid: '#ffe0e2' }
+};
+var currentTheme = 'blue';
+
+function setTheme(name) {
+  currentTheme = name;
+  document.body.className = 'theme-' + name;
+  ['blue','black','red'].forEach(function(t) {
+    document.getElementById('btn-' + t).classList.toggle('active', t === name);
+  });
+  try { localStorage.setItem('sim_theme', name); } catch(e) {}
+  // グラフ再描画
+  var chartCard = document.getElementById('chartCard');
+  if (!chartCard.classList.contains('hidden') && gChart.pts.length > 0) {
+    redrawCurrentChart();
+  }
 }
+
+// ===== ユーティリティ =====
+function commaInt(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 function commaDec(n) {
   var s = n.toFixed(2).split('.');
   s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   return s.join('.');
 }
 function fmtUSD(v)       { return '$' + commaDec(v); }
-function fmtJPY(v, rate) { return '\u00a5' + commaInt(v * rate); }
+function fmtJPY(v, rate) { return '¥' + commaInt(v * rate); }
 function fmtPct(v)       { return (v >= 0 ? '+' : '') + v.toFixed(1) + '%'; }
+
+function fmtYAxis(v) {
+  if (v >= 1000000) return '$' + (v / 1000000).toFixed(1) + 'M';
+  if (v >= 100000)  return '$' + commaInt(v / 1000) + ',000';
+  if (v >= 10000)   return '$' + commaDec(v / 1000) + 'k';
+  if (v >= 1000)    return '$' + commaInt(v);
+  return '$' + Math.round(v);
+}
 
 // ===== シミュレーション =====
 function runSimulation(principal, days, annualRate, feePercent, threshold) {
   var dailyRate = annualRate / 100 / 365;
   var feeRate   = feePercent / 100;
-  var p         = principal;
-  var pending   = 0;
-  var totalReinv = 0;
-  var rows      = [];
-
+  var p = principal, pending = 0, totalReinv = 0;
+  var rows = [];
   for (var d = 1; d <= days; d++) {
     var interest = p * dailyRate;
     pending += interest;
-
-    var reinvested  = 0;
     var didReinvest = false;
-
     if (pending >= threshold) {
       var batches = Math.floor(pending / threshold);
-      reinvested  = batches * threshold;
-      p          += reinvested;
-      pending    -= reinvested;
-      totalReinv += reinvested;
+      p        += batches * threshold;
+      pending  -= batches * threshold;
+      totalReinv += batches * threshold;
       didReinvest = true;
     }
-
-    rows.push({
-      day: d, principal: p, interest: interest,
-      pending: pending, cashout: (p + pending) * (1 - feeRate),
-      didReinvest: didReinvest
-    });
+    rows.push({ day: d, principal: p, interest: interest, pending: pending, didReinvest: didReinvest });
   }
-
-  return {
-    rows: rows, finalPrincipal: p, finalPending: pending,
-    finalAssets: p + pending,
-    cashout: (p + pending) * (1 - feeRate),
-    profit:  (p + pending) * (1 - feeRate) - principal,
-    totalReinv: totalReinv
-  };
+  return { rows: rows, totalReinv: totalReinv };
 }
 
 function compoundValue(principal, annualRate, days) {
   return principal * Math.pow(1 + annualRate / 100 / 365, days);
 }
 
+// ===== 為替レート =====
+function fetchRate() {
+  document.getElementById('rateDate').textContent = '取得中...';
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.frankfurter.app/latest?from=USD&to=JPY', true);
+  xhr.timeout = 8000;
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      try {
+        var data = JSON.parse(xhr.responseText);
+        var rate = Math.round(data.rates.JPY * 10) / 10;
+        var d    = new Date(data.date + 'T00:00:00');
+        document.getElementById('rateValue').textContent = rate + ' 円 / ドル';
+        document.getElementById('rateDate').textContent  = (d.getMonth()+1) + '月' + d.getDate() + '日時点';
+        document.getElementById('jpyRate').value = Math.round(rate);
+        updatePrincipalYen();
+      } catch(e) { document.getElementById('rateDate').textContent = '解析エラー'; }
+    } else {
+      document.getElementById('rateDate').textContent = '取得失敗';
+    }
+  };
+  xhr.onerror = xhr.ontimeout = function() {
+    document.getElementById('rateDate').textContent = '接続を確認してください';
+  };
+  xhr.send();
+}
+
+function updatePrincipalYen() {
+  var p  = parseFloat(document.getElementById('principal').value);
+  var r  = parseFloat(document.getElementById('jpyRate').value) || 155;
+  var el = document.getElementById('principalYen');
+  el.textContent = (!isNaN(p) && p > 0) ? '≈ ' + fmtJPY(p, r) : '';
+}
+
 // ===== グローバル状態 =====
-var lastRows = [];
-var lastJpyRate = 155;
-var lastStartDate = null;
-var fullTableVisible = false;
+var lastRows = [], lastJpyRate = 155, lastStartDate = null, fullTableVisible = false;
+var gSimParams = {};
 
 // ===== メイン =====
 function simulate() {
   try {
     document.getElementById('errorBox').style.display = 'none';
 
-    var principal  = parseFloat(document.getElementById('principal').value);
-    var days       = parseInt(document.getElementById('days').value, 10);
-    var annualRate = parseFloat(document.getElementById('annualRate').value);
+    var principal  = parseFloat(document.getElementById('principal').value)  || 1000;
+    var days       = parseInt(document.getElementById('days').value, 10)      || 365;
+    var annualRate = parseFloat(document.getElementById('annualRate').value)  || 180;
     var fee        = parseFloat(document.getElementById('fee').value);
-    var threshold  = parseFloat(document.getElementById('reinvestThreshold').value);
-    var jpyRate    = parseFloat(document.getElementById('jpyRate').value);
+    var threshold  = parseFloat(document.getElementById('reinvestThreshold').value) || 100;
+    var jpyRate    = parseFloat(document.getElementById('jpyRate').value)     || 155;
 
-    if (isNaN(principal) || principal <= 0) principal = 1000;
-    if (isNaN(days)      || days <= 0)      days      = 365;
-    if (isNaN(annualRate)|| annualRate <= 0) annualRate = 180;
-    if (isNaN(fee)       || fee < 0)        fee        = 5;
-    if (isNaN(threshold) || threshold <= 0) threshold  = 100;
-    if (isNaN(jpyRate)   || jpyRate <= 0)   jpyRate    = 155;
+    if (isNaN(fee) || fee < 0) fee = 5;
+    if (principal <= 0)  principal  = 1000;
+    if (days <= 0)       days       = 365;
+    if (annualRate <= 0) annualRate = 180;
 
     lastJpyRate = jpyRate;
     fullTableVisible = false;
+    gSimParams = { principal: principal, annualRate: annualRate, fee: fee, days: days, jpyRate: jpyRate };
 
-    var sim           = runSimulation(principal, days, annualRate, fee, threshold);
-    lastRows          = sim.rows;
-    var profitPct     = (sim.cashout / principal - 1) * 100;
+    var startDateVal = document.getElementById('startDate').value;
+    lastStartDate    = startDateVal ? new Date(startDateVal + 'T00:00:00') : null;
+
     var compCashout   = compoundValue(principal, annualRate, days) * (1 - fee / 100);
     var simpleCashout = principal * (1 + annualRate / 100 * days / 365) * (1 - fee / 100);
-    var nextReinv     = threshold - (sim.finalPending % threshold);
-    if (nextReinv >= threshold) nextReinv = 0;
 
-    // サマリー
-    document.getElementById('daysLabel').textContent = days + '日間';
-    document.getElementById('summaryCard').classList.remove('hidden');
-    document.getElementById('summaryGrid').innerHTML =
-      makeResultBox('rb-green', '最終出金額（手数料後）',
-        fmtUSD(sim.cashout), fmtJPY(sim.cashout, jpyRate),
-        '税引前利益: ' + fmtUSD(sim.profit) + '<br>(' + fmtJPY(sim.profit, jpyRate) + ')',
-        fmtPct(profitPct), 'pill-green') +
-      makeResultBox('rb-blue', '総資産（出金前）',
-        fmtUSD(sim.finalAssets), fmtJPY(sim.finalAssets, jpyRate),
-        '元本: ' + fmtUSD(principal) + '<br>利益: ' + fmtUSD(sim.finalAssets - principal),
-        '', '') +
-      makeResultBox('rb-yellow', '再投資回数',
-        (sim.totalReinv > 0 ? Math.round(sim.totalReinv / threshold) : 0) + '回', '',
-        '再投資総額: ' + fmtUSD(sim.totalReinv) + '<br>(' + fmtJPY(sim.totalReinv, jpyRate) + ')',
-        '', '') +
-      makeResultBox('rb-orange', '未払い利益（積立中）',
-        fmtUSD(sim.finalPending), fmtJPY(sim.finalPending, jpyRate),
-        '次の再投資まで: ' + fmtUSD(nextReinv) + ' 不足',
-        '', '');
+    // 複利との比較
+    document.getElementById('compCard').classList.remove('hidden');
+    document.getElementById('compRows').innerHTML =
+      makeCompRow('複利（日次複利）', '毎日全額が複利で運用',
+        compCashout,   jpyRate, (compCashout   / principal - 1) * 100, 'accent',  'pill-accent') +
+      makeCompRow('単利', '元本のみに利息がつく',
+        simpleCashout, jpyRate, (simpleCashout / principal - 1) * 100, '#f59e0b', 'pill-yellow') +
+      makeCompRow('元本のみ（運用なし）', '投資しない場合',
+        principal,     jpyRate, 0, 'muted', 'pill-gray');
 
     document.getElementById('assumptionsText').innerHTML =
       '<strong>前提条件：</strong><br>' +
-      '年利 ' + annualRate + '% → 日利 ' + (annualRate / 365).toFixed(4) + '% ／ ' +
-      '再投資トリガー: $' + threshold + '（' + fmtJPY(threshold, jpyRate) + '） ／ ' +
-      '出金手数料: ' + fee + '% ／ レート: ' + jpyRate + '円/$<br>' +
-      '元本: ' + fmtUSD(principal) + '（' + fmtJPY(principal, jpyRate) + '）';
-
-    // 複利比較
-    document.getElementById('compCard').classList.remove('hidden');
-    document.getElementById('compRows').innerHTML =
-      makeCompRow('このシミュレーション', '日利受取 + $' + threshold + '再投資 + ' + fee + '%手数料',
-        sim.cashout, jpyRate, profitPct, '#0fb981', 'pill-green') +
-      makeCompRow('完全複利（日次）', '毎日全額再投資 + ' + fee + '%手数料',
-        compCashout, jpyRate, (compCashout / principal - 1) * 100, '#4f6ef7', 'pill-blue') +
-      makeCompRow('単利（再投資なし）', '日利を別口座で受取 + ' + fee + '%手数料',
-        simpleCashout, jpyRate, (simpleCashout / principal - 1) * 100, '#f59e0b', 'pill-yellow') +
-      makeCompRow('元本のみ（投資なし）', '何もしない場合',
-        principal, jpyRate, 0, '#6b7a9e', 'pill-gray');
+      '年利 ' + annualRate + '% ／ 出金手数料: ' + fee + '% ／ レート: ' + jpyRate + '円/$<br>' +
+      '元本: ' + fmtUSD(principal) + '（' + fmtJPY(principal, jpyRate) + '）／ 運用日数: ' + days + '日';
 
     // マイルストーン
-    var startDateVal = document.getElementById('startDate').value;
-    var startDate    = startDateVal ? new Date(startDateVal + 'T00:00:00') : new Date();
-    lastStartDate    = startDate;
+    var startDate = lastStartDate || new Date();
     renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate);
 
     // グラフ
     document.getElementById('chartCard').classList.remove('hidden');
-    drawChart(sim.rows, principal, annualRate, fee);
+    drawChart(principal, annualRate, fee, days, jpyRate);
 
     // テーブル
+    var sim = runSimulation(principal, days, annualRate, fee, threshold);
+    lastRows = sim.rows;
     document.getElementById('tableCard').classList.remove('hidden');
     renderTable(sim.rows, false, jpyRate);
 
-    // 結果へスクロール
-    document.getElementById('summaryCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  } catch (e) {
+    document.getElementById('milestoneCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch(e) {
     var eb = document.getElementById('errorBox');
     eb.style.display = 'block';
     eb.textContent = 'エラー: ' + (e.message || e);
   }
 }
 
-function makeResultBox(cls, label, value, yen, sub, pillText, pillCls) {
-  return '<div class="result-box ' + cls + '">' +
-    '<div class="result-label">' + label + '</div>' +
-    '<div class="result-value">' + value +
-      (yen ? '<span class="yen">(' + yen + ')</span>' : '') +
-    '</div>' +
-    (sub ? '<div class="result-sub">' + sub + '</div>' : '') +
-    (pillText ? '<div><span class="pill ' + pillCls + '">' + pillText + '</span></div>' : '') +
-  '</div>';
-}
-
-function makeCompRow(title, label, value, jpyRate, pctVal, color, pillCls) {
+function makeCompRow(title, label, value, jpyRate, pctVal, colorKey, pillCls) {
+  // colorKey: 'accent' / 'muted' / hex string
+  var style = (colorKey === 'accent') ? 'color:var(--accent)' :
+              (colorKey === 'muted')  ? 'color:var(--muted)'  :
+              'color:' + colorKey;
   return '<div class="comparison-row">' +
     '<div class="comp-left">' +
-      '<div class="comp-title">' + title + '</div>' +
+      '<div class="comp-title" style="' + style + '">' + title + '</div>' +
       '<div class="comp-label">' + label + '</div>' +
     '</div>' +
     '<div class="comp-right">' +
-      '<div class="comp-value" style="color:' + color + '">' + fmtUSD(value) + '</div>' +
+      '<div class="comp-value" style="' + style + '">' + fmtUSD(value) + '</div>' +
       '<div class="comp-yen">(' + fmtJPY(value, jpyRate) + ')</div>' +
       '<span class="pill ' + pillCls + '">' + fmtPct(pctVal) + '</span>' +
     '</div>' +
+  '</div>';
+}
+
+// ===== マイルストーン =====
+function addMonths(date, months) {
+  var d = new Date(date.getTime()); d.setMonth(d.getMonth() + months); return d;
+}
+function fmtDate(d) { return d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate(); }
+
+function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
+  document.getElementById('milestoneCard').classList.remove('hidden');
+  var ms = [
+    { label:'3ヶ月後',  date:addMonths(startDate,3),  color:'#0fb981', bg:'linear-gradient(135deg,#d0f5e8,#b8f0d8)', border:'#82dbb8' },
+    { label:'6ヶ月後',  date:addMonths(startDate,6),  color:'#4f6ef7', bg:'linear-gradient(135deg,#dce5ff,#c8d8ff)', border:'#9ab2ff' },
+    { label:'12ヶ月後', date:addMonths(startDate,12), color:'#9b5cf6', bg:'linear-gradient(135deg,#ede0ff,#ddc8ff)', border:'#c49aff' },
+    { label:'2年後',    date:addMonths(startDate,24), color:'#f59e0b', bg:'linear-gradient(135deg,#fff3cc,#ffe8a0)', border:'#ffd260' }
+  ];
+  var html = '';
+  for (var i = 0; i < ms.length; i++) {
+    var m    = ms[i];
+    var days = Math.max(1, Math.round((m.date - startDate) / 86400000));
+    var compV = compoundValue(principal, annualRate, days) * (1 - fee / 100);
+    var simpV = principal * (1 + annualRate / 100 * days / 365) * (1 - fee / 100);
+    html +=
+      '<div class="milestone-row" style="border-color:' + m.border + '">' +
+        '<div class="milestone-header" style="background:' + m.bg + ';color:' + m.color + '">' +
+          '<span>' + m.label + '</span>' +
+          '<span class="milestone-date">' + fmtDate(m.date) + '</span>' +
+          '<span class="milestone-days">' + days + '日</span>' +
+        '</div>' +
+        '<div class="milestone-body" style="background:#fff">' +
+          milestoneCell('単利',      simpV, (simpV/principal-1)*100, jpyRate, m.color) +
+          milestoneCell('複利（日次）', compV, (compV/principal-1)*100, jpyRate, m.color) +
+        '</div>' +
+      '</div>';
+  }
+  document.getElementById('milestoneGrid').innerHTML = html;
+}
+
+function milestoneCell(label, value, pct, jpyRate, color) {
+  return '<div class="milestone-cell">' +
+    '<div class="milestone-cell-label">' + label + '</div>' +
+    '<div class="milestone-cell-value" style="color:' + color + '">' + fmtUSD(value) + '</div>' +
+    '<div class="milestone-cell-yen">' + fmtJPY(value, jpyRate) + '</div>' +
+    '<div class="milestone-cell-pct">' + fmtPct(pct) + '</div>' +
   '</div>';
 }
 
@@ -787,48 +629,45 @@ function rowDate(day) {
   if (!lastStartDate) return '';
   var d = new Date(lastStartDate.getTime());
   d.setDate(d.getDate() + day);
-  return (d.getMonth() + 1) + '/' + d.getDate();
+  return (d.getMonth()+1) + '/' + d.getDate();
 }
 
 function renderTable(rows, full, jpyRate) {
   if (jpyRate !== undefined) lastJpyRate = jpyRate;
-  var rate     = lastJpyRate;
-  var hasDate  = !!lastStartDate;
-  var tbody    = document.getElementById('tableBody');
-  var btn      = document.getElementById('showMoreBtn');
-  var thDate   = document.getElementById('thDate');
+  var rate   = lastJpyRate;
+  var hasDate = !!lastStartDate;
+  var tbody  = document.getElementById('tableBody');
+  var btn    = document.getElementById('showMoreBtn');
+  var thDate = document.getElementById('thDate');
 
-  // 日付列ヘッダーの表示切替
   if (hasDate) thDate.classList.remove('hidden');
   else         thDate.classList.add('hidden');
 
   var displayRows;
   if (full || rows.length <= 30) {
-    displayRows = rows;
-    btn.classList.add('hidden');
+    displayRows = rows; btn.classList.add('hidden');
   } else {
-    displayRows = rows.slice(0, 20).concat([null]).concat(rows.slice(-5));
+    displayRows = rows.slice(0,20).concat([null]).concat(rows.slice(-5));
     btn.classList.remove('hidden');
-    btn.textContent = '\u25bc 全 ' + rows.length + ' 日を表示';
+    btn.textContent = '▼ 全 ' + rows.length + ' 日を表示';
   }
 
-  var cols = hasDate ? 6 : 5;
+  var cols = hasDate ? 5 : 4;
   var html = '';
   for (var i = 0; i < displayRows.length; i++) {
     var row = displayRows[i];
     if (row === null) {
-      html += '<tr><td colspan="' + cols + '" style="text-align:center;color:var(--muted);padding:8px;font-size:0.85rem">・・・</td></tr>';
+      html += '<tr><td colspan="' + cols + '" style="text-align:center;color:var(--muted);padding:8px">・・・</td></tr>';
       continue;
     }
-    var cls = row.didReinvest ? ' class="reinvest"' : '';
-    var dateTd = hasDate ? '<td style="color:var(--muted);font-size:0.78rem">' + rowDate(row.day) + '</td>' : '';
+    var cls    = row.didReinvest ? ' class="reinvest"' : '';
+    var dateTd = hasDate ? '<td>' + rowDate(row.day) + '</td>' : '';
     html += '<tr' + cls + '>' +
       '<td>' + row.day + '日' + (row.didReinvest ? ' ♻' : '') + '</td>' +
       dateTd +
       '<td>' + commaDec(row.principal) + '<span class="td-yen">' + fmtJPY(row.principal, rate) + '</span></td>' +
-      '<td>+' + commaDec(row.interest) + '<span class="td-yen">' + fmtJPY(row.interest, rate) + '</span></td>' +
-      '<td>' + commaDec(row.pending)   + '<span class="td-yen">' + fmtJPY(row.pending, rate)   + '</span></td>' +
-      '<td>' + commaDec(row.cashout)   + '<span class="td-yen">' + fmtJPY(row.cashout, rate)   + '</span></td>' +
+      '<td>+' + commaDec(row.interest)  + '<span class="td-yen">' + fmtJPY(row.interest,  rate) + '</span></td>' +
+      '<td>' + commaDec(row.pending)    + '<span class="td-yen">' + fmtJPY(row.pending,   rate) + '</span></td>' +
     '</tr>';
   }
   tbody.innerHTML = html;
@@ -838,189 +677,195 @@ function toggleFullTable() {
   fullTableVisible = !fullTableVisible;
   renderTable(lastRows, fullTableVisible);
   var btn = document.getElementById('showMoreBtn');
-  if (fullTableVisible) {
-    btn.textContent = '\u25b2 折りたたむ';
-    btn.classList.remove('hidden');
-  } else {
-    btn.textContent = '\u25bc 全 ' + lastRows.length + ' 日を表示';
-  }
+  btn.textContent = fullTableVisible ? '▲ 折りたたむ' : '▼ 全 ' + lastRows.length + ' 日を表示';
+  btn.classList.remove('hidden');
 }
 
-// ===== グラフ（純Canvas） =====
-function drawChart(rows, principal, annualRate, fee) {
+// ===== グラフ =====
+var gChart = {
+  pts:[], compData:[], simpleData:[],
+  PAD_L:72, PAD_R:14, PAD_T:14, PAD_B:30,
+  gW:0, gH:0, H:230, maxVal:0, jpyRate:155
+};
+
+function drawChart(principal, annualRate, fee, days, jpyRate) {
   var canvas = document.getElementById('chart');
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
   if (!ctx) return;
 
+  gChart.jpyRate = jpyRate;
   var feeRate = fee / 100;
-  var W = canvas.parentElement.clientWidth || 300;
-  var H = 220;
+  var W = canvas.parentElement.clientWidth || 320;
   canvas.width  = W;
-  canvas.height = H;
+  canvas.height = gChart.H;
 
-  var N    = rows.length;
-  var step = Math.max(1, Math.floor(N / 100));
+  var step = Math.max(1, Math.floor(days / 120));
   var pts  = [];
-  for (var i = 0; i < N; i += step) pts.push(rows[i]);
-  if (pts[pts.length - 1] !== rows[N - 1]) pts.push(rows[N - 1]);
+  for (var d = step; d <= days; d += step) pts.push(d);
+  if (!pts.length || pts[pts.length-1] !== days) pts.push(days);
 
-  var simData = [], compData = [], simpleData = [];
-  for (var j = 0; j < pts.length; j++) {
-    simData.push(pts[j].cashout);
-    compData.push(principal * Math.pow(1 + annualRate / 100 / 365, pts[j].day) * (1 - feeRate));
-    simpleData.push(principal * (1 + annualRate / 100 * pts[j].day / 365) * (1 - feeRate));
+  var compData = [], simpleData = [];
+  for (var i = 0; i < pts.length; i++) {
+    compData.push(compoundValue(principal, annualRate, pts[i]) * (1 - feeRate));
+    simpleData.push(principal * (1 + annualRate / 100 * pts[i] / 365) * (1 - feeRate));
   }
 
-  var allVals = simData.concat(compData).concat(simpleData);
-  var maxVal  = 0;
-  for (var k = 0; k < allVals.length; k++) { if (allVals[k] > maxVal) maxVal = allVals[k]; }
-  maxVal *= 1.08;
+  gChart.pts = pts; gChart.compData = compData; gChart.simpleData = simpleData;
+  var all = compData.concat(simpleData);
+  var mx = 0; for (var k = 0; k < all.length; k++) { if (all[k] > mx) mx = all[k]; }
+  gChart.maxVal = mx * 1.08;
+  gChart.gW = W - gChart.PAD_L - gChart.PAD_R;
+  gChart.gH = gChart.H - gChart.PAD_T - gChart.PAD_B;
 
-  var PAD_L = 56, PAD_R = 14, PAD_T = 14, PAD_B = 30;
-  var gW = W - PAD_L - PAD_R;
-  var gH = H - PAD_T - PAD_B;
+  // 凡例更新
+  var tc = THEMES[currentTheme];
+  document.getElementById('chartLegend').innerHTML =
+    '<div class="legend-item"><div class="legend-line" style="background:' + tc.comp + '"></div>複利（日次）</div>' +
+    '<div class="legend-item"><div class="legend-line" style="height:2px;border-top:2px dashed ' + tc.simple + ';background:none;width:18px"></div>単利</div>';
 
-  // 背景
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, W, H);
+  drawChartBase(ctx, W, -1);
+  setupChartEvents(canvas, ctx, W);
+}
 
-  // グリッド
-  ctx.strokeStyle = '#e8edff';
-  ctx.lineWidth = 1;
+function redrawCurrentChart() {
+  var p  = gSimParams;
+  if (!p.principal) return;
+  drawChart(p.principal, p.annualRate, p.fee, p.days, p.jpyRate);
+}
+
+function drawChartBase(ctx, W, activeIdx) {
+  var PAD_L = gChart.PAD_L, PAD_R = gChart.PAD_R, PAD_T = gChart.PAD_T, PAD_B = gChart.PAD_B;
+  var gW = gChart.gW, gH = gChart.gH, H = gChart.H;
+  var pts = gChart.pts, compData = gChart.compData, simpleData = gChart.simpleData;
+  var maxVal = gChart.maxVal;
+  var tc = THEMES[currentTheme];
+
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+
+  // グリッド & Y軸ラベル
+  ctx.strokeStyle = tc.grid; ctx.lineWidth = 1;
   for (var t = 0; t <= 4; t++) {
-    var gy = PAD_T + gH * t / 4;
-    ctx.beginPath(); ctx.moveTo(PAD_L, gy); ctx.lineTo(PAD_L + gW, gy); ctx.stroke();
+    var gy   = PAD_T + gH * t / 4;
     var yVal = maxVal * (1 - t / 4);
-    var lbl  = yVal >= 1000 ? '$' + Math.round(yVal / 1000) + 'k' : '$' + Math.round(yVal);
-    ctx.fillStyle = '#6b7a9e';
-    ctx.font = '10px Arial';
-    ctx.textAlign = 'right';
-    ctx.fillText(lbl, PAD_L - 4, gy + 4);
+    ctx.beginPath(); ctx.moveTo(PAD_L, gy); ctx.lineTo(PAD_L + gW, gy); ctx.stroke();
+    ctx.fillStyle = '#9aa3b8'; ctx.font = '10px Arial';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText(fmtYAxis(yVal), PAD_L - 4, gy);
   }
 
   // X軸ラベル
-  ctx.fillStyle = '#6b7a9e';
-  ctx.font = '10px Arial';
-  ctx.textAlign = 'center';
+  ctx.fillStyle = '#9aa3b8'; ctx.font = '10px Arial';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
   var xIdxs = [0, Math.floor(pts.length / 2), pts.length - 1];
   for (var xi = 0; xi < xIdxs.length; xi++) {
     var idx = xIdxs[xi];
-    var xp  = PAD_L + gW * idx / (pts.length - 1 || 1);
-    ctx.fillText(pts[idx].day + '日', xp, H - 8);
+    ctx.fillText(pts[idx] + '日', PAD_L + gW * idx / (pts.length - 1 || 1), H - 8);
   }
 
-  function px(i) { return PAD_L + gW * i / (simData.length - 1 || 1); }
+  function px(i) { return PAD_L + gW * i / (pts.length - 1 || 1); }
   function py(v) { return PAD_T + gH * (1 - v / maxVal); }
 
-  // 塗りつぶし（シミュレーション）
+  // 複利グラデーション塗り
   var grad = ctx.createLinearGradient(0, PAD_T, 0, PAD_T + gH);
-  grad.addColorStop(0, 'rgba(15,185,129,0.18)');
-  grad.addColorStop(1, 'rgba(15,185,129,0.01)');
+  grad.addColorStop(0, tc.fill + '0.18)');
+  grad.addColorStop(1, tc.fill + '0.01)');
   ctx.fillStyle = grad;
   ctx.beginPath();
-  for (var fi = 0; fi < simData.length; fi++) {
-    if (fi === 0) ctx.moveTo(px(fi), py(simData[fi]));
-    else          ctx.lineTo(px(fi), py(simData[fi]));
+  for (var fi = 0; fi < compData.length; fi++) {
+    if (fi === 0) ctx.moveTo(px(fi), py(compData[fi]));
+    else          ctx.lineTo(px(fi), py(compData[fi]));
   }
-  ctx.lineTo(px(simData.length - 1), PAD_T + gH);
-  ctx.lineTo(PAD_L, PAD_T + gH);
-  ctx.closePath();
-  ctx.fill();
+  ctx.lineTo(px(compData.length-1), PAD_T+gH);
+  ctx.lineTo(PAD_L, PAD_T+gH);
+  ctx.closePath(); ctx.fill();
 
-  function drawLine(data, color, dash) {
-    ctx.strokeStyle = color;
-    ctx.lineWidth   = 2.5;
-    ctx.setLineDash(dash || []);
-    ctx.beginPath();
-    for (var di = 0; di < data.length; di++) {
-      if (di === 0) ctx.moveTo(px(di), py(data[di]));
-      else          ctx.lineTo(px(di), py(data[di]));
-    }
-    ctx.stroke();
-    ctx.setLineDash([]);
+  // 単利（破線）
+  ctx.strokeStyle = tc.simple; ctx.lineWidth = 2; ctx.setLineDash([6,4]);
+  ctx.beginPath();
+  for (var si = 0; si < simpleData.length; si++) {
+    if (si === 0) ctx.moveTo(px(si), py(simpleData[si]));
+    else          ctx.lineTo(px(si), py(simpleData[si]));
   }
+  ctx.stroke(); ctx.setLineDash([]);
 
-  drawLine(simpleData, '#f59e0b', [5, 4]);
-  drawLine(compData,   '#4f6ef7', [7, 3]);
-  drawLine(simData,    '#0fb981');
-}
-
-// ===== マイルストーン =====
-function addMonths(date, months) {
-  var d = new Date(date.getTime());
-  d.setMonth(d.getMonth() + months);
-  return d;
-}
-
-function fmtDate(d) {
-  return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate();
-}
-
-function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
-  var card = document.getElementById('milestoneCard');
-  var grid = document.getElementById('milestoneGrid');
-  card.classList.remove('hidden');
-
-  var milestones = [
-    { label: '3ヶ月後',  date: addMonths(startDate, 3),  color: '#0fb981', bg: 'linear-gradient(135deg,#d0f5e8,#b8f0d8)', border: '#82dbb8' },
-    { label: '6ヶ月後',  date: addMonths(startDate, 6),  color: '#4f6ef7', bg: 'linear-gradient(135deg,#dce5ff,#c8d8ff)', border: '#9ab2ff' },
-    { label: '12ヶ月後', date: addMonths(startDate, 12), color: '#9b5cf6', bg: 'linear-gradient(135deg,#ede0ff,#ddc8ff)', border: '#c49aff' },
-    { label: '2年後',    date: addMonths(startDate, 24), color: '#f59e0b', bg: 'linear-gradient(135deg,#fff3cc,#ffe8a0)', border: '#ffd260' }
-  ];
-
-  var html = '';
-  for (var i = 0; i < milestones.length; i++) {
-    var m    = milestones[i];
-    var days = Math.round((m.date - startDate) / 86400000);
-    if (days <= 0) days = 1;
-
-    // このシミュレーション
-    var sim    = runSimulation(principal, days, annualRate, fee, threshold);
-    var simVal = sim.cashout;
-    var simPct = (simVal / principal - 1) * 100;
-
-    // 完全複利
-    var compVal = compoundValue(principal, annualRate, days) * (1 - fee / 100);
-    var compPct = (compVal / principal - 1) * 100;
-
-    // 単利
-    var simpVal = principal * (1 + annualRate / 100 * days / 365) * (1 - fee / 100);
-    var simpPct = (simpVal / principal - 1) * 100;
-
-    html +=
-      '<div class="milestone-row" style="border-color:' + m.border + '">' +
-        '<div class="milestone-header" style="background:' + m.bg + ';color:' + m.color + '">' +
-          '<span>' + m.label + '</span>' +
-          '<span class="milestone-date">' + fmtDate(m.date) + '</span>' +
-          '<span class="milestone-days">' + days + '日</span>' +
-        '</div>' +
-        '<div class="milestone-body" style="background:#fff">' +
-          makeMilestoneCell('単利', simpVal, simpPct, jpyRate, m.color) +
-          makeMilestoneCell('複利（日次）', compVal, compPct, jpyRate, m.color) +
-        '</div>' +
-      '</div>';
+  // 複利ライン（実線）
+  ctx.strokeStyle = tc.comp; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (var ci = 0; ci < compData.length; ci++) {
+    if (ci === 0) ctx.moveTo(px(ci), py(compData[ci]));
+    else          ctx.lineTo(px(ci), py(compData[ci]));
   }
-  grid.innerHTML = html;
+  ctx.stroke();
+
+  // アクティブ縦線と点
+  if (activeIdx >= 0 && activeIdx < pts.length) {
+    var ax = px(activeIdx);
+    ctx.strokeStyle = 'rgba(100,100,120,0.3)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(ax, PAD_T); ctx.lineTo(ax, PAD_T+gH); ctx.stroke();
+
+    [[compData, tc.comp], [simpleData, tc.simple]].forEach(function(pair) {
+      ctx.fillStyle   = pair[1];
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(ax, py(pair[0][activeIdx]), 5, 0, Math.PI*2);
+      ctx.fill(); ctx.stroke();
+    });
+  }
 }
 
-function makeMilestoneCell(label, value, pct, jpyRate, color) {
-  return '<div class="milestone-cell">' +
-    '<div class="milestone-cell-label">' + label + '</div>' +
-    '<div class="milestone-cell-value" style="color:' + color + '">' + fmtUSD(value) + '</div>' +
-    '<div class="milestone-cell-yen">' + fmtJPY(value, jpyRate) + '</div>' +
-    '<div class="milestone-cell-pct">' + fmtPct(pct) + '</div>' +
-  '</div>';
+function setupChartEvents(canvas, ctx, W) {
+  var tooltip = document.getElementById('chartTooltip');
+  function getIdx(clientX) {
+    var rect = canvas.getBoundingClientRect();
+    var x    = (clientX - rect.left) * (canvas.width / rect.width);
+    var relX = (x - gChart.PAD_L) / gChart.gW;
+    return Math.max(0, Math.min(gChart.pts.length-1, Math.round(relX * (gChart.pts.length-1))));
+  }
+  function show(clientX, clientY) {
+    var idx   = getIdx(clientX);
+    var compV = gChart.compData[idx];
+    var simpV = gChart.simpleData[idx];
+    var rate  = gChart.jpyRate;
+    var tc    = THEMES[currentTheme];
+    drawChartBase(ctx, W, idx);
+    tooltip.innerHTML =
+      '<div class="chart-tooltip-day">' + gChart.pts[idx] + '日目</div>' +
+      '<div class="chart-tooltip-row"><div class="chart-tooltip-dot" style="background:' + tc.comp + '"></div>' +
+        '複利: ' + fmtUSD(compV) + ' <span style="opacity:.7;font-size:0.7rem">(' + fmtJPY(compV, rate) + ')</span></div>' +
+      '<div class="chart-tooltip-row"><div class="chart-tooltip-dot" style="background:' + tc.simple + '"></div>' +
+        '単利: ' + fmtUSD(simpV) + ' <span style="opacity:.7;font-size:0.7rem">(' + fmtJPY(simpV, rate) + ')</span></div>';
+    var rect = canvas.getBoundingClientRect();
+    var tipX = clientX - rect.left + 14;
+    var tipY = clientY - rect.top  - 20;
+    if (tipX + 200 > rect.width) tipX = clientX - rect.left - 210;
+    if (tipY < 0) tipY = 4;
+    tooltip.style.left    = tipX + 'px';
+    tooltip.style.top     = tipY + 'px';
+    tooltip.style.display = 'block';
+  }
+  function hide() { tooltip.style.display = 'none'; drawChartBase(ctx, W, -1); }
+  canvas.onmousemove  = function(e) { show(e.clientX, e.clientY); };
+  canvas.onmouseleave = hide;
+  canvas.ontouchstart = function(e) { e.preventDefault(); show(e.touches[0].clientX, e.touches[0].clientY); };
+  canvas.ontouchmove  = function(e) { e.preventDefault(); show(e.touches[0].clientX, e.touches[0].clientY); };
+  canvas.ontouchend   = hide;
 }
 
 // ===== 起動 =====
 window.onload = function() {
-  // 今日の日付をデフォルトにセット
-  var today = new Date();
-  var yyyy  = today.getFullYear();
-  var mm    = ('0' + (today.getMonth() + 1)).slice(-2);
-  var dd    = ('0' + today.getDate()).slice(-2);
-  document.getElementById('startDate').value = yyyy + '-' + mm + '-' + dd;
+  // テーマ復元
+  try {
+    var saved = localStorage.getItem('sim_theme');
+    if (saved && THEMES[saved]) setTheme(saved);
+  } catch(e) {}
+
+  // 今日の日付
+  var t  = new Date();
+  var mm = ('0' + (t.getMonth()+1)).slice(-2);
+  var dd = ('0' + t.getDate()).slice(-2);
+  document.getElementById('startDate').value = t.getFullYear() + '-' + mm + '-' + dd;
+
+  fetchRate();
   simulate();
 };
 </script>
