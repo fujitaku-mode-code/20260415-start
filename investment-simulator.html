@@ -319,6 +319,30 @@
       text-align: center; padding: 40px 16px;
       color: var(--muted); font-size: 0.9rem;
     }
+    /* ===== 資料集 ===== */
+    .guide-title {
+      background: var(--btn-grad); color: #fff;
+      border-radius: 10px; padding: 11px 14px;
+      font-weight: 700; font-size: 0.85rem;
+      margin-bottom: 10px; margin-top: 6px;
+    }
+    .step-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+    .step-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; background: var(--bg); border-radius: 10px; border: 1px solid var(--border); }
+    .step-num { min-width: 26px; height: 26px; border-radius: 50%; background: var(--btn-grad); color: #fff; font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .step-text { font-size: 0.82rem; color: var(--text); line-height: 1.55; }
+    .step-text b { color: var(--accent); }
+    .step-note { font-size: 0.74rem; color: #d32f2f; font-weight: 600; margin-top: 3px; }
+    .guide-done { background: rgba(15,185,129,0.1); border: 1.5px solid #0fb981; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; font-weight: 700; color: #0a9e6d; text-align: center; }
+    /* ===== SNSリンク ===== */
+    .sns-card { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 10px; text-decoration: none; color: var(--text); transition: background 0.15s; }
+    .sns-card:active { background: var(--border); }
+    .sns-icon { width: 38px; height: 38px; border-radius: 10px; background: #000; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sns-icon svg { width: 20px; height: 20px; fill: #fff; }
+    .sns-name { font-weight: 700; font-size: 0.88rem; }
+    .sns-handle { font-size: 0.74rem; color: var(--muted); margin-top: 1px; }
+    .sns-arrow { margin-left: auto; color: var(--muted); font-size: 1rem; }
+    /* ラベル内ヒント */
+    .label-hint { font-size: 0.68rem; font-weight: 700; color: #b07800; margin-left: 6px; background: rgba(255,200,0,0.18); padding: 1px 6px; border-radius: 8px; }
   </style>
 </head>
 <body class="theme-blue">
@@ -339,7 +363,7 @@
 <div class="tab-bar">
   <button class="tab-btn active" id="tabBtn-0" onclick="switchTab(0)">① 投資<br>シミュレーター</button>
   <button class="tab-btn"        id="tabBtn-1" onclick="switchTab(1)">② 資料集</button>
-  <button class="tab-btn"        id="tabBtn-2" onclick="switchTab(2)">③ bitradex<br>最新情報</button>
+  <button class="tab-btn"        id="tabBtn-2" onclick="switchTab(2)">③ bitradex等<br>最新情報</button>
 </div>
 
 <!-- タブ①: 投資シミュレーター -->
@@ -367,8 +391,7 @@
 
   <div class="input-grid">
     <div class="input-group required-field" style="grid-column:1/-1">
-      <div class="required-hint">※黄色の枠内へ入力</div>
-      <label>⭐ 初期投資額（$）</label>
+      <label>⭐ 初期投資額（$）<span class="label-hint">※黄色の枠内へ入力</span></label>
       <input type="number" id="principal" value="1000" min="1" step="100" oninput="updatePrincipalYen()" />
       <div class="input-yen" id="principalYen"></div>
     </div>
@@ -455,23 +478,82 @@
 
 <!-- タブ②: 資料集 -->
 <div id="tab-docs" class="tab-panel">
+
+  <!-- ガイド1 -->
   <div class="card">
-    <div class="card-title">
-      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📚</span>
-      資料集
+    <div class="card-title"><span class="card-title-icon" style="background:rgba(79,110,247,0.12)">💳</span>biteradeX → bitget wallet → カードへ入金</div>
+    <div class="guide-title">📋 作業の流れ（全10ステップ）</div>
+    <div class="step-list">
+      <div class="step-item"><div class="step-num">①</div><div class="step-text">bitget walletのアプリを開き、トークンの中の<b>【solチェーンのUSDT】</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">②</div><div class="step-text">左下の<b>【受け取る】</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">③</div><div class="step-text">受け取りアドレス横の<b>【コピーボタン】</b>を押す<div class="step-note">※ SOLチェーンになっていることを念のため確認</div></div></div>
+      <div class="step-item"><div class="step-num">④</div><div class="step-text">bitradeXのアプリを開き、右下の<b>【資産】</b>→ 資産の中の<b>【USDT】</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑤</div><div class="step-text">右下の<b>【出金】</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑥</div><div class="step-text">下部に出てくる出金タイプの<b>【オンチェーン出金】</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑦</div><div class="step-text">
+        ⑦-1 アドレス入力欄に、bitget walletでコピーしたアドレスを<b>貼り付け</b>る<br>
+        <span style="font-size:0.74rem;color:#d32f2f;font-weight:600">※ アドレスの上2文字・下2文字を確認してください</span><br>
+        ⑦-2 ネットワーク選択で<b>【SOL(Solana)】</b>を選ぶ<br>
+        ⑦-3 全額引き出す場合は<b>【全て】</b>ボタンを押す<br>
+        ⑦-4 最下部の<b>【出金ボタン】</b>を押す
+      </div></div>
+      <div class="step-item"><div class="step-num">⑧</div><div class="step-text">bitget walletのアプリを開き、最下部右の<b>【ウォレット】</b>→<b>【カード】</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑨</div><div class="step-text">最下部の<b>【チャージ】</b>ボタンを押す</div></div>
+      <div class="step-item"><div class="step-num">⑩</div><div class="step-text">真ん中右横の<b>【100%】</b>→<b>【次へ】</b>→<b>【承認】</b>を押す</div></div>
     </div>
-    <div class="tab-placeholder">準備中です。</div>
+    <div class="guide-done">✅ Apple Payに紐づいたデビットカードへの入金完了！</div>
   </div>
+
+  <!-- ガイド2 -->
+  <div class="card">
+    <div class="card-title"><span class="card-title-icon" style="background:rgba(155,92,246,0.12)">🤖</span>bitradex AI BOT → USDT変換まで</div>
+    <div class="guide-title">📋 作業の流れ（全16ステップ）</div>
+    <div class="step-list">
+      <div class="step-item"><div class="step-num">①</div><div class="step-text">右下の<b>「資産」</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">②</div><div class="step-text">上部タブの<b>「AI」</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">③</div><div class="step-text">中間タブの<b>「収益プール」</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">④</div><div class="step-text">グラデーション色の右側の<b>「収益の引き出し」</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑤</div><div class="step-text"><b>「MAX」</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑥</div><div class="step-text"><b>「今すぐ引き出す」</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑦</div><div class="step-text">「利益引き出し確認」ダイアログの<b>「確認」</b>ボタンを押す</div></div>
+      <div class="step-item"><div class="step-num">⑧</div><div class="step-text"><b>「交換」</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑨</div><div class="step-text"><b>「MAX」</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑩</div><div class="step-text"><b>「今すぐ交換」</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑪</div><div class="step-text"><b>「振替」</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑫</div><div class="step-text"><b>「矢印ボタン」</b>を押して、上部が<b>「AIアカウント」</b>・下部が<b>「現物」</b>になるよう切り替える</div></div>
+      <div class="step-item"><div class="step-num">⑬</div><div class="step-text">通貨表示を<b>「USDN」→「BTX」</b>に変更する</div></div>
+      <div class="step-item"><div class="step-num">⑭</div><div class="step-text"><b>「全て」</b>を押す</div></div>
+      <div class="step-item"><div class="step-num">⑮</div><div class="step-text"><b>「確認」</b>を押す → BTXに数字が入っていることを確認</div></div>
+      <div class="step-item"><div class="step-num">⑯</div><div class="step-text">市場画面で<b>「BTX/USDT」</b>表示を確認 →<b>「売却」</b>タブ →<b>「成行注文」</b>に変更 →<b>黒ボタン</b>を右端まで移動 →<b>「売却BTX」</b>を押す</div></div>
+    </div>
+    <div class="guide-done">✅ USDTに金額が表示されていれば作業完了！</div>
+  </div>
+
 </div>
 
-<!-- タブ③: bitradex最新情報 -->
+<!-- タブ③: bitradex等最新情報 -->
 <div id="tab-news" class="tab-panel">
   <div class="card">
     <div class="card-title">
       <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📰</span>
-      bitradexの最新情報
+      bitradex等の最新情報
     </div>
-    <div class="tab-placeholder">準備中です。</div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:14px">公式X（Twitter）アカウントの最新情報をご確認ください。</p>
+    <a class="sns-card" href="https://x.com/Bitradexen" target="_blank" rel="noopener">
+      <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+      <div><div class="sns-name">Bitradex（英語）</div><div class="sns-handle">@Bitradexen</div></div>
+      <div class="sns-arrow">›</div>
+    </a>
+    <a class="sns-card" href="https://x.com/BitradeXCapital" target="_blank" rel="noopener">
+      <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+      <div><div class="sns-name">BitradeX Capital</div><div class="sns-handle">@BitradeXCapital</div></div>
+      <div class="sns-arrow">›</div>
+    </a>
+    <a class="sns-card" href="https://x.com/BitradexJP" target="_blank" rel="noopener">
+      <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+      <div><div class="sns-name">Bitradex（日本語）</div><div class="sns-handle">@BitradexJP</div></div>
+      <div class="sns-arrow">›</div>
+    </a>
   </div>
 </div>
 
