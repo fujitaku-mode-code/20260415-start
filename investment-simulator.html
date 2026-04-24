@@ -62,31 +62,22 @@
       margin: 0 auto;
     }
 
-    /* ===== テーマ選択バー ===== */
-    .theme-bar {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .theme-bar-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-      font-weight: 600;
-      margin-right: 4px;
-    }
+    /* ===== テーマボタン ===== */
     .theme-btn {
-      width: 32px; height: 32px;
+      width: 20px; height: 20px;
       border-radius: 50%;
-      border: 3px solid transparent;
+      border: 2px solid transparent;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.65rem; font-weight: 700; color: #fff;
-      transition: transform 0.15s, border-color 0.15s;
+      padding: 0;
+      transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.22);
     }
-    .theme-btn:active { transform: scale(0.9); }
-    .theme-btn.active { border-color: var(--text); transform: scale(1.1); }
+    .theme-btn:active { transform: scale(0.85); }
+    .theme-btn.active {
+      border-color: var(--text);
+      transform: scale(1.25);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.12), 0 2px 10px rgba(0,0,0,0.28);
+    }
     .theme-btn-blue  { background: linear-gradient(135deg, #4f6ef7, #9b5cf6); }
     .theme-btn-black { background: linear-gradient(135deg, #1e2a3a, #3d4f66); }
     .theme-btn-red   { background: linear-gradient(135deg, #e63946, #c1121f); }
@@ -102,8 +93,13 @@
       margin: 0 auto 10px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.18);
     }
-    h1 { font-size: 1.35rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+    h1 { font-size: 1.35rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .subtitle-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px;
+    }
     .subtitle { color: var(--muted); font-size: 0.82rem; }
+    .theme-dots { display: flex; align-items: center; gap: 7px; }
 
     /* ===== カード ===== */
     .card {
@@ -293,18 +289,17 @@
 </head>
 <body class="theme-blue">
 
-<!-- テーマ選択 -->
-<div class="theme-bar">
-  <span class="theme-bar-label">テーマ</span>
-  <button class="theme-btn theme-btn-blue  active" id="btn-blue"  onclick="setTheme('blue')"  title="ブルー">青</button>
-  <button class="theme-btn theme-btn-black"         id="btn-black" onclick="setTheme('black')" title="ブラック">黒</button>
-  <button class="theme-btn theme-btn-red"           id="btn-red"   onclick="setTheme('red')"   title="レッド">赤</button>
-</div>
-
 <!-- ヘッダー -->
 <div class="header">
   <h1>投資シミュレーター</h1>
-  <p class="subtitle">年利180%・日利受取・$100再投資・出金5%手数料モデル</p>
+  <div class="subtitle-row">
+    <p class="subtitle">日利受取・$100再投資・出金5%手数料モデル</p>
+    <div class="theme-dots">
+      <button class="theme-btn theme-btn-blue  active" id="btn-blue"  onclick="setTheme('blue')"  title="ブルー"></button>
+      <button class="theme-btn theme-btn-black"         id="btn-black" onclick="setTheme('black')" title="ブラック"></button>
+      <button class="theme-btn theme-btn-red"           id="btn-red"   onclick="setTheme('red')"   title="レッド"></button>
+    </div>
+  </div>
 </div>
 
 <div class="error-box" id="errorBox"></div>
@@ -329,7 +324,7 @@
 
   <div class="input-grid">
     <div class="input-group required-field">
-      <label>⭐ 初期投資額（$）<span class="required-note">← ここに入力</span></label>
+      <label>⭐ 初期投資額（$）<span class="required-note">↓ここへ入力</span></label>
       <input type="number" id="principal" value="1000" min="1" step="100" oninput="updatePrincipalYen()" />
       <div class="input-yen" id="principalYen"></div>
     </div>
@@ -354,7 +349,7 @@
       <input type="number" id="jpyRate" value="155" min="1" step="1" oninput="updatePrincipalYen()" />
     </div>
     <div class="input-group required-field" style="grid-column:1/-1">
-      <label>⭐ 開始日（運用開始日を入力）<span class="required-note">← ここに入力</span></label>
+      <label>⭐ 開始日（運用開始日を入力）<span class="required-note">↓ここへ入力</span></label>
       <input type="date" id="startDate" />
     </div>
   </div>
@@ -494,41 +489,63 @@ function nowTimeStr() {
 }
 
 // ===== 為替レート =====
+function applyRate(rate) {
+  document.getElementById('rateValue').textContent = rate + ' 円 / ドル';
+  document.getElementById('rateDate').textContent  = '✅ リアルタイム';
+  document.getElementById('rateTime').textContent  = nowTimeStr() + '取得';
+  document.getElementById('jpyRate').value = Math.round(rate);
+  updatePrincipalYen();
+}
+function fallbackRate() {
+  var cur = parseFloat(document.getElementById('jpyRate').value) || 155;
+  document.getElementById('rateValue').textContent = cur + ' 円 / ドル';
+  document.getElementById('rateDate').textContent  = '※設定値を使用中';
+  document.getElementById('rateTime').textContent  = nowTimeStr();
+}
 function fetchRate() {
   document.getElementById('rateDate').textContent = '取得中...';
-  // まず現在のjpyRate値で即時表示
-  var currentRate = parseFloat(document.getElementById('jpyRate').value) || 155;
-  document.getElementById('rateValue').textContent = currentRate + ' 円 / ドル';
+  var cur = parseFloat(document.getElementById('jpyRate').value) || 155;
+  document.getElementById('rateValue').textContent = cur + ' 円 / ドル';
   document.getElementById('rateTime').textContent  = nowTimeStr() + '（設定値）';
 
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://api.frankfurter.app/latest?from=USD&to=JPY', true);
-  xhr.timeout = 8000;
-  xhr.onload = function() {
-    if (xhr.status === 200) {
+  // API 1: open.er-api.com
+  var xhr1 = new XMLHttpRequest();
+  xhr1.open('GET', 'https://open.er-api.com/v6/latest/USD', true);
+  xhr1.timeout = 8000;
+  var done = false;
+  xhr1.onload = function() {
+    if (done) return;
+    if (xhr1.status === 200) {
       try {
-        var data = JSON.parse(xhr.responseText);
-        var rate = Math.round(data.rates.JPY * 10) / 10;
-        var d    = new Date(data.date + 'T00:00:00');
-        document.getElementById('rateValue').textContent = rate + ' 円 / ドル';
-        document.getElementById('rateDate').textContent  = (d.getMonth()+1) + '月' + d.getDate() + '日付レート';
-        document.getElementById('rateTime').textContent  = nowTimeStr() + '取得';
-        document.getElementById('jpyRate').value = Math.round(rate);
-        updatePrincipalYen();
-      } catch(e) {
-        document.getElementById('rateDate').textContent = '※設定値を使用中';
-        document.getElementById('rateTime').textContent = nowTimeStr();
-      }
-    } else {
-      document.getElementById('rateDate').textContent = '※設定値を使用中';
-      document.getElementById('rateTime').textContent = nowTimeStr();
+        var d = JSON.parse(xhr1.responseText);
+        var rate = Math.round(d.rates.JPY * 10) / 10;
+        if (rate > 50 && rate < 300) { done = true; applyRate(rate); return; }
+      } catch(e) {}
     }
+    if (!done) tryApi2();
   };
-  xhr.onerror = xhr.ontimeout = function() {
-    document.getElementById('rateDate').textContent = '※設定値を使用中';
-    document.getElementById('rateTime').textContent = nowTimeStr();
-  };
-  xhr.send();
+  xhr1.onerror = xhr1.ontimeout = function() { if (!done) tryApi2(); };
+  xhr1.send();
+
+  function tryApi2() {
+    // API 2: cdn.jsdelivr.net currency-api
+    var xhr2 = new XMLHttpRequest();
+    xhr2.open('GET', 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json', true);
+    xhr2.timeout = 8000;
+    xhr2.onload = function() {
+      if (done) return;
+      if (xhr2.status === 200) {
+        try {
+          var d2 = JSON.parse(xhr2.responseText);
+          var rate2 = Math.round(d2.usd.jpy * 10) / 10;
+          if (rate2 > 50 && rate2 < 300) { done = true; applyRate(rate2); return; }
+        } catch(e) {}
+      }
+      if (!done) { done = true; fallbackRate(); }
+    };
+    xhr2.onerror = xhr2.ontimeout = function() { if (!done) { done = true; fallbackRate(); } };
+    xhr2.send();
+  }
 }
 
 function updatePrincipalYen() {
