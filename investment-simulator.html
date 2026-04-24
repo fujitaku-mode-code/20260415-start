@@ -66,22 +66,11 @@
     }
 
     /* ===== ヘッダー ===== */
-    .header { padding: 0 0 16px; }
-    .logo-banner {
-      background: var(--white);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px 14px;
-      margin-bottom: 10px;
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    .header { padding: 8px 0 14px; }
+    .title-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
     }
-    .logo-left { display: flex; align-items: center; gap: 7px; min-width: 0; flex-shrink: 1; }
-    .logo-icon { width: 24px; height: 24px; flex-shrink: 0; color: var(--accent); }
-    h1 { font-size: 0.95rem; font-weight: 800; color: var(--text); white-space: nowrap; }
-    .logo-deco { display: none; }
+    h1 { font-size: 1.3rem; font-weight: 800; color: var(--text); }
     .theme-row { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 
     /* ===== テーマボタン ===== */
@@ -275,12 +264,16 @@
     .required-field input { background: #fff; border-color: #f0c030; }
     .required-field input:focus { border-color: var(--accent); }
     .required-hint {
-      grid-column: 1 / -1;
       font-size: 0.72rem; font-weight: 700;
       color: #b07800;
       text-align: left;
-      padding: 2px 2px;
-      margin-top: -4px;
+      margin-bottom: 2px;
+    }
+    .required-hint-red {
+      font-size: 0.7rem; font-weight: 600;
+      color: #d32f2f;
+      text-align: left;
+      margin-bottom: 6px;
     }
 
     /* マイルストーン文字サイズ拡大 */
@@ -306,19 +299,8 @@
 
 <!-- ヘッダー -->
 <div class="header">
-  <div class="logo-banner">
-    <div class="logo-left">
-      <svg class="logo-icon" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="3" y="32" width="9" height="16" rx="2" stroke="currentColor" stroke-width="2.2"/>
-        <rect x="15" y="23" width="9" height="25" rx="2" stroke="currentColor" stroke-width="2.2"/>
-        <rect x="27" y="14" width="9" height="34" rx="2" stroke="currentColor" stroke-width="2.2"/>
-        <path d="M4 44 C14 32 25 20 40 9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M33 8 L41 8 L41 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="48" cy="37" r="5.5" stroke="currentColor" stroke-width="2.2"/>
-        <circle cx="48" cy="37" r="2" fill="currentColor"/>
-      </svg>
-      <h1>投資シミュレーター</h1>
-    </div>
+  <div class="title-row">
+    <h1>投資シミュレーター</h1>
     <div class="theme-row">
       <button class="theme-btn theme-btn-blue  active" id="btn-blue"  onclick="setTheme('blue')"  title="ブルー">blue</button>
       <button class="theme-btn theme-btn-black"         id="btn-black" onclick="setTheme('black')" title="ブラック">black</button>
@@ -348,12 +330,13 @@
   </div>
 
   <div class="input-grid">
-    <div class="input-group required-field">
+    <div class="input-group required-field" style="grid-column:1/-1">
+      <div class="required-hint">※黄色の枠内へ入力</div>
+      <div class="required-hint-red">「更新」ボタンを押すと、日本円換算の金額が表示されます</div>
       <label>⭐ 初期投資額（$）</label>
       <input type="number" id="principal" value="1000" min="1" step="100" oninput="updatePrincipalYen()" />
       <div class="input-yen" id="principalYen"></div>
     </div>
-    <div class="required-hint">※黄色の枠内へ入力</div>
     <div class="input-group">
       <label>運用日数（日）</label>
       <input type="number" id="days" value="365" min="1" step="1" />
@@ -513,6 +496,7 @@ function applyRate(rate) {
   document.getElementById('rateValue').textContent = gJpyRate + ' 円 / ドル';
   document.getElementById('rateDate').textContent  = '✅ リアルタイム';
   document.getElementById('rateTime').textContent  = nowTimeStr() + '取得';
+  try { localStorage.setItem('sim_last_rate', gJpyRate); } catch(e) {}
   updatePrincipalYen();
 }
 function fallbackRate() {
@@ -935,6 +919,16 @@ window.onload = function() {
   try {
     var saved = localStorage.getItem('sim_theme');
     if (saved && THEMES[saved]) setTheme(saved);
+  } catch(e) {}
+
+  // 前回取得レートを即時表示
+  try {
+    var savedRate = parseFloat(localStorage.getItem('sim_last_rate'));
+    if (savedRate > 50 && savedRate < 300) {
+      gJpyRate = savedRate;
+      document.getElementById('rateValue').textContent = gJpyRate + ' 円 / ドル';
+      document.getElementById('rateDate').textContent  = '前回取得値';
+    }
   } catch(e) {}
 
   updatePrincipalYen();
