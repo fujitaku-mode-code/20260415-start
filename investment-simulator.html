@@ -737,6 +737,7 @@ function switchTab(idx) {
     document.getElementById('tab-' + tabIds[i]).classList.toggle('active', i === idx);
     document.getElementById('tabBtn-' + i).classList.toggle('active', i === idx);
   }
+  try { localStorage.setItem('sim_tab', idx); } catch(e) {}
 }
 
 function setTheme(name) {
@@ -1240,6 +1241,12 @@ window.onload = function() {
   try {
     var saved = localStorage.getItem('sim_theme');
     if (saved && THEMES[saved]) setTheme(saved);
+  } catch(e) {}
+
+  // タブ復元
+  try {
+    var savedTab = parseInt(localStorage.getItem('sim_tab'), 10);
+    if (savedTab > 0 && savedTab < tabIds.length) switchTab(savedTab);
   } catch(e) {}
 
   // 前回取得レートを即時表示
