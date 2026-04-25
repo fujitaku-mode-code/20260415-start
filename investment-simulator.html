@@ -780,7 +780,7 @@ function runSimulation(principal, days, annualRate, feePercent, threshold) {
   var p = principal, pending = 0, totalReinv = 0;
   var rows = [];
   for (var d = 1; d <= days; d++) {
-    var interest = d <= 2 ? 0 : p * dailyRate;
+    var interest = d <= 1 ? 0 : p * dailyRate;
     pending += interest;
     var didReinvest = false;
     if (pending >= threshold) {
@@ -904,7 +904,7 @@ function simulate() {
 
     lastStartDate = new Date();
 
-    var effDays       = Math.max(0, days - 2);
+    var effDays       = Math.max(0, days - 1);
     var compCashout   = compoundValue(principal, annualRate, effDays) * (1 - fee / 100);
     var simpleCashout = principal * (1 + annualRate / 100 * effDays / 365) * (1 - fee / 100);
 
@@ -981,7 +981,7 @@ function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startD
   for (var i = 0; i < ms.length; i++) {
     var m    = ms[i];
     var days = Math.max(1, Math.round((m.date - startDate) / 86400000));
-    var effD = Math.max(0, days - 2);
+    var effD = Math.max(0, days - 1);
     var compV = compoundValue(principal, annualRate, effD) * (1 - fee / 100);
     var simpV = principal * (1 + annualRate / 100 * effD / 365) * (1 - fee / 100);
     html +=
@@ -1092,7 +1092,7 @@ function drawChart(principal, annualRate, fee, days, jpyRate) {
 
   var compData = [], simpleData = [];
   for (var i = 0; i < pts.length; i++) {
-    var ed = Math.max(0, pts[i] - 2);
+    var ed = Math.max(0, pts[i] - 1);
     compData.push(compoundValue(principal, annualRate, ed) * (1 - feeRate));
     simpleData.push(principal * (1 + annualRate / 100 * ed / 365) * (1 - feeRate));
   }
