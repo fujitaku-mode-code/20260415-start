@@ -353,6 +353,12 @@
     .sns-arrow { margin-left: auto; color: var(--muted); font-size: 1rem; }
     /* ラベル内ヒント */
     .label-hint { font-size: 0.68rem; font-weight: 700; color: #d32f2f; margin-left: 6px; background: rgba(211,47,47,0.08); padding: 1px 6px; border-radius: 8px; }
+    /* ===== ライトボックス ===== */
+    .lb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; align-items:center; justify-content:center; padding:12px; }
+    .lb-overlay.open { display:flex; }
+    .lb-overlay img { max-width:100%; max-height:100%; object-fit:contain; border-radius:8px; box-shadow:0 8px 40px rgba(0,0,0,0.6); }
+    .lb-close { position:fixed; top:12px; right:16px; font-size:2rem; color:#fff; cursor:pointer; line-height:1; z-index:10000; }
+    .pdf-page img { cursor:zoom-in; }
   </style>
 </head>
 <body class="theme-blue">
@@ -485,51 +491,89 @@
 <!-- タブ②: 資料集 -->
 <div id="tab-docs" class="tab-panel">
 
-  <!-- ガイド1 -->
+  <p style="font-size:0.75rem;color:var(--muted);margin:0 0 10px;text-align:center">🔍 画像をタップすると拡大表示できます</p>
+
+  <!-- 投資への流れ -->
   <div class="card">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
-        <span class="card-title-icon" style="background:rgba(79,110,247,0.12)">💳</span>biteradeX → bitget wallet → カードへ入金
+        <span class="card-title-icon" style="background:rgba(15,185,129,0.12)">📈</span>投資への流れ
       </div>
       <span class="acc-arrow">▼</span>
     </div>
     <div class="acc-body">
-      <div class="guide-title">📋 実際の操作画面（全6ページ）</div>
+      <div class="guide-title">📋 実際の操作画面（全1ページ）</div>
       <div class="pdf-pages">
-        <div class="pdf-page"><img src="tools/pdf_images/guide1_p01.jpg" alt="操作手順 1" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide1_p02.jpg" alt="操作手順 2" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide1_p03.jpg" alt="操作手順 3" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide1_p04.jpg" alt="操作手順 4" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide1_p05.jpg" alt="操作手順 5" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide1_p06.jpg" alt="操作手順 6" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_invest_p01.jpg" alt="投資への流れ 1" loading="lazy" onclick="openLightbox(this)"></div>
       </div>
-      <div class="guide-done">✅ Apple Payに紐づいたデビットカードへの入金完了！</div>
     </div>
   </div>
 
-  <!-- ガイド2 -->
+  <!-- AI BOT → USDT -->
   <div class="card">
     <div class="acc-header" onclick="toggleAcc(this)">
       <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
-        <span class="card-title-icon" style="background:rgba(155,92,246,0.12)">🤖</span>bitradex AI BOT → USDT変換まで
+        <span class="card-title-icon" style="background:rgba(155,92,246,0.12)">🤖</span>【bitradex内】AI BOT → USDT変換まで
       </div>
       <span class="acc-arrow">▼</span>
     </div>
     <div class="acc-body">
       <div class="guide-title">📋 実際の操作画面（全10ページ）</div>
       <div class="pdf-pages">
-        <div class="pdf-page"><img src="tools/pdf_images/guide2_p01.jpg" alt="操作手順 1" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide2_p02.jpg" alt="操作手順 2" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide2_p03.jpg" alt="操作手順 3" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide2_p04.jpg" alt="操作手順 4" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide2_p05.jpg" alt="操作手順 5" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide2_p06.jpg" alt="操作手順 6" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide2_p07.jpg" alt="操作手順 7" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide2_p08.jpg" alt="操作手順 8" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide2_p09.jpg" alt="操作手順 9" loading="lazy"></div>
-        <div class="pdf-page"><img src="tools/pdf_images/guide2_p10.jpg" alt="操作手順 10" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p01.jpg" alt="AI BOT 1" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p02.jpg" alt="AI BOT 2" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p03.jpg" alt="AI BOT 3" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p04.jpg" alt="AI BOT 4" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p05.jpg" alt="AI BOT 5" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p06.jpg" alt="AI BOT 6" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p07.jpg" alt="AI BOT 7" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p08.jpg" alt="AI BOT 8" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p09.jpg" alt="AI BOT 9" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p10.jpg" alt="AI BOT 10" loading="lazy" onclick="openLightbox(this)"></div>
       </div>
       <div class="guide-done">✅ USDTに金額が表示されていれば作業完了！</div>
+    </div>
+  </div>
+
+  <!-- bitget wallet → カードへ入金 -->
+  <div class="card">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
+        <span class="card-title-icon" style="background:rgba(79,110,247,0.12)">💳</span>bitradeX → bitget wallet → カードへ入金
+      </div>
+      <span class="acc-arrow">▼</span>
+    </div>
+    <div class="acc-body">
+      <div class="guide-title">📋 実際の操作画面（全4ページ）</div>
+      <div class="pdf-pages">
+        <div class="pdf-page"><img src="tools/pdf_images/new_bitget_p01.jpg" alt="bitget 1" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_bitget_p02.jpg" alt="bitget 2" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_bitget_p03.jpg" alt="bitget 3" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_bitget_p04.jpg" alt="bitget 4" loading="lazy" onclick="openLightbox(this)"></div>
+      </div>
+      <div class="guide-done">✅ Apple Payに紐づいたデビットカードへの入金完了！</div>
+    </div>
+  </div>
+
+  <!-- TRIA カードへ入金 -->
+  <div class="card">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
+        <span class="card-title-icon" style="background:rgba(247,181,0,0.15)">🏧</span>bitradeX → TRIAカードへ入金
+      </div>
+      <span class="acc-arrow">▼</span>
+    </div>
+    <div class="acc-body">
+      <div class="guide-title">📋 実際の操作画面（全6ページ）</div>
+      <div class="pdf-pages">
+        <div class="pdf-page"><img src="tools/pdf_images/new_tria_p01.jpg" alt="TRIA 1" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_tria_p02.jpg" alt="TRIA 2" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_tria_p03.jpg" alt="TRIA 3" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_tria_p04.jpg" alt="TRIA 4" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_tria_p05.jpg" alt="TRIA 5" loading="lazy" onclick="openLightbox(this)"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/new_tria_p06.jpg" alt="TRIA 6" loading="lazy" onclick="openLightbox(this)"></div>
+      </div>
+      <div class="guide-done">✅ TRIAカードへの入金完了！</div>
     </div>
   </div>
 
@@ -730,6 +774,17 @@ function toggleAcc(header) {
   var body = header.nextElementSibling;
   var isOpen = body.classList.toggle('open');
   header.classList.toggle('open', isOpen);
+}
+
+function openLightbox(img) {
+  var lb = document.getElementById('lb-overlay');
+  document.getElementById('lb-img').src = img.src;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lb-overlay').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 function switchTab(idx) {
@@ -1264,5 +1319,11 @@ window.onload = function() {
   simulate();
 };
 </script>
+
+<!-- ライトボックス -->
+<div id="lb-overlay" class="lb-overlay" onclick="closeLightbox()">
+  <span class="lb-close" onclick="closeLightbox()">✕</span>
+  <img id="lb-img" src="" alt="">
+</div>
 </body>
 </html>
