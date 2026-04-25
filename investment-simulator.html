@@ -421,7 +421,7 @@
   </div>
 
   <button class="btn" onclick="simulate()">📊 シミュレーション実行</button>
-  <p class="sim-note">※開始日を本日とした場合。また、日利受取で算出してシミュレーション実施します</p>
+  <p class="sim-note">※開始日を本日。日利受取で算出としたシミュレーションです</p>
 </div>
 
 <!-- 期間別シミュレーション -->
@@ -538,12 +538,13 @@
 
 <!-- タブ③: bitradex等最新情報 -->
 <div id="tab-news" class="tab-panel">
+
+  <!-- X（Twitter） -->
   <div class="card">
     <div class="card-title">
-      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📰</span>
-      bitradex等の最新情報
+      <span class="card-title-icon" style="background:rgba(0,0,0,0.08)"><svg style="width:18px;height:18px;fill:currentColor;vertical-align:middle" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>
+      X（Twitter）
     </div>
-    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:14px">公式X（Twitter）アカウントの最新情報をご確認ください。</p>
     <a class="sns-card" href="https://x.com/Bitradexen" target="_blank" rel="noopener">
       <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
       <div><div class="sns-name">Bitradex（英語）</div><div class="sns-handle">@Bitradexen</div></div>
@@ -559,7 +560,56 @@
       <div><div class="sns-name">Bitradex（日本語）</div><div class="sns-handle">@BitradexJP</div></div>
       <div class="sns-arrow">›</div>
     </a>
+    <a class="sns-card" href="https://x.com/BitgetWallet" target="_blank" rel="noopener">
+      <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+      <div><div class="sns-name">Bitget Wallet</div><div class="sns-handle">@BitgetWallet</div></div>
+      <div class="sns-arrow">›</div>
+    </a>
+    <a class="sns-card" href="https://x.com/BitgetWalletJP" target="_blank" rel="noopener">
+      <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+      <div><div class="sns-name">Bitget Wallet（日本語）</div><div class="sns-handle">@BitgetWalletJP</div></div>
+      <div class="sns-arrow">›</div>
+    </a>
+    <a class="sns-card" href="https://x.com/useTria" target="_blank" rel="noopener">
+      <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+      <div><div class="sns-name">Tria</div><div class="sns-handle">@useTria</div></div>
+      <div class="sns-arrow">›</div>
+    </a>
   </div>
+
+  <!-- WEBサイト -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-title-icon" style="background:rgba(15,185,129,0.1)">🌐</span>
+      WEBサイト
+    </div>
+    <a class="sns-card" href="https://www.bitradex.ai/ja" target="_blank" rel="noopener">
+      <div class="sns-icon" style="background:linear-gradient(135deg,#1a3a8f,#4f6ef7)"><span style="color:#fff;font-weight:800;font-size:0.7rem">BTX</span></div>
+      <div><div class="sns-name">Bitradex 公式サイト</div><div class="sns-handle">www.bitradex.ai</div></div>
+      <div class="sns-arrow">›</div>
+    </a>
+    <a class="sns-card" href="https://coinmarketcap.com/ja/" target="_blank" rel="noopener">
+      <div class="sns-icon" style="background:#2575fc"><span style="color:#fff;font-weight:800;font-size:0.62rem">CMC</span></div>
+      <div><div class="sns-name">CoinMarketCap</div><div class="sns-handle">coinmarketcap.com</div></div>
+      <div class="sns-arrow">›</div>
+    </a>
+    <a class="sns-card" href="https://skynet.certik.com/leaderboards/exchange" target="_blank" rel="noopener">
+      <div class="sns-icon" style="background:#00b4d8"><span style="color:#fff;font-weight:800;font-size:0.62rem">CER</span></div>
+      <div><div class="sns-name">CertiK Skynet</div><div class="sns-handle">skynet.certik.com</div></div>
+      <div class="sns-arrow">›</div>
+    </a>
+    <a class="sns-card" href="https://web3.bitget.com/ja" target="_blank" rel="noopener">
+      <div class="sns-icon" style="background:linear-gradient(135deg,#00c6fb,#005bea)"><span style="color:#fff;font-weight:800;font-size:0.62rem">BGT</span></div>
+      <div><div class="sns-name">Bitget Wallet</div><div class="sns-handle">web3.bitget.com</div></div>
+      <div class="sns-arrow">›</div>
+    </a>
+    <a class="sns-card" href="https://www.tria.so/ja" target="_blank" rel="noopener">
+      <div class="sns-icon" style="background:linear-gradient(135deg,#7b2ff7,#f107a3)"><span style="color:#fff;font-weight:800;font-size:0.72rem">TR</span></div>
+      <div><div class="sns-name">Tria</div><div class="sns-handle">www.tria.so</div></div>
+      <div class="sns-arrow">›</div>
+    </a>
+  </div>
+
 </div>
 
 <script>
