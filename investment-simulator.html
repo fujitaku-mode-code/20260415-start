@@ -442,7 +442,6 @@
     複利との比較
   </div>
   <div id="compRows"></div>
-  <div class="assumptions" id="assumptionsText"></div>
 </div>
 
 <!-- グラフ -->
@@ -920,7 +919,6 @@ function simulate() {
       makeCompRow('複利（日次複利）', '毎日全額が複利で運用',
         compCashout,   jpyRate, (compCashout   / principal - 1) * 100, 'accent',  'pill-accent');
 
-    document.getElementById('assumptionsText').innerHTML = '';
 
     // マイルストーン
     var startDate = lastStartDate || new Date();
