@@ -391,14 +391,14 @@
       <div class="rate-value" id="rateValue">--- 円 / ドル</div>
       <div class="rate-date"  id="rateDate">取得中...</div>
       <div style="font-size:0.7rem;color:var(--muted);margin-top:2px" id="rateTime"></div>
-      <div style="font-size:0.68rem;color:#d32f2f;margin-top:4px;font-weight:600">「更新」ボタンを押すと、日本円換算の金額が表示されます</div>
+      <div style="font-size:0.68rem;color:#d32f2f;margin-top:4px;font-weight:600">①「更新」ボタンを押して、日本円を表示</div>
     </div>
     <button class="rate-btn" onclick="fetchRate()">🔄 更新</button>
   </div>
 
   <div class="input-grid">
     <div class="input-group required-field" style="grid-column:1/-1">
-      <label>⭐ 初期投資額（$）<span class="label-hint">※黄色の枠内へ入力</span></label>
+      <label>⭐ 初期投資額（$）<span class="label-hint">②※黄色の枠内へ入力</span></label>
       <input type="number" id="principal" value="1000" min="1" step="100" oninput="updatePrincipalYen()" />
       <div class="input-yen" id="principalYen"></div>
     </div>
@@ -420,7 +420,7 @@
     </div>
   </div>
 
-  <button class="btn" onclick="simulate()">📊 シミュレーション実行</button>
+  <button class="btn" onclick="simulate()">③ シミュレーション実行</button>
   <p class="sim-note">※開始日を本日。日利受取で算出したシミュレーションツールです。</p>
 </div>
 
