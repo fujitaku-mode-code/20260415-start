@@ -337,6 +337,12 @@
     .pdf-pages { display: flex; flex-direction: column; gap: 16px; margin-bottom: 18px; }
     .pdf-page { border-radius: 14px; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.13); border: 1.5px solid var(--border); background: #fff; }
     .pdf-page img { width: 100%; display: block; }
+    /* ===== アコーディオン ===== */
+    .acc-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; padding: 4px 0 10px; }
+    .acc-arrow { font-size: 1rem; color: var(--muted); transition: transform 0.25s; flex-shrink: 0; margin-left: 8px; }
+    .acc-header.open .acc-arrow { transform: rotate(180deg); }
+    .acc-body { overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
+    .acc-body.open { max-height: 9999px; }
     /* ===== SNSリンク ===== */
     .sns-card { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 10px; text-decoration: none; color: var(--text); transition: background 0.15s; }
     .sns-card:active { background: var(--border); }
@@ -482,36 +488,50 @@
 
   <!-- ガイド1 -->
   <div class="card">
-    <div class="card-title"><span class="card-title-icon" style="background:rgba(79,110,247,0.12)">💳</span>biteradeX → bitget wallet → カードへ入金</div>
-    <div class="guide-title">📋 実際の操作画面（全6ページ）</div>
-    <div class="pdf-pages">
-      <div class="pdf-page"><img src="tools/pdf_images/guide1_p01.jpg" alt="操作手順 1" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide1_p02.jpg" alt="操作手順 2" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide1_p03.jpg" alt="操作手順 3" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide1_p04.jpg" alt="操作手順 4" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide1_p05.jpg" alt="操作手順 5" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide1_p06.jpg" alt="操作手順 6" loading="lazy"></div>
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
+        <span class="card-title-icon" style="background:rgba(79,110,247,0.12)">💳</span>biteradeX → bitget wallet → カードへ入金
+      </div>
+      <span class="acc-arrow">▼</span>
     </div>
-    <div class="guide-done">✅ Apple Payに紐づいたデビットカードへの入金完了！</div>
+    <div class="acc-body">
+      <div class="guide-title">📋 実際の操作画面（全6ページ）</div>
+      <div class="pdf-pages">
+        <div class="pdf-page"><img src="tools/pdf_images/guide1_p01.jpg" alt="操作手順 1" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide1_p02.jpg" alt="操作手順 2" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide1_p03.jpg" alt="操作手順 3" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide1_p04.jpg" alt="操作手順 4" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide1_p05.jpg" alt="操作手順 5" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide1_p06.jpg" alt="操作手順 6" loading="lazy"></div>
+      </div>
+      <div class="guide-done">✅ Apple Payに紐づいたデビットカードへの入金完了！</div>
+    </div>
   </div>
 
   <!-- ガイド2 -->
   <div class="card">
-    <div class="card-title"><span class="card-title-icon" style="background:rgba(155,92,246,0.12)">🤖</span>bitradex AI BOT → USDT変換まで</div>
-    <div class="guide-title">📋 実際の操作画面（全10ページ）</div>
-    <div class="pdf-pages">
-      <div class="pdf-page"><img src="tools/pdf_images/guide2_p01.jpg" alt="操作手順 1" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide2_p02.jpg" alt="操作手順 2" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide2_p03.jpg" alt="操作手順 3" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide2_p04.jpg" alt="操作手順 4" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide2_p05.jpg" alt="操作手順 5" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide2_p06.jpg" alt="操作手順 6" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide2_p07.jpg" alt="操作手順 7" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide2_p08.jpg" alt="操作手順 8" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide2_p09.jpg" alt="操作手順 9" loading="lazy"></div>
-      <div class="pdf-page"><img src="tools/pdf_images/guide2_p10.jpg" alt="操作手順 10" loading="lazy"></div>
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
+        <span class="card-title-icon" style="background:rgba(155,92,246,0.12)">🤖</span>bitradex AI BOT → USDT変換まで
+      </div>
+      <span class="acc-arrow">▼</span>
     </div>
-    <div class="guide-done">✅ USDTに金額が表示されていれば作業完了！</div>
+    <div class="acc-body">
+      <div class="guide-title">📋 実際の操作画面（全10ページ）</div>
+      <div class="pdf-pages">
+        <div class="pdf-page"><img src="tools/pdf_images/guide2_p01.jpg" alt="操作手順 1" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide2_p02.jpg" alt="操作手順 2" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide2_p03.jpg" alt="操作手順 3" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide2_p04.jpg" alt="操作手順 4" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide2_p05.jpg" alt="操作手順 5" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide2_p06.jpg" alt="操作手順 6" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide2_p07.jpg" alt="操作手順 7" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide2_p08.jpg" alt="操作手順 8" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide2_p09.jpg" alt="操作手順 9" loading="lazy"></div>
+        <div class="pdf-page"><img src="tools/pdf_images/guide2_p10.jpg" alt="操作手順 10" loading="lazy"></div>
+      </div>
+      <div class="guide-done">✅ USDTに金額が表示されていれば作業完了！</div>
+    </div>
   </div>
 
 </div>
@@ -553,6 +573,12 @@ var currentTheme = 'blue';
 
 // ===== タブ切替 =====
 var tabIds = ['sim', 'docs', 'news'];
+function toggleAcc(header) {
+  var body = header.nextElementSibling;
+  var isOpen = body.classList.toggle('open');
+  header.classList.toggle('open', isOpen);
+}
+
 function switchTab(idx) {
   for (var i = 0; i < tabIds.length; i++) {
     document.getElementById('tab-' + tabIds[i]).classList.toggle('active', i === idx);
