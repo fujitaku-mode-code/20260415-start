@@ -421,7 +421,7 @@
   </div>
 
   <button class="btn" onclick="simulate()">③ シミュレーション実行</button>
-  <p class="sim-note">※開始日を本日。日利受取で算出したシミュレーションツールです。</p>
+  <p class="sim-note">※日利受取で算出したシミュレーションツールです。</p>
 </div>
 
 <!-- 期間別シミュレーション -->
@@ -780,7 +780,7 @@ function runSimulation(principal, days, annualRate, feePercent, threshold) {
   var p = principal, pending = 0, totalReinv = 0;
   var rows = [];
   for (var d = 1; d <= days; d++) {
-    var interest = p * dailyRate;
+    var interest = d <= 2 ? 0 : p * dailyRate;
     pending += interest;
     var didReinvest = false;
     if (pending >= threshold) {
@@ -904,8 +904,9 @@ function simulate() {
 
     lastStartDate = new Date();
 
-    var compCashout   = compoundValue(principal, annualRate, days) * (1 - fee / 100);
-    var simpleCashout = principal * (1 + annualRate / 100 * days / 365) * (1 - fee / 100);
+    var effDays       = Math.max(0, days - 2);
+    var compCashout   = compoundValue(principal, annualRate, effDays) * (1 - fee / 100);
+    var simpleCashout = principal * (1 + annualRate / 100 * effDays / 365) * (1 - fee / 100);
 
     // 複利との比較
     document.getElementById('compCard').classList.remove('hidden');
@@ -980,8 +981,9 @@ function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startD
   for (var i = 0; i < ms.length; i++) {
     var m    = ms[i];
     var days = Math.max(1, Math.round((m.date - startDate) / 86400000));
-    var compV = compoundValue(principal, annualRate, days) * (1 - fee / 100);
-    var simpV = principal * (1 + annualRate / 100 * days / 365) * (1 - fee / 100);
+    var effD = Math.max(0, days - 2);
+    var compV = compoundValue(principal, annualRate, effD) * (1 - fee / 100);
+    var simpV = principal * (1 + annualRate / 100 * effD / 365) * (1 - fee / 100);
     html +=
       '<div class="milestone-row" style="border-color:' + m.border + '">' +
         '<div class="milestone-header" style="background:' + m.bg + ';color:' + m.color + '">' +
@@ -1090,8 +1092,9 @@ function drawChart(principal, annualRate, fee, days, jpyRate) {
 
   var compData = [], simpleData = [];
   for (var i = 0; i < pts.length; i++) {
-    compData.push(compoundValue(principal, annualRate, pts[i]) * (1 - feeRate));
-    simpleData.push(principal * (1 + annualRate / 100 * pts[i] / 365) * (1 - feeRate));
+    var ed = Math.max(0, pts[i] - 2);
+    compData.push(compoundValue(principal, annualRate, ed) * (1 - feeRate));
+    simpleData.push(principal * (1 + annualRate / 100 * ed / 365) * (1 - feeRate));
   }
 
   gChart.pts = pts; gChart.compData = compData; gChart.simpleData = simpleData;
