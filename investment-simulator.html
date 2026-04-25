@@ -812,7 +812,7 @@ function applyRate(rate) {
   gJpyRate = Math.round(rate * 10) / 10;
   document.getElementById('rateValue').textContent = gJpyRate + ' 円 / ドル';
   document.getElementById('rateDate').textContent  = '';
-  document.getElementById('rateTime').textContent  = nowTimeStr() + '取得';
+  document.getElementById('rateTime').textContent  = nowTimeStr();
   try { localStorage.setItem('sim_last_rate', gJpyRate); } catch(e) {}
   updatePrincipalYen();
 }
