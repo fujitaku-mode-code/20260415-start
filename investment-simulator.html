@@ -376,8 +376,15 @@
   <button class="tab-btn"        id="tabBtn-2" onclick="switchTab(2)">3⃣ bitradex等<br>最新情報</button>
 </div>
 
-<!-- 為替レートバナー（全タブ共通） -->
-<div class="card" style="margin-bottom:0;border-radius:0 0 14px 14px">
+<!-- タブ①: 投資シミュレーター -->
+<div id="tab-sim" class="tab-panel active">
+<div class="error-box" id="errorBox"></div>
+
+<!-- 設定 -->
+<div class="card">
+  <div class="card-title" style="display:none"></div>
+
+  <!-- 為替レートバナー -->
   <div class="rate-banner">
     <div style="flex:1">
       <div class="rate-label">現在の為替レート</div>
@@ -388,15 +395,6 @@
     </div>
     <button class="rate-btn" onclick="fetchRate()">🔄 更新</button>
   </div>
-</div>
-
-<!-- タブ①: 投資シミュレーター -->
-<div id="tab-sim" class="tab-panel active">
-<div class="error-box" id="errorBox"></div>
-
-<!-- 設定 -->
-<div class="card">
-  <div class="card-title" style="display:none"></div>
 
   <div class="input-grid">
     <div class="input-group required-field" style="grid-column:1/-1">
@@ -934,7 +932,6 @@ function simulate() {
     document.getElementById('tableCard').classList.remove('hidden');
     renderTable(sim.rows, false, jpyRate);
 
-    document.getElementById('milestoneCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch(e) {
     var eb = document.getElementById('errorBox');
     eb.style.display = 'block';
