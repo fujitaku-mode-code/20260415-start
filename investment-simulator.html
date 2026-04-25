@@ -385,7 +385,7 @@
   <div class="rate-banner">
     <div style="flex:1">
       <div class="rate-label">現在の為替レート</div>
-      <div class="rate-value" id="rateValue">155 円 / ドル</div>
+      <div class="rate-value" id="rateValue">--- 円 / ドル</div>
       <div class="rate-date"  id="rateDate">取得中...</div>
       <div style="font-size:0.7rem;color:var(--muted);margin-top:2px" id="rateTime"></div>
       <div style="font-size:0.68rem;color:#d32f2f;margin-top:4px;font-weight:600">「更新」ボタンを押すと、日本円換算の金額が表示されます</div>
@@ -624,8 +624,10 @@ function compoundValue(principal, annualRate, days) {
 
 // ===== 現在時刻フォーマット =====
 function nowTimeStr() {
+  var w = ['日','月','火','水','木','金','土'];
   var n = new Date();
-  return n.getHours() + '時' + ('0' + n.getMinutes()).slice(-2) + '分現在';
+  return n.getFullYear() + '/' + (n.getMonth()+1) + '/' + n.getDate() + '（' + w[n.getDay()] + '）' +
+         n.getHours() + '時' + ('0' + n.getMinutes()).slice(-2) + '分現在';
 }
 
 // ===== 為替レート =====
@@ -644,7 +646,7 @@ function fallbackRate() {
 }
 function fetchRate() {
   document.getElementById('rateDate').textContent  = '取得中...';
-  document.getElementById('rateValue').textContent = gJpyRate + ' 円 / ドル';
+  document.getElementById('rateValue').textContent = (gJpyRate > 0 ? gJpyRate : '---') + ' 円 / ドル';
   document.getElementById('rateTime').textContent  = '';
 
   // API 1: open.er-api.com
@@ -690,12 +692,16 @@ function fetchRate() {
 function updatePrincipalYen() {
   var p  = parseFloat(document.getElementById('principal').value);
   var el = document.getElementById('principalYen');
-  el.textContent = (!isNaN(p) && p > 0) ? commaInt(p * gJpyRate) + '円' : '';
+  if (!isNaN(p) && p > 0) {
+    el.textContent = gJpyRate > 0 ? commaInt(p * gJpyRate) + '円' : '--- 円';
+  } else {
+    el.textContent = '';
+  }
 }
 
 // ===== グローバル状態 =====
-var gJpyRate = 155;
-var lastRows = [], lastJpyRate = 155, lastStartDate = null, fullTableVisible = false;
+var gJpyRate = 0;
+var lastRows = [], lastJpyRate = 0, lastStartDate = null, fullTableVisible = false;
 var gSimParams = {};
 
 // ===== メイン =====
