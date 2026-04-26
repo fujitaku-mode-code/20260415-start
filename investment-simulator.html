@@ -502,15 +502,6 @@
   <div class="milestone-grid" id="milestoneGrid"></div>
 </div>
 
-<!-- 複利との比較 -->
-<div class="card hidden" id="compCard">
-  <div class="card-title">
-    <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">⚖️</span>
-    複利との比較
-  </div>
-  <div id="compRows"></div>
-</div>
-
 <!-- グラフ -->
 <div class="card hidden" id="chartCard">
   <div class="card-title">
@@ -1094,20 +1085,6 @@ function simulate() {
     lastStartDate = new Date();
 
     var effDays       = Math.max(0, days - 1);
-    var compCashout   = compoundValue(principal, annualRate, effDays) * (1 - fee / 100);
-    var simpleCashout = principal * (1 + annualRate / 100 * effDays / 365) * (1 - fee / 100);
-
-    // 複利との比較
-    document.getElementById('compCard').classList.remove('hidden');
-    document.getElementById('compRows').innerHTML =
-      makeCompRow('元本のみ（運用なし）', '投資しない場合',
-        principal,     jpyRate, 0, 'muted', 'pill-gray') +
-      makeCompRow('単利', '元本のみに利息がつく',
-        simpleCashout, jpyRate, (simpleCashout / principal - 1) * 100, '#f59e0b', 'pill-yellow') +
-      makeCompRow('複利（日次複利）', '毎日全額が複利で運用',
-        compCashout,   jpyRate, (compCashout   / principal - 1) * 100, 'accent',  'pill-accent');
-
-
     // マイルストーン
     var startDate = lastStartDate || new Date();
     renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate);
@@ -1185,21 +1162,21 @@ function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startD
           '<div style="font-size:0.72rem;font-weight:700;background:' + mc + ';color:#fff;padding:4px 12px;border-radius:20px">' + days + '日</div>' +
         '</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr">' +
-          msCell('複利（日次）', compV, (compV/principal-1)*100, jpyRate, mc, div, true) +
-          msCell('単利',      simpV, (simpV/principal-1)*100, jpyRate, mc, div, false) +
+          msCell('単利',      simpV, (simpV/principal-1)*100, jpyRate, mc, div, true,  false) +
+          msCell('複利（日次）', compV, (compV/principal-1)*100, jpyRate, mc, div, false, true) +
         '</div>' +
       '</div>';
   }
   document.getElementById('milestoneGrid').innerHTML = html;
 }
 
-function msCell(label, value, pct, jpyRate, color, divColor, isComp) {
+function msCell(label, value, pct, jpyRate, color, divColor, hasBorder, useAccent) {
   var isJpy   = (simMode === 'jpy' && jpyRate > 0);
   var primary = isJpy ? ('¥' + commaInt(value * jpyRate)) : fmtUSD(value);
   var sub     = isJpy ? fmtUSD(value) : fmtJPY(value, jpyRate);
-  var vColor  = isComp ? color : 'var(--text)';
+  var vColor  = useAccent ? color : 'var(--text)';
   var pBg     = color + '1e';
-  var border  = isComp ? ('border-right:1px solid ' + divColor + ';') : '';
+  var border  = hasBorder ? ('border-right:1px solid ' + divColor + ';') : '';
   var arrow   = pct >= 0 ? '▲ ' : '▼ ';
   return '<div style="padding:13px 15px;' + border + '">' +
     '<div style="font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px">' + label + '</div>' +
