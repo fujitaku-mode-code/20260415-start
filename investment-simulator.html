@@ -493,13 +493,20 @@
   <button class="btn" onclick="simulate()">③ シミュレーション実行</button>
 </div>
 
+<!-- 投資条件サマリー枠 -->
+<div id="simSummaryBox" class="hidden" style="background:var(--white);border:1.5px solid var(--border);border-left:4px solid var(--accent);border-radius:12px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+  <span style="font-size:0.75rem;color:var(--muted);white-space:nowrap">初期投資額</span>
+  <strong id="simSummaryAmt" style="font-size:1.05rem;font-weight:900;color:var(--accent);white-space:nowrap"></strong>
+  <span id="simSummarySub" style="font-size:0.78rem;color:var(--muted);white-space:nowrap"></span>
+  <span style="font-size:0.75rem;color:var(--muted);white-space:nowrap">を運用した場合の試算</span>
+</div>
+
 <!-- 期間別シミュレーション -->
 <div class="card hidden" id="milestoneCard">
   <div class="card-title">
     <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
     期間別シミュレーション
   </div>
-  <div id="simSummaryText" style="font-size:0.8rem;color:var(--muted);text-align:center;margin-bottom:12px;line-height:1.6"></div>
   <div class="milestone-grid" id="milestoneGrid"></div>
 </div>
 
@@ -1085,7 +1092,25 @@ function simulate() {
 
     lastStartDate = new Date();
 
-    var effDays       = Math.max(0, days - 1);
+    var effDays = Math.max(0, days - 1);
+
+    // 投資条件サマリー枠を更新・表示
+    (function() {
+      var box = document.getElementById('simSummaryBox');
+      if (!box) return;
+      var amt, sub;
+      if (simMode === 'jpy' && jpyRate > 0) {
+        amt = '¥' + commaInt(principal * jpyRate);
+        sub = '（≈ $' + commaDec(principal) + '）';
+      } else {
+        amt = '$' + commaDec(principal);
+        sub = jpyRate > 0 ? '（¥' + commaInt(principal * jpyRate) + '）' : '';
+      }
+      document.getElementById('simSummaryAmt').textContent = amt;
+      document.getElementById('simSummarySub').textContent = sub;
+      box.classList.remove('hidden');
+    })();
+
     // マイルストーン
     var startDate = lastStartDate || new Date();
     renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate);
@@ -1138,19 +1163,6 @@ function fmtDate(d) {
 
 function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
   document.getElementById('milestoneCard').classList.remove('hidden');
-
-  // 投資額サマリー
-  var summaryEl = document.getElementById('simSummaryText');
-  if (summaryEl) {
-    var dispAmt;
-    if (simMode === 'jpy' && jpyRate > 0) {
-      dispAmt = '¥' + commaInt(principal * jpyRate) + '<span style="color:var(--muted);font-size:0.72rem">（≈ $' + commaDec(principal) + '）</span>';
-    } else {
-      dispAmt = '$' + commaDec(principal) + (jpyRate > 0 ? '<span style="color:var(--muted);font-size:0.72rem">（¥' + commaInt(principal * jpyRate) + '）</span>' : '');
-    }
-    summaryEl.innerHTML = '<span style="color:var(--muted)">初期投資額 </span><strong style="color:var(--accent);font-size:0.95rem;font-weight:900">' + dispAmt + '</strong><span style="color:var(--muted)"> を運用した場合の試算</span>';
-  }
-
   var ms = [
     { label:'3ヶ月後',  date:addMonths(startDate,3),  color:'#0fb981', dColor:'#34d399' },
     { label:'6ヶ月後',  date:addMonths(startDate,6),  color:'#4f6ef7', dColor:'#60a5fa' },
