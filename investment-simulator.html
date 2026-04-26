@@ -337,9 +337,9 @@
     .tab-panel.active { display: block; }
     /* ===== シミュレーター通貨モード ===== */
     .sim-mode-bar {
-      display: flex; margin-bottom: 14px;
+      display: flex; margin-bottom: 0;
       background: var(--white); border: 1.5px solid var(--border);
-      border-radius: 12px; overflow: hidden;
+      border-radius: 12px 12px 0 0; overflow: hidden;
       box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     }
     .sim-mode-btn {
@@ -467,7 +467,7 @@
 <div class="error-box" id="errorBox"></div>
 
 <!-- 設定 -->
-<div class="card" style="padding-top:10px">
+<div class="card" style="padding-top:10px;border-top-left-radius:0;border-top-right-radius:0;border-top:none;margin-bottom:14px">
   <div class="card-title" style="display:none"></div>
 
   <!-- 為替レートバナー -->
