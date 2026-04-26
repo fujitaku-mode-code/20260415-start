@@ -901,6 +901,7 @@ function setSimMode(mode) {
   }
   document.getElementById('principalLabel').innerHTML =
     '⭐ 投資金額（' + (isJpy ? '円' : '$') + '）<span class="label-hint">②黄色の枠内へ金額を入力</span>';
+  updatePresetLabels();
   updatePrincipalYen();
   try { localStorage.setItem('sim_mode', mode); } catch(e) {}
   simulate();
@@ -980,20 +981,25 @@ function fmtPresetLabel(val) {
   }
 }
 
-function setPresetDirect(val, btn) {
-  document.getElementById('principal').value = val;
-  updatePrincipalYen();
-  document.querySelectorAll('.preset-btn').forEach(function(b) { b.classList.remove('active'); });
-  if (btn) btn.classList.add('active');
-}
-
 function updatePresetLabels() {
   var container = document.getElementById('presetBtns');
   if (!container) return;
   var vals = PRESETS[simMode] || PRESETS.usd;
-  container.innerHTML = vals.map(function(v) {
-    return '<button class="preset-btn" onclick="setPresetDirect(' + v + ',this)">' + fmtPresetLabel(v) + '</button>';
-  }).join('');
+  container.innerHTML = '';
+  vals.forEach(function(v) {
+    var btn = document.createElement('button');
+    btn.className = 'preset-btn';
+    btn.type = 'button';
+    btn.textContent = fmtPresetLabel(v);
+    btn.addEventListener('click', function() {
+      document.getElementById('principal').value = v;
+      updatePrincipalYen();
+      var all = container.querySelectorAll('.preset-btn');
+      for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
+      btn.classList.add('active');
+    });
+    container.appendChild(btn);
+  });
 }
 
 // ===== ユーティリティ =====
