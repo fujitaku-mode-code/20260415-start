@@ -15,20 +15,20 @@
 
     /* ===== テーマ変数 ===== */
     :root {
-      --bg:         #f7f3eb;
+      --bg:         #f5f0e8;
       --white:      #ffffff;
-      --border:     #e5d9b6;
-      --accent:     #b8860b;
-      --accent2:    #d4a017;
-      --btn-grad:   linear-gradient(135deg, #b8860b, #d4a017);
-      --rate-bg:    linear-gradient(135deg, #fdf6e3, #faf0d7);
-      --rate-border:#dfc96a;
+      --border:     #d8c89a;
+      --accent:     #7a5a00;
+      --accent2:    #9e7a10;
+      --btn-grad:   linear-gradient(135deg, #6b5000, #9e7a10);
+      --rate-bg:    linear-gradient(135deg, #fdf6e3, #f8edce);
+      --rate-border:#c8a840;
       --text:       #1c1a14;
-      --muted:      #7a6d52;
-      --green:      #0fb981;
-      --orange:     #e07b20;
-      --yellow:     #d4a017;
-      --grid-line:  #ede5cf;
+      --muted:      #695d42;
+      --green:      #0a9e6d;
+      --orange:     #c96a10;
+      --yellow:     #9e7a10;
+      --grid-line:  #e8dfc0;
       --radius:     16px;
     }
 
@@ -36,13 +36,13 @@
       --bg:          #100f0c;
       --white:       #1c1a14;
       --border:      #3a3220;
-      --accent:      #d4a017;
-      --accent2:     #e8b84b;
-      --btn-grad:    linear-gradient(135deg, #c9902a, #d4a017);
+      --accent:      #e8b84b;
+      --accent2:     #f5d070;
+      --btn-grad:    linear-gradient(135deg, #c9902a, #e8b84b);
       --rate-bg:     linear-gradient(135deg, #1a1608, #201b0a);
-      --rate-border: #5a4d25;
+      --rate-border: #6a5530;
       --text:        #f0e8d0;
-      --muted:       #a09070;
+      --muted:       #b09878;
       --green:       #26d89a;
       --orange:      #f0953a;
       --yellow:      #e8b84b;
@@ -784,8 +784,8 @@
 <script>
 // ===== テーマ =====
 var THEMES = {
-  light: { comp: '#b8860b', simple: '#0fb981', fill: 'rgba(184,134,11,', grid: '#ede5cf', bg: '#ffffff' },
-  dark:  { comp: '#d4a017', simple: '#26d89a', fill: 'rgba(212,160,23,', grid: '#2a2415', bg: '#1c1a14' }
+  light: { comp: '#7a5a00', simple: '#0a9e6d', fill: 'rgba(122,90,0,',   grid: '#e8dfc0', bg: '#ffffff' },
+  dark:  { comp: '#e8b84b', simple: '#26d89a', fill: 'rgba(232,184,75,', grid: '#2a2415', bg: '#1c1a14' }
 };
 var isDark = false;
 function getTC() { return isDark ? THEMES.dark : THEMES.light; }
