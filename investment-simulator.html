@@ -414,6 +414,18 @@
     .lb-overlay img { max-width:100%; max-height:100%; object-fit:contain; border-radius:8px; box-shadow:0 8px 40px rgba(0,0,0,0.6); }
     .lb-close { position:fixed; top:12px; right:16px; font-size:2rem; color:#fff; cursor:pointer; line-height:1; z-index:10000; }
     .pdf-page img { cursor:zoom-in; }
+    /* ===== 資料集アクションボタン ===== */
+    .doc-actions { display:flex; gap:8px; margin-bottom:14px; }
+    .doc-btn {
+      flex:1; padding:10px 6px; border:none; border-radius:10px;
+      font-size:0.82rem; font-weight:700; cursor:pointer;
+      font-family:'Noto Sans JP',sans-serif; transition:opacity 0.15s;
+      display:flex; align-items:center; justify-content:center; gap:4px;
+    }
+    .doc-btn:active { opacity:0.72; }
+    .doc-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .doc-btn-print { background:var(--bg); color:var(--text); border:1.5px solid var(--border); }
+    .doc-btn-dl    { background:var(--btn-grad); color:#fff; }
     /* ===== 用語ツールチップ ===== */
     .tt {
       position: relative; cursor: help;
@@ -477,21 +489,21 @@
 
   <!-- 為替レートバナー -->
   <div class="rate-banner">
-    <div style="flex:1">
-      <div style="display:flex;align-items:baseline;gap:7px">
+    <div style="flex:1;min-width:0">
+      <div style="font-size:0.82rem;font-weight:600;color:var(--text);margin-bottom:5px">①「更新」ボタンを押し日本円を表示</div>
+      <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
         <span class="rate-num" id="rateNum">---</span>
         <span class="rate-unit">円 / ドル</span>
+        <span class="rate-date" id="rateDate">取得中...</span>
+        <span class="rate-date" id="rateTime"></span>
       </div>
-      <div class="rate-date" id="rateDate" style="margin-top:3px">取得中...</div>
-      <div class="rate-date" id="rateTime"></div>
-      <div class="rate-hint-1" style="margin-top:6px">①「更新」ボタンを押し日本円を表示</div>
     </div>
-    <button class="rate-btn" onclick="fetchRate()" style="padding:10px 18px;font-size:0.9rem;font-weight:800">更新</button>
+    <button class="rate-btn" onclick="fetchRate()" style="padding:7px 11px;font-size:0.78rem;font-weight:700;flex-shrink:0">更新</button>
   </div>
 
   <div class="input-grid">
     <div class="input-group required-field" style="grid-column:1/-1">
-      <label id="principalLabel">⭐ 投資金額（$）<span class="label-hint">②黄色の枠内へ金額を入力</span></label>
+      <label id="principalLabel">②黄色の枠内へ金額を入力</label>
       <div style="display:flex;align-items:center;gap:8px">
         <input type="number" id="principal" value="1000" min="1" step="100"
                style="flex:1;min-width:0"
@@ -594,6 +606,10 @@
       <span class="acc-arrow">▼</span>
     </div>
     <div class="acc-body">
+      <div class="doc-actions">
+        <button class="doc-btn doc-btn-print" onclick="printSection('投資への流れ',['tools/pdf_images/new_invest_p01.jpg','tools/pdf_images/new_invest_p02.jpg','tools/pdf_images/new_invest_p03.jpg','tools/pdf_images/new_invest_p04.jpg','tools/pdf_images/new_invest_p05.jpg','tools/pdf_images/new_invest_p06.jpg','tools/pdf_images/new_invest_p07.jpg','tools/pdf_images/new_invest_p08.jpg','tools/pdf_images/new_invest_p09.jpg'])">🖨 印刷</button>
+        <button class="doc-btn doc-btn-dl" onclick="downloadSection(this,'投資への流れ',['tools/pdf_images/new_invest_p01.jpg','tools/pdf_images/new_invest_p02.jpg','tools/pdf_images/new_invest_p03.jpg','tools/pdf_images/new_invest_p04.jpg','tools/pdf_images/new_invest_p05.jpg','tools/pdf_images/new_invest_p06.jpg','tools/pdf_images/new_invest_p07.jpg','tools/pdf_images/new_invest_p08.jpg','tools/pdf_images/new_invest_p09.jpg'])">⬇ ダウンロード</button>
+      </div>
       <div class="guide-title">📋 実際の操作画面（全9ページ）</div>
       <div class="pdf-pages">
         <div class="pdf-page"><img src="tools/pdf_images/new_invest_p01.jpg" alt="投資への流れ 1" loading="lazy" onclick="openLightbox(this)"></div>
@@ -618,6 +634,10 @@
       <span class="acc-arrow">▼</span>
     </div>
     <div class="acc-body">
+      <div class="doc-actions">
+        <button class="doc-btn doc-btn-print" onclick="printSection('AI BOT → USDT変換',['tools/pdf_images/new_aibot_p01.jpg','tools/pdf_images/new_aibot_p02.jpg','tools/pdf_images/new_aibot_p03.jpg','tools/pdf_images/new_aibot_p04.jpg','tools/pdf_images/new_aibot_p05.jpg','tools/pdf_images/new_aibot_p06.jpg','tools/pdf_images/new_aibot_p07.jpg'])">🖨 印刷</button>
+        <button class="doc-btn doc-btn-dl" onclick="downloadSection(this,'AI BOT → USDT変換',['tools/pdf_images/new_aibot_p01.jpg','tools/pdf_images/new_aibot_p02.jpg','tools/pdf_images/new_aibot_p03.jpg','tools/pdf_images/new_aibot_p04.jpg','tools/pdf_images/new_aibot_p05.jpg','tools/pdf_images/new_aibot_p06.jpg','tools/pdf_images/new_aibot_p07.jpg'])">⬇ ダウンロード</button>
+      </div>
       <div class="guide-title">📋 実際の操作画面（全7ページ）</div>
       <div class="pdf-pages">
         <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p01.jpg" alt="AI BOT 1" loading="lazy" onclick="openLightbox(this)"></div>
@@ -641,6 +661,10 @@
       <span class="acc-arrow">▼</span>
     </div>
     <div class="acc-body">
+      <div class="doc-actions">
+        <button class="doc-btn doc-btn-print" onclick="printSection('bitget walletカードへ入金',['tools/pdf_images/new_bitget_p01.jpg','tools/pdf_images/new_bitget_p02.jpg','tools/pdf_images/new_bitget_p03.jpg','tools/pdf_images/new_bitget_p04.jpg','tools/pdf_images/new_bitget_p05.jpg','tools/pdf_images/new_bitget_p06.jpg','tools/pdf_images/new_bitget_p07.jpg','tools/pdf_images/new_bitget_p08.jpg','tools/pdf_images/new_bitget_p09.jpg','tools/pdf_images/new_bitget_p10.jpg','tools/pdf_images/new_bitget_p11.jpg','tools/pdf_images/new_bitget_p12.jpg','tools/pdf_images/new_bitget_p13.jpg','tools/pdf_images/new_bitget_p14.jpg'])">🖨 印刷</button>
+        <button class="doc-btn doc-btn-dl" onclick="downloadSection(this,'bitget walletカードへ入金',['tools/pdf_images/new_bitget_p01.jpg','tools/pdf_images/new_bitget_p02.jpg','tools/pdf_images/new_bitget_p03.jpg','tools/pdf_images/new_bitget_p04.jpg','tools/pdf_images/new_bitget_p05.jpg','tools/pdf_images/new_bitget_p06.jpg','tools/pdf_images/new_bitget_p07.jpg','tools/pdf_images/new_bitget_p08.jpg','tools/pdf_images/new_bitget_p09.jpg','tools/pdf_images/new_bitget_p10.jpg','tools/pdf_images/new_bitget_p11.jpg','tools/pdf_images/new_bitget_p12.jpg','tools/pdf_images/new_bitget_p13.jpg','tools/pdf_images/new_bitget_p14.jpg'])">⬇ ダウンロード</button>
+      </div>
       <div class="guide-title">📋 実際の操作画面（全14ページ）</div>
       <div class="pdf-pages">
         <div class="pdf-page"><img src="tools/pdf_images/new_bitget_p01.jpg" alt="bitget 1" loading="lazy" onclick="openLightbox(this)"></div>
@@ -903,8 +927,7 @@ function setSimMode(mode) {
     document.getElementById('principal').step = '10000';
     document.getElementById('principal').min  = '1000';
   }
-  document.getElementById('principalLabel').innerHTML =
-    '⭐ 投資金額（' + (isJpy ? '円' : '$') + '）<span class="label-hint">②黄色の枠内へ金額を入力</span>';
+  document.getElementById('principalLabel').textContent = '②黄色の枠内へ金額を入力';
   updatePresetLabels();
   updatePrincipalYen();
   try { localStorage.setItem('sim_mode', mode); } catch(e) {}
@@ -1552,6 +1575,64 @@ function setupChartEvents(canvas, ctx, W) {
   canvas.ontouchend   = hide;
 }
 
+// ===== 資料集: 印刷 =====
+function printSection(title, srcs) {
+  var base = location.href.replace(/[^/]*$/, '');
+  var win = window.open('', '_blank', 'width=800,height=700');
+  if (!win) { alert('ポップアップをブロックしないでください。\nブラウザの設定からポップアップを許可してください。'); return; }
+  var imgs = srcs.map(function(s) { return '<img src="' + base + s + '">'; }).join('');
+  win.document.open();
+  win.document.write(
+    '<!DOCTYPE html><html><head><meta charset="utf-8">'
+    + '<meta name="viewport" content="width=device-width">'
+    + '<title>' + title + '</title>'
+    + '<style>'
+    + '*{margin:0;padding:0;box-sizing:border-box;}'
+    + 'body{background:#fff;}'
+    + 'img{width:100%;display:block;}'
+    + '@media print{img{page-break-after:always;}}'
+    + '</style></head><body>'
+    + imgs
+    + '<script>window.addEventListener("load",function(){window.print();});<\/script>'
+    + '</body></html>'
+  );
+  win.document.close();
+}
+
+// ===== 資料集: ダウンロード（全ページを縦結合して1枚のJPEGで保存）=====
+function downloadSection(btn, title, srcs) {
+  var origText = btn.innerHTML;
+  btn.innerHTML = '⏳ 処理中…';
+  btn.disabled = true;
+  var base = location.href.replace(/[^/]*$/, '');
+  var images = new Array(srcs.length);
+  var loaded = 0;
+  function onDone() {
+    var validImgs = images.filter(function(im) { return im; });
+    if (!validImgs.length) { btn.innerHTML = origText; btn.disabled = false; return; }
+    var W = validImgs[0].naturalWidth;
+    var H = validImgs.reduce(function(s, im) { return s + im.naturalHeight; }, 0);
+    var canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    var ctx = canvas.getContext('2d');
+    var y = 0;
+    images.forEach(function(im) { if (im) { ctx.drawImage(im, 0, y); y += im.naturalHeight; } });
+    canvas.toBlob(function(blob) {
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = title + '.jpg'; a.click();
+      setTimeout(function() { URL.revokeObjectURL(url); }, 10000);
+      btn.innerHTML = origText; btn.disabled = false;
+    }, 'image/jpeg', 0.90);
+  }
+  srcs.forEach(function(src, i) {
+    var im = new Image();
+    im.onload = function() { images[i] = im; if (++loaded === srcs.length) onDone(); };
+    im.onerror = function() { images[i] = null; if (++loaded === srcs.length) onDone(); };
+    im.src = base + src;
+  });
+}
+
 // ===== 起動 =====
 window.onload = function() {
   // ダークモード復元（<body>直後で class は適用済み、ここでは変数とUIだけ同期）
@@ -1568,8 +1649,7 @@ window.onload = function() {
       simMode = 'jpy';
       document.getElementById('simModeBtn-usd').classList.remove('active');
       document.getElementById('simModeBtn-jpy').classList.add('active');
-      document.getElementById('principalLabel').innerHTML =
-        '⭐ 投資金額（円）<span class="label-hint">②黄色の枠内へ金額を入力</span>';
+      document.getElementById('principalLabel').textContent = '②黄色の枠内へ金額を入力';
       document.getElementById('principal').value = 150000;
       document.getElementById('principal').step  = '10000';
       document.getElementById('principal').min   = '1000';
