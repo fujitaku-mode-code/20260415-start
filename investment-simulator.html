@@ -174,7 +174,7 @@
     }
 
     /* ===== マイルストーン ===== */
-    .milestone-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .milestone-grid { display: block; }
     .milestone-row { border-radius: 12px; border: 1.5px solid var(--border); overflow: hidden; }
     .milestone-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -497,7 +497,7 @@
 <div class="card hidden" id="milestoneCard">
   <div class="card-title">
     <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
-    期間別シミュレーション（<span class="tt" ontouchstart="ttTap(this)">単利<span class="tt-pop">元本だけに利息がつく計算方式。利益は元本に組み込まれない。</span></span>・<span class="tt" ontouchstart="ttTap(this)">複利<span class="tt-pop">利息を元本に組み込み、次の利息計算に使う方式。時間が長いほど雪だるま式に増加。</span></span>）
+    期間別シミュレーション
   </div>
   <div class="milestone-grid" id="milestoneGrid"></div>
 </div>
@@ -1161,54 +1161,51 @@ function fmtDate(d) {
 function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
   document.getElementById('milestoneCard').classList.remove('hidden');
   var ms = [
-    { label:'3ヶ月後',  date:addMonths(startDate,3),
-      color:'#0fb981', bg:'linear-gradient(135deg,#d0f5e8,#b8f0d8)', border:'#82dbb8',
-      dColor:'#34d399', dBg:'linear-gradient(135deg,rgba(52,211,153,0.13),rgba(52,211,153,0.06))', dBorder:'rgba(52,211,153,0.3)' },
-    { label:'6ヶ月後',  date:addMonths(startDate,6),
-      color:'#4f6ef7', bg:'linear-gradient(135deg,#dce5ff,#c8d8ff)', border:'#9ab2ff',
-      dColor:'#60a5fa', dBg:'linear-gradient(135deg,rgba(96,165,250,0.13),rgba(96,165,250,0.06))', dBorder:'rgba(96,165,250,0.3)' },
-    { label:'12ヶ月後', date:addMonths(startDate,12),
-      color:'#9b5cf6', bg:'linear-gradient(135deg,#ede0ff,#ddc8ff)', border:'#c49aff',
-      dColor:'#a78bfa', dBg:'linear-gradient(135deg,rgba(167,139,250,0.13),rgba(167,139,250,0.06))', dBorder:'rgba(167,139,250,0.3)' },
-    { label:'2年後',    date:addMonths(startDate,24),
-      color:'#f59e0b', bg:'linear-gradient(135deg,#fff3cc,#ffe8a0)', border:'#ffd260',
-      dColor:'#e8b84b', dBg:'linear-gradient(135deg,rgba(232,184,75,0.13),rgba(232,184,75,0.06))', dBorder:'rgba(232,184,75,0.3)' }
+    { label:'3ヶ月後',  date:addMonths(startDate,3),  color:'#0fb981', dColor:'#34d399' },
+    { label:'6ヶ月後',  date:addMonths(startDate,6),  color:'#4f6ef7', dColor:'#60a5fa' },
+    { label:'12ヶ月後', date:addMonths(startDate,12), color:'#9b5cf6', dColor:'#a78bfa' },
+    { label:'2年後',    date:addMonths(startDate,24), color:'#c9902a', dColor:'#e8b84b' }
   ];
   var html = '';
   for (var i = 0; i < ms.length; i++) {
     var m    = ms[i];
+    var mc   = isDark ? m.dColor : m.color;
+    var div  = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
     var days = Math.max(1, Math.round((m.date - startDate) / 86400000));
     var effD = Math.max(0, days - 1);
     var compV = compoundValue(principal, annualRate, effD) * (1 - fee / 100);
     var simpV = principal * (1 + annualRate / 100 * effD / 365) * (1 - fee / 100);
-    var mc = isDark ? m.dColor : m.color;
-    var mb = isDark ? m.dBg    : m.bg;
-    var mbd= isDark ? m.dBorder: m.border;
     html +=
-      '<div class="milestone-row" style="border-color:' + mbd + '">' +
-        '<div class="milestone-header" style="background:' + mb + ';color:' + mc + '">' +
-          '<span>' + m.label + '</span>' +
-          '<span class="milestone-date">' + fmtDate(m.date) + '</span>' +
-          '<span class="milestone-days">' + days + '日</span>' +
+      '<div style="border-radius:14px;border:1.5px solid var(--border);border-left:4px solid ' + mc + ';background:var(--white);overflow:hidden;margin-bottom:10px">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px 9px;border-bottom:1px solid ' + div + '">' +
+          '<div>' +
+            '<div style="font-size:1.3rem;font-weight:900;color:' + mc + ';letter-spacing:-0.03em;line-height:1">' + m.label + '</div>' +
+            '<div style="font-size:0.68rem;color:var(--muted);margin-top:3px">' + fmtDate(m.date) + '</div>' +
+          '</div>' +
+          '<div style="font-size:0.72rem;font-weight:700;background:' + mc + ';color:#fff;padding:4px 12px;border-radius:20px">' + days + '日</div>' +
         '</div>' +
-        '<div class="milestone-body">' +
-          milestoneCell('単利',      simpV, (simpV/principal-1)*100, jpyRate, mc) +
-          milestoneCell('複利（日次）', compV, (compV/principal-1)*100, jpyRate, mc) +
+        '<div style="display:grid;grid-template-columns:1fr 1fr">' +
+          msCell('複利（日次）', compV, (compV/principal-1)*100, jpyRate, mc, div, true) +
+          msCell('単利',      simpV, (simpV/principal-1)*100, jpyRate, mc, div, false) +
         '</div>' +
       '</div>';
   }
   document.getElementById('milestoneGrid').innerHTML = html;
 }
 
-function milestoneCell(label, value, pct, jpyRate, color) {
+function msCell(label, value, pct, jpyRate, color, divColor, isComp) {
   var isJpy   = (simMode === 'jpy' && jpyRate > 0);
   var primary = isJpy ? ('¥' + commaInt(value * jpyRate)) : fmtUSD(value);
   var sub     = isJpy ? fmtUSD(value) : fmtJPY(value, jpyRate);
-  return '<div class="milestone-cell">' +
-    '<div class="milestone-cell-label">' + label + '</div>' +
-    '<div class="milestone-cell-value" style="color:' + color + '">' + primary + '</div>' +
-    '<div class="milestone-cell-yen">' + sub + '</div>' +
-    '<div class="milestone-cell-pct">' + fmtPct(pct) + '</div>' +
+  var vColor  = isComp ? color : 'var(--text)';
+  var pBg     = color + '1e';
+  var border  = isComp ? ('border-right:1px solid ' + divColor + ';') : '';
+  var arrow   = pct >= 0 ? '▲ ' : '▼ ';
+  return '<div style="padding:13px 15px;' + border + '">' +
+    '<div style="font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px">' + label + '</div>' +
+    '<div style="font-size:1.35rem;font-weight:900;color:' + vColor + ';letter-spacing:-0.03em;line-height:1.1">' + primary + '</div>' +
+    '<div style="font-size:0.68rem;color:var(--muted);margin-top:3px">' + sub + '</div>' +
+    '<div style="display:inline-block;font-size:0.72rem;font-weight:700;padding:2px 9px;border-radius:20px;margin-top:6px;background:' + pBg + ';color:' + color + '">' + arrow + fmtPct(pct) + '</div>' +
   '</div>';
 }
 
