@@ -492,9 +492,10 @@
     </div>
   </div>
 
-  <div class="input-grid">
-    <div class="input-group required-field" style="grid-column:1/-1">
-      <label id="principalLabel">⭐ 投資金額（$）<span class="label-hint">②黄色の枠内へ入力</span></label>
+  <!-- 投資金額 + 実行ボタン（横並び） -->
+  <div style="display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:10px;align-items:stretch">
+    <div class="input-group required-field">
+      <label id="principalLabel">⭐ 投資金額（$）<span class="label-hint">②黄色の枠内へ金額を入力</span></label>
       <input type="number" id="principal" value="1000" min="1" step="100"
              oninput="updatePrincipalYen();updateSliderFromPrincipal()" />
       <div style="margin-top:5px;min-height:1.4em">
@@ -503,13 +504,21 @@
       <div style="margin-top:9px">
         <input type="range" id="principalSlider" class="principal-slider" min="0" max="100" value="10" step="1" oninput="onSliderInput(this.value)">
         <div class="slider-marks">
-          <span onclick="setSliderPct(25)"><span class="smv">$1千</span></span>
-          <span onclick="setSliderPct(50)"><span class="smv">$1万</span></span>
-          <span onclick="setSliderPct(75)"><span class="smv">$10万</span></span>
-          <span onclick="setSliderPct(100)"><span class="smv">$100万</span></span>
+          <span onclick="setSliderPct(25)"><span class="smv">1000$</span></span>
+          <span onclick="setSliderPct(50)"><span class="smv">1万$</span></span>
+          <span onclick="setSliderPct(75)"><span class="smv">10万$</span></span>
+          <span onclick="setSliderPct(100)"><span class="smv">100万$</span></span>
         </div>
       </div>
     </div>
+    <button class="btn" onclick="simulate()"
+            style="align-self:stretch;width:72px;padding:8px 6px;font-size:0.8rem;line-height:1.65;flex-shrink:0">
+      ③<br>シミュ<br>レーション<br>実行
+    </button>
+  </div>
+
+  <!-- 他の設定項目 -->
+  <div class="input-grid" style="margin-bottom:0">
     <div class="input-group">
       <label>運用日数（日）</label>
       <input type="number" id="days" value="365" min="1" step="1" />
@@ -525,11 +534,9 @@
     <div class="input-group">
       <label><span class="tt" ontouchstart="ttTap(this)">再投資額（$）<span class="tt-pop">累積利益がこの金額以上になったとき、累積利益の全額を元本に自動追加します。</span></span></label>
       <input type="number" id="reinvestThreshold" value="100" min="1" step="10" />
-      <div style="font-size:0.65rem;color:var(--muted);margin-top:2px">※設定額以上で累積利益を全額元本に追加</div>
+      <div style="font-size:0.65rem;color:var(--muted);margin-top:2px"><span style="white-space:nowrap">※設定額以上で累積利益を全額</span><span style="white-space:nowrap">元本に追加</span></div>
     </div>
   </div>
-
-  <button class="btn" onclick="simulate()">③ シミュレーション実行</button>
 </div>
 
 <!-- 投資条件サマリー枠 -->
@@ -914,7 +921,7 @@ function setSimMode(mode) {
     document.getElementById('principal').min  = '1000';
   }
   document.getElementById('principalLabel').innerHTML =
-    '⭐ 投資金額（' + (isJpy ? '円' : '$') + '）<span class="label-hint">②黄色の枠内へ入力</span>';
+    '⭐ 投資金額（' + (isJpy ? '円' : '$') + '）<span class="label-hint">②黄色の枠内へ金額を入力</span>';
   updateSliderLabels();
   updatePrincipalYen();
   try { localStorage.setItem('sim_mode', mode); } catch(e) {}
@@ -1027,8 +1034,8 @@ function updateSliderLabels() {
   var marks = document.querySelectorAll('.smv');
   if (!marks.length) return;
   var labels = simMode === 'jpy'
-    ? ['¥10万', '¥100万', '¥1千万', '¥1.5億']
-    : ['$1千', '$1万', '$10万', '$100万'];
+    ? ['10万円', '100万円', '1000万円', '1.5億円']
+    : ['1000$', '1万$', '10万$', '100万$'];
   for (var i = 0; i < marks.length && i < labels.length; i++) marks[i].textContent = labels[i];
 }
 
@@ -1592,7 +1599,7 @@ window.onload = function() {
       document.getElementById('simModeBtn-usd').classList.remove('active');
       document.getElementById('simModeBtn-jpy').classList.add('active');
       document.getElementById('principalLabel').innerHTML =
-        '⭐ 投資金額（円）<span class="label-hint">②黄色の枠内へ入力</span>';
+        '⭐ 投資金額（円）<span class="label-hint">②黄色の枠内へ金額を入力</span>';
       document.getElementById('principal').value = 150000;
       document.getElementById('principal').step  = '10000';
       document.getElementById('principal').min   = '1000';
