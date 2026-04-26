@@ -155,6 +155,28 @@
     }
     input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,0,0,0.06); }
     .input-yen { font-size: 0.78rem; font-weight: 700; color: var(--accent); padding: 0 2px; }
+    /* ===== 投資額スライダー ===== */
+    .principal-slider {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 5px; border-radius: 3px; outline: none; cursor: pointer;
+      background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--pct,10%), var(--border) var(--pct,10%), var(--border) 100%);
+    }
+    .principal-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 20px; height: 20px;
+      border-radius: 50%; background: var(--accent);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.22); cursor: pointer; border: 2.5px solid #fff;
+    }
+    .principal-slider::-moz-range-thumb {
+      width: 18px; height: 18px; border-radius: 50%; background: var(--accent);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.22); cursor: pointer; border: 2px solid #fff;
+    }
+    .slider-marks { display: flex; justify-content: space-between; margin-top: 5px; }
+    .slider-marks span {
+      font-size: 0.65rem; font-weight: 700; color: var(--muted);
+      cursor: pointer; padding: 2px 5px; border-radius: 4px;
+      transition: color 0.15s;
+    }
+    .slider-marks span:hover, .slider-marks span:active { color: var(--accent); }
 
     .btn {
       background: var(--btn-grad); color: #fff;
@@ -436,7 +458,7 @@
 <div class="tab-bar">
   <button class="tab-btn active" id="tabBtn-0" onclick="switchTab(0)">1. 投資<br>シミュレーター</button>
   <button class="tab-btn"        id="tabBtn-1" onclick="switchTab(1)">2. 資料集</button>
-  <button class="tab-btn"        id="tabBtn-2" onclick="switchTab(2)">3. bitradex等<br>最新情報</button>
+  <button class="tab-btn"        id="tabBtn-2" onclick="switchTab(2)">3. その他</button>
 </div>
 
 <!-- タブ①: 投資シミュレーター -->
@@ -461,20 +483,33 @@
         <span class="rate-num" id="rateNum">---</span>
         <span class="rate-unit">円 / ドル</span>
       </div>
+      <div class="rate-date" id="rateDate" style="margin-top:3px">取得中...</div>
+      <div class="rate-date" id="rateTime"></div>
       <div class="rate-hint-1" style="margin-top:6px">①「更新」ボタンを押し日本円を表示</div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0">
-      <button class="rate-btn" onclick="fetchRate()"><span style="font-size:1.3rem">🔄</span> 更新</button>
-      <div class="rate-date" id="rateDate">取得中...</div>
-      <div class="rate-date" id="rateTime"></div>
+    <div style="flex-shrink:0">
+      <button class="rate-btn" onclick="fetchRate()">更新</button>
     </div>
   </div>
 
   <div class="input-grid">
     <div class="input-group required-field" style="grid-column:1/-1">
       <label id="principalLabel">⭐ 投資金額（$）<span class="label-hint">②黄色の枠内へ入力</span></label>
-      <input type="number" id="principal" value="1000" min="1" step="100" oninput="updatePrincipalYen()" />
-      <div class="input-yen" id="principalYen"></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <input type="number" id="principal" value="1000" min="1" step="100"
+               style="width:110px;flex:0 0 110px"
+               oninput="updatePrincipalYen();updateSliderFromPrincipal()" />
+        <span class="input-yen" id="principalYen" style="font-size:0.95rem;white-space:nowrap;flex:1"></span>
+      </div>
+      <div style="margin-top:9px">
+        <input type="range" id="principalSlider" class="principal-slider" min="0" max="100" value="10" step="1" oninput="onSliderInput(this.value)">
+        <div class="slider-marks">
+          <span onclick="setSliderPct(25)">25%</span>
+          <span onclick="setSliderPct(50)">50%</span>
+          <span onclick="setSliderPct(75)">75%</span>
+          <span onclick="setSliderPct(100)">MAX</span>
+        </div>
+      </div>
     </div>
     <div class="input-group">
       <label>運用日数（日）</label>
@@ -489,8 +524,9 @@
       <input type="number" id="fee" value="5" min="0" max="99" step="0.1" />
     </div>
     <div class="input-group">
-      <label><span class="tt" ontouchstart="ttTap(this)">再投資額（$）<span class="tt-pop">累積利益がこの金額に達したとき、元本に自動追加（複利）する金額。例：$100ごとに元本に上乗せ。</span></span></label>
+      <label><span class="tt" ontouchstart="ttTap(this)">再投資額（$）<span class="tt-pop">累積利益がこの金額以上になったとき、累積利益の全額を元本に自動追加します。</span></span></label>
       <input type="number" id="reinvestThreshold" value="100" min="1" step="10" />
+      <div style="font-size:0.65rem;color:var(--muted);margin-top:2px">※設定額以上で累積利益を全額元本に追加</div>
     </div>
   </div>
 
@@ -665,7 +701,7 @@
 
 </div>
 
-<!-- タブ③: bitradex等最新情報 -->
+<!-- タブ③: その他 -->
 <div id="tab-news" class="tab-panel">
 
   <!-- X（Twitter） -->
@@ -944,6 +980,41 @@ function switchTab(idx) {
 }
 
 
+// ===== 投資額スライダー =====
+var SLIDER_MAXES = { usd: 10000, jpy: 1500000 };
+
+function onSliderInput(pct) {
+  pct = parseFloat(pct);
+  var maxVal = SLIDER_MAXES[simMode] || 10000;
+  var val;
+  if (simMode === 'jpy') {
+    val = Math.round(pct / 100 * maxVal / 1000) * 1000;
+    if (val < 1000) val = 0;
+  } else {
+    val = Math.round(pct / 100 * maxVal / 10) * 10;
+    if (val < 10) val = 0;
+  }
+  document.getElementById('principal').value = val || '';
+  document.getElementById('principalSlider').style.setProperty('--pct', pct + '%');
+  updatePrincipalYen();
+}
+
+function setSliderPct(pct) {
+  document.getElementById('principalSlider').value = pct;
+  onSliderInput(pct);
+}
+
+function updateSliderFromPrincipal() {
+  var val = parseFloat(document.getElementById('principal').value) || 0;
+  var maxVal = SLIDER_MAXES[simMode] || 10000;
+  var pct = Math.min(100, Math.max(0, Math.round(val / maxVal * 100)));
+  var slider = document.getElementById('principalSlider');
+  if (slider) {
+    slider.value = pct;
+    slider.style.setProperty('--pct', pct + '%');
+  }
+}
+
 // ===== ユーティリティ =====
 function commaInt(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 function commaDec(n) {
@@ -974,10 +1045,9 @@ function runSimulation(principal, days, annualRate, feePercent, threshold) {
     pending += interest;
     var didReinvest = false;
     if (pending >= threshold) {
-      var batches = Math.floor(pending / threshold);
-      p        += batches * threshold;
-      pending  -= batches * threshold;
-      totalReinv += batches * threshold;
+      p          += pending;
+      totalReinv += pending;
+      pending     = 0;
       didReinvest = true;
     }
     rows.push({ day: d, principal: p, interest: interest, pending: pending, didReinvest: didReinvest });
@@ -1476,10 +1546,9 @@ function setupChartEvents(canvas, ctx, W) {
       '<div class="chart-tooltip-row"><div class="chart-tooltip-dot" style="background:' + tc.simple + '"></div>' +
         '単利: ' + fmtP(simpV) + ' <span style="opacity:.7;font-size:0.7rem">(' + fmtS(simpV) + ')</span></div>';
     var rect = canvas.getBoundingClientRect();
-    var tipX = clientX - rect.left + 14;
-    var tipY = clientY - rect.top  - 20;
-    if (tipX + 200 > rect.width) tipX = clientX - rect.left - 210;
-    if (tipY < 0) tipY = 4;
+    var relX = clientX - rect.left;
+    var tipX = relX < rect.width / 2 ? (rect.width - 210) : 4;
+    var tipY = 4;
     tooltip.style.left    = tipX + 'px';
     tooltip.style.top     = tipY + 'px';
     tooltip.style.display = 'block';
