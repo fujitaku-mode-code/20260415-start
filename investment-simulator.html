@@ -256,7 +256,8 @@
     }
 
     .badge { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
-    .badge-sub { background: rgba(255,107,61,0.12); color: var(--orange); }
+    .badge-sub { background: rgba(100,200,100,0.15); color: #2a8a40; }
+    body.dark .badge-sub { background: rgba(100,220,130,0.15); color: #5dd88a; }
 
     /* 必須入力フィールド */
     .required-field {
@@ -495,12 +496,12 @@
 
 <!-- 投資条件サマリー枠 -->
 <div id="simSummaryBox" class="hidden" style="background:var(--rate-bg);border:1.5px solid var(--rate-border);border-radius:14px;padding:14px 16px;margin-bottom:14px;text-align:center">
-  <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px">初期投資額</div>
+  <div style="font-size:0.8rem;font-weight:700;letter-spacing:0.06em;color:var(--muted);margin-bottom:5px">投資額</div>
   <div style="display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap;line-height:1.2">
     <span id="simSummaryAmt" style="font-size:1.7rem;font-weight:900;color:var(--accent);letter-spacing:-0.03em;white-space:nowrap"></span>
     <span id="simSummarySub" style="font-size:0.85rem;font-weight:600;color:var(--muted);white-space:nowrap"></span>
   </div>
-  <div style="font-size:0.7rem;color:var(--muted);margin-top:6px;letter-spacing:0.02em">を運用した場合の試算</div>
+  <div style="font-size:0.82rem;color:var(--muted);margin-top:6px;letter-spacing:0.02em">を運用した場合の試算</div>
 </div>
 
 <!-- 期間別シミュレーション -->
