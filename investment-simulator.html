@@ -400,9 +400,13 @@
       border: none;
     }
     body.dark .rate-hint-1 {
-      color: #d32f2f;
-      background: rgba(211,47,47,0.08);
+      color: #ef9a9a;
+      background: rgba(239,154,154,0.12);
       border: none;
+    }
+    body.dark .label-hint {
+      color: #ef9a9a;
+      background: rgba(239,154,154,0.12);
     }
     /* ===== ライトボックス ===== */
     .lb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; align-items:center; justify-content:center; padding:12px; }
@@ -968,7 +972,7 @@ function switchTab(idx) {
 
 // ===== 投資額プリセットボタン =====
 var PRESETS = {
-  usd: [100, 200, 1000, 2000, 10000, 20000, 100000],
+  usd: [100, 200, 1000, 2000, 5000, 10000, 20000, 100000],
   jpy: [20000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000]
 };
 
@@ -1593,6 +1597,12 @@ window.onload = function() {
   fetchRate();
   simulate();
 };
+
+// スクリプトはbody末尾にあるためDOMは即座に利用可能
+// window.onloadを待たずに先行してボタンを描画する（モバイルで画像ロード完了前でも表示）
+(function() {
+  try { updatePresetLabels(); } catch(e) {}
+})();
 </script>
 
 <!-- ライトボックス -->
