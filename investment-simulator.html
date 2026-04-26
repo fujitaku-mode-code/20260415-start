@@ -358,6 +358,19 @@
     .sns-arrow { margin-left: auto; color: var(--muted); font-size: 1rem; }
     /* ラベル内ヒント */
     .label-hint { font-size: 0.68rem; font-weight: 700; color: #d32f2f; margin-left: 6px; background: rgba(211,47,47,0.08); padding: 1px 6px; border-radius: 8px; }
+    /* ① 更新ヒント */
+    .rate-hint-1 {
+      font-size: 0.68rem; font-weight: 700; display: inline-block;
+      border-radius: 8px; padding: 3px 9px; margin-top: 6px;
+      color: #7a5a00;
+      background: linear-gradient(135deg,rgba(255,220,50,0.18),rgba(255,180,0,0.12));
+      border: 1.5px solid #f0c030;
+    }
+    body.dark .rate-hint-1 {
+      color: #ffaaaa;
+      background: rgba(211,47,47,0.18);
+      border-color: rgba(211,47,47,0.5);
+    }
     /* ===== ライトボックス ===== */
     .lb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; align-items:center; justify-content:center; padding:12px; }
     .lb-overlay.open { display:flex; }
@@ -423,7 +436,7 @@
       <div class="rate-value" id="rateValue">--- 円 / ドル</div>
       <div class="rate-date"  id="rateDate">取得中...</div>
       <div style="font-size:0.7rem;color:var(--muted);margin-top:2px" id="rateTime"></div>
-      <div style="font-size:0.68rem;font-weight:700;color:#7a5a00;background:linear-gradient(135deg,rgba(255,220,50,0.18),rgba(255,180,0,0.12));border:1.5px solid #f0c030;border-radius:8px;padding:3px 9px;margin-top:6px;display:inline-block">①「更新」ボタンを押して、日本円を表示</div>
+      <div class="rate-hint-1">①「更新」ボタンを押して、日本円を表示</div>
     </div>
     <button class="rate-btn" onclick="fetchRate()">🔄 更新</button>
   </div>
@@ -1080,16 +1093,16 @@ function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startD
   document.getElementById('milestoneCard').classList.remove('hidden');
   var ms = [
     { label:'3ヶ月後',  date:addMonths(startDate,3),
-      color:'#0a9e6d', bg:'linear-gradient(135deg,#d0f5e8,#b8f0d8)', border:'#82dbb8',
+      color:'#0fb981', bg:'linear-gradient(135deg,#d0f5e8,#b8f0d8)', border:'#82dbb8',
       dColor:'#26d89a', dBg:'linear-gradient(135deg,#0a3d2a,#0f5236)', dBorder:'#1a7a50' },
     { label:'6ヶ月後',  date:addMonths(startDate,6),
-      color:'#2a5fc9', bg:'linear-gradient(135deg,#dce5ff,#c8d8ff)', border:'#9ab2ff',
+      color:'#4f6ef7', bg:'linear-gradient(135deg,#dce5ff,#c8d8ff)', border:'#9ab2ff',
       dColor:'#7aabff', dBg:'linear-gradient(135deg,#0a1f4a,#0d2d6a)', dBorder:'#1a3f8a' },
     { label:'12ヶ月後', date:addMonths(startDate,12),
-      color:'#7a30d0', bg:'linear-gradient(135deg,#ede0ff,#ddc8ff)', border:'#c49aff',
+      color:'#9b5cf6', bg:'linear-gradient(135deg,#ede0ff,#ddc8ff)', border:'#c49aff',
       dColor:'#c49aff', dBg:'linear-gradient(135deg,#2a1060,#3d1a8a)', dBorder:'#6030c0' },
     { label:'2年後',    date:addMonths(startDate,24),
-      color:'#9e7a10', bg:'linear-gradient(135deg,#fff3cc,#ffe8a0)', border:'#ffd260',
+      color:'#f59e0b', bg:'linear-gradient(135deg,#fff3cc,#ffe8a0)', border:'#ffd260',
       dColor:'#e8b84b', dBg:'linear-gradient(135deg,#3a2800,#5a3e00)', dBorder:'#8a6500' }
   ];
   var html = '';
