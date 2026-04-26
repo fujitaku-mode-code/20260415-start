@@ -155,28 +155,22 @@
     }
     input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,0,0,0.06); }
     .input-yen { font-size: 0.78rem; font-weight: 700; color: var(--accent); padding: 0 2px; }
-    /* ===== 投資額スライダー ===== */
-    .principal-slider {
-      -webkit-appearance: none; appearance: none;
-      width: 100%; height: 5px; border-radius: 3px; outline: none; cursor: pointer;
-      background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--pct,10%), var(--border) var(--pct,10%), var(--border) 100%);
+    /* ===== 投資額プリセットボタン ===== */
+    .preset-btns {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 6px; margin-top: 8px;
     }
-    .principal-slider::-webkit-slider-thumb {
-      -webkit-appearance: none; width: 20px; height: 20px;
-      border-radius: 50%; background: var(--accent);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.22); cursor: pointer; border: 2.5px solid #fff;
+    .preset-btn {
+      padding: 6px 2px; border: 1.5px solid var(--border);
+      border-radius: 8px; background: var(--bg);
+      color: var(--text); font-size: 0.7rem; font-weight: 700;
+      cursor: pointer; text-align: center;
+      font-family: 'Noto Sans JP', sans-serif;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
     }
-    .principal-slider::-moz-range-thumb {
-      width: 18px; height: 18px; border-radius: 50%; background: var(--accent);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.22); cursor: pointer; border: 2px solid #fff;
-    }
-    .slider-marks { display: flex; justify-content: space-between; margin-top: 5px; padding: 0 10px; }
-    .slider-marks span {
-      font-size: 0.65rem; font-weight: 700; color: var(--muted);
-      cursor: pointer; padding: 2px 5px; border-radius: 4px;
-      transition: color 0.15s;
-    }
-    .slider-marks span:hover, .slider-marks span:active { color: var(--accent); }
+    .preset-btn:active { opacity: 0.75; }
+    .preset-btn.active { background: var(--btn-grad); color: #fff; border-color: transparent; }
 
     .btn {
       background: var(--btn-grad); color: #fff;
@@ -496,18 +490,18 @@
       <div style="display:flex;align-items:center;gap:8px">
         <input type="number" id="principal" value="1000" min="1" step="100"
                style="flex:1;min-width:0"
-               oninput="updatePrincipalYen();updateSliderFromPrincipal()" />
+               oninput="updatePrincipalYen()" />
         <span id="principalYen" style="display:inline-block;background:var(--bg);border:1.5px solid var(--border);border-radius:20px;padding:2px 10px;font-size:0.78rem;font-weight:700;color:var(--muted);white-space:nowrap;flex-shrink:0"></span>
       </div>
-      <div style="margin-top:7px">
-        <input type="range" id="principalSlider" class="principal-slider" min="0" max="100" value="25" step="1" style="--pct:25%" oninput="onSliderInput(this.value)">
-        <div class="slider-marks">
-          <span onclick="setSliderPct(0)"><span class="smv">100$</span></span>
-          <span onclick="setSliderPct(25)"><span class="smv">1000$</span></span>
-          <span onclick="setSliderPct(50)"><span class="smv">1万$</span></span>
-          <span onclick="setSliderPct(75)"><span class="smv">10万$</span></span>
-          <span onclick="setSliderPct(100)"><span class="smv">100万$</span></span>
-        </div>
+      <div class="preset-btns">
+        <button class="preset-btn" onclick="setPreset(100)">$100</button>
+        <button class="preset-btn" onclick="setPreset(200)">$200</button>
+        <button class="preset-btn" onclick="setPreset(1000)">$1,000</button>
+        <button class="preset-btn" onclick="setPreset(2000)">$2,000</button>
+        <button class="preset-btn" onclick="setPreset(10000)">$10,000</button>
+        <button class="preset-btn" onclick="setPreset(20000)">$20,000</button>
+        <button class="preset-btn" onclick="setPreset(50000)">$50,000</button>
+        <button class="preset-btn" onclick="setPreset(100000)">$100,000</button>
       </div>
     </div>
     <div class="input-group">
@@ -915,8 +909,6 @@ function setSimMode(mode) {
   }
   document.getElementById('principalLabel').innerHTML =
     '⭐ 投資金額（' + (isJpy ? '円' : '$') + '）<span class="label-hint">②黄色の枠内へ金額を入力</span>';
-  updateSliderLabels();
-  updateSliderFromPrincipal();
   updatePrincipalYen();
   try { localStorage.setItem('sim_mode', mode); } catch(e) {}
   simulate();
@@ -981,56 +973,39 @@ function switchTab(idx) {
 }
 
 
-// ===== 投資額スライダー（対数スケール: $100〜$1,000,000） =====
-var SL = {
-  usd: { logMin: 2, logMax: 6, step: 100, min: 100 },       // $100 〜 $1,000,000
-  jpy: { logMin: 4, logMax: 8.176, step: 1000, min: 10000 } // ¥10,000 〜 ¥150,000,000
-};
+// ===== 投資額プリセットボタン =====
+var PRESET_VALS_USD = [100, 200, 1000, 2000, 10000, 20000, 50000, 100000];
 
-function sliderToValue(pct) {
-  pct = Math.max(0, Math.min(100, parseFloat(pct)));
-  var s = SL[simMode] || SL.usd;
-  var logVal = s.logMin + (s.logMax - s.logMin) * pct / 100;
-  var raw = Math.pow(10, logVal);
-  return Math.max(s.min, Math.round(raw / s.step) * s.step);
-}
-
-function valueToSlider(val) {
-  var s = SL[simMode] || SL.usd;
-  val = Math.max(s.min, val);
-  return Math.min(100, Math.max(0, Math.round((Math.log10(val) - s.logMin) / (s.logMax - s.logMin) * 100)));
-}
-
-function onSliderInput(pct) {
-  var val = sliderToValue(pct);
+function setPreset(usdVal) {
+  var val = (simMode === 'jpy' && gJpyRate > 0)
+    ? Math.round(usdVal * gJpyRate / 1000) * 1000
+    : usdVal;
   document.getElementById('principal').value = val;
-  document.getElementById('principalSlider').style.setProperty('--pct', parseFloat(pct) + '%');
   updatePrincipalYen();
+  document.querySelectorAll('.preset-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (event && event.currentTarget) event.currentTarget.classList.add('active');
 }
 
-function setSliderPct(pct) {
-  document.getElementById('principalSlider').value = pct;
-  onSliderInput(pct);
+function updatePresetLabels() {
+  var btns = document.querySelectorAll('.preset-btn');
+  PRESET_VALS_USD.forEach(function(v, i) {
+    if (!btns[i]) return;
+    if (simMode === 'jpy' && gJpyRate > 0) {
+      var yen = Math.round(v * gJpyRate / 1000) * 1000;
+      btns[i].textContent = '¥' + commaInt(yen);
+      btns[i].onclick = function() { setPresetYen(yen, this); };
+    } else {
+      btns[i].textContent = '$' + (v >= 1000 ? commaInt(v) : v);
+      btns[i].onclick = function(uv) { return function() { setPreset(uv); }; }(v);
+    }
+  });
 }
 
-function updateSliderFromPrincipal() {
-  var val = parseFloat(document.getElementById('principal').value) || 0;
-  if (val <= 0) return;
-  var pct = valueToSlider(val);
-  var slider = document.getElementById('principalSlider');
-  if (slider) {
-    slider.value = pct;
-    slider.style.setProperty('--pct', pct + '%');
-  }
-}
-
-function updateSliderLabels() {
-  var marks = document.querySelectorAll('.smv');
-  if (!marks.length) return;
-  var labels = simMode === 'jpy'
-    ? ['1万円', '10万円', '100万円', '1000万円', '1.5億円']
-    : ['100$', '1000$', '1万$', '10万$', '100万$'];
-  for (var i = 0; i < marks.length && i < labels.length; i++) marks[i].textContent = labels[i];
+function setPresetYen(yen, btn) {
+  document.getElementById('principal').value = yen;
+  updatePrincipalYen();
+  document.querySelectorAll('.preset-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
 }
 
 // ===== ユーティリティ =====
@@ -1616,8 +1591,6 @@ window.onload = function() {
     }
   } catch(e) {}
 
-  updateSliderLabels();
-  updateSliderFromPrincipal();
   updatePrincipalYen();
   fetchRate();
   simulate();
