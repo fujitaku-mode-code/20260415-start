@@ -426,11 +426,13 @@
     .doc-btn:disabled { opacity:0.5; cursor:not-allowed; }
     .doc-btn-print { background:var(--bg); color:var(--text); border:1.5px solid var(--border); }
     .doc-btn-dl    { background:var(--btn-grad); color:#fff; }
-    /* ===== A案スタイル（①② ヒント） ===== */
+    /* ===== ①② ヒントスタイル（赤茶・左ボーダー） ===== */
     .step-badge {
-      font-size:0.82rem; font-weight:700; color:#2855b8; white-space:nowrap;
+      font-size:0.82rem; font-weight:800; color:#a03a22;
+      border-left:3px solid #a03a22; padding-left:7px;
+      display:inline-block; line-height:1.4;
     }
-    body.dark .step-badge { color:#7eb3ff; }
+    body.dark .step-badge { color:#e07a60; border-left-color:#e07a60; }
     /* ===== 資料集 アクションバー ===== */
     .doc-action-bar {
       display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap;
@@ -455,10 +457,17 @@
     .doc-check-label:hover { border-color:var(--accent); color:var(--accent); }
     .doc-check-label input[type=checkbox] { accent-color:var(--accent); width:15px; height:15px; flex-shrink:0; cursor:pointer; }
     /* ===== 印刷エリア（チェック選択） ===== */
-    #print-area { display:none; }
+    #print-area {
+      position:absolute; left:-9999px; top:0;
+      width:390px; visibility:hidden; pointer-events:none;
+    }
     @media print {
       body > *:not(#print-area) { display:none !important; }
-      #print-area { display:block !important; width:100%; background:#fff; }
+      #print-area {
+        position:static !important; left:0 !important;
+        width:100% !important; visibility:visible !important;
+        pointer-events:auto !important; background:#fff;
+      }
       #print-area img { width:100%; display:block; page-break-after:always; margin:0; padding:0; }
     }
     /* ===== 用語ツールチップ ===== */
@@ -533,7 +542,7 @@
         <span class="rate-date" id="rateTime"></span>
       </div>
     </div>
-    <button class="rate-btn" onclick="fetchRate()" style="padding:13px 13px;font-size:0.78rem;font-weight:700;flex-shrink:0;line-height:1">更新</button>
+    <button class="rate-btn" onclick="fetchRate()" style="padding:15px 18px;font-size:0.88rem;font-weight:700;flex-shrink:0;line-height:1">更新</button>
   </div>
 
   <div class="input-grid">
@@ -1639,27 +1648,55 @@ function printSelected() {
   var loaded = 0;
   var imgs = srcs.map(function(s) {
     var im = document.createElement('img');
+    im.style.cssText = 'width:100%;display:block;page-break-after:always;margin:0;padding:0;';
     im.src = base + s;
     area.appendChild(im);
     return im;
   });
   function tryPrint() {
     if (++loaded < imgs.length) return;
-    window.print();
-    setTimeout(function() { area.innerHTML = ''; }, 5000);
+    // RAF×2 + delayでiOSが画像を完全レンダリングしてから印刷
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        setTimeout(function() {
+          window.print();
+          setTimeout(function() { area.innerHTML = ''; }, 6000);
+        }, 600);
+      });
+    });
   }
   imgs.forEach(function(im) {
-    if (im.complete) { tryPrint(); }
+    if (im.complete && im.naturalHeight > 0) { tryPrint(); }
     else { im.onload = tryPrint; im.onerror = tryPrint; }
   });
 }
 
-// ===== 資料集: ダウンロード（選択資料を縦結合して1枚のJPEGで保存）=====
+// ===== 資料集: ダウンロード =====
 function downloadSelected(btn) {
   var srcs = getSelectedDocs();
   if (!srcs.length) { alert('ダウンロードする資料を選択してください（「選択」チェックボックスにチェックを入れてください）'); return; }
-  var base  = location.href.replace(/[^/]*$/, '');
-  var orig  = btn.innerHTML;
+  var base = location.href.replace(/[^/]*$/, '');
+
+  // iOS Safari: a.click()ダウンロード非対応 → 画像ギャラリーオーバーレイで長押し保存
+  if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;background:#111;z-index:99999;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:20px;';
+    var imgs = srcs.map(function(s) {
+      return '<img src="' + base + s + '" style="width:100%;display:block;margin-bottom:4px;">';
+    }).join('');
+    ov.innerHTML =
+      '<div style="padding:12px;display:flex;justify-content:space-between;align-items:center">'
+      + '<span style="color:#ddd;font-size:12px;">画像を長押し→「写真に保存」で保存できます</span>'
+      + '<button onclick="document.body.removeChild(this.closest(\'[style*=z-index\\:99999]\')||this.parentElement.parentElement)" '
+      + 'style="padding:6px 16px;background:#444;color:#fff;border:none;border-radius:16px;font-size:13px;cursor:pointer;flex-shrink:0;margin-left:10px">✕ 閉じる</button>'
+      + '</div>'
+      + imgs;
+    document.body.appendChild(ov);
+    return;
+  }
+
+  // PC / Android: canvasで縦結合して1枚のJPEGとしてDL
+  var orig = btn.innerHTML;
   btn.innerHTML = '⏳ 処理中…'; btn.disabled = true;
   var images = new Array(srcs.length);
   var loaded = 0;
