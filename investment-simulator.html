@@ -499,6 +499,7 @@
     <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
     期間別シミュレーション
   </div>
+  <div id="simSummaryText" style="font-size:0.8rem;color:var(--muted);text-align:center;margin-bottom:12px;line-height:1.6"></div>
   <div class="milestone-grid" id="milestoneGrid"></div>
 </div>
 
@@ -1137,6 +1138,19 @@ function fmtDate(d) {
 
 function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
   document.getElementById('milestoneCard').classList.remove('hidden');
+
+  // 投資額サマリー
+  var summaryEl = document.getElementById('simSummaryText');
+  if (summaryEl) {
+    var dispAmt;
+    if (simMode === 'jpy' && jpyRate > 0) {
+      dispAmt = '¥' + commaInt(principal * jpyRate) + '<span style="color:var(--muted);font-size:0.72rem">（≈ $' + commaDec(principal) + '）</span>';
+    } else {
+      dispAmt = '$' + commaDec(principal) + (jpyRate > 0 ? '<span style="color:var(--muted);font-size:0.72rem">（¥' + commaInt(principal * jpyRate) + '）</span>' : '');
+    }
+    summaryEl.innerHTML = '<span style="color:var(--muted)">初期投資額 </span><strong style="color:var(--accent);font-size:0.95rem;font-weight:900">' + dispAmt + '</strong><span style="color:var(--muted)"> を運用した場合の試算</span>';
+  }
+
   var ms = [
     { label:'3ヶ月後',  date:addMonths(startDate,3),  color:'#0fb981', dColor:'#34d399' },
     { label:'6ヶ月後',  date:addMonths(startDate,6),  color:'#4f6ef7', dColor:'#60a5fa' },
@@ -1320,76 +1334,102 @@ function drawChartBase(ctx, W, activeIdx) {
   var pts = gChart.pts, compData = gChart.compData, simpleData = gChart.simpleData;
   var maxVal = gChart.maxVal;
   var tc = getTC();
-  ctx.fillStyle = tc.bg; ctx.fillRect(0, 0, W, H);
 
-  // グリッド & Y軸ラベル
-  ctx.strokeStyle = tc.grid; ctx.lineWidth = 1;
-  for (var t = 0; t <= 4; t++) {
-    var gy   = PAD_T + gH * t / 4;
-    var yVal = maxVal * (1 - t / 4);
-    ctx.beginPath(); ctx.moveTo(PAD_L, gy); ctx.lineTo(PAD_L + gW, gy); ctx.stroke();
-    ctx.fillStyle = '#9aa3b8'; ctx.font = '10px Arial';
-    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-    var yLabel = (gChart.mode === 'jpy' && gChart.jpyRate > 0)
-      ? fmtYAxisJPY(yVal * gChart.jpyRate) : fmtYAxis(yVal);
-    ctx.fillText(yLabel, PAD_L - 4, gy);
-  }
-
-  // X軸ラベル
-  ctx.fillStyle = '#9aa3b8'; ctx.font = '10px Arial';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-  var xIdxs = [0, Math.floor(pts.length / 2), pts.length - 1];
-  for (var xi = 0; xi < xIdxs.length; xi++) {
-    var idx = xIdxs[xi];
-    ctx.fillText(pts[idx] + '日', PAD_L + gW * idx / (pts.length - 1 || 1), H - 8);
-  }
+  // 背景
+  ctx.fillStyle = tc.bg;
+  ctx.fillRect(0, 0, W, H);
 
   function px(i) { return PAD_L + gW * i / (pts.length - 1 || 1); }
   function py(v) { return PAD_T + gH * (1 - v / maxVal); }
 
-  // 複利グラデーション塗り
+  // スムーズ曲線ヘルパー（quadratic bezier）
+  function drawSmooth(data) {
+    ctx.beginPath();
+    ctx.moveTo(px(0), py(data[0]));
+    for (var i = 1; i < data.length - 1; i++) {
+      var midX = (px(i) + px(i + 1)) / 2;
+      var midY = (py(data[i]) + py(data[i + 1])) / 2;
+      ctx.quadraticCurveTo(px(i), py(data[i]), midX, midY);
+    }
+    ctx.lineTo(px(data.length - 1), py(data[data.length - 1]));
+  }
+
+  // グリッド & Y軸ラベル（3本のみ、薄く）
+  var axisColor = isDark ? 'rgba(160,144,112,0.7)' : 'rgba(110,95,70,0.65)';
+  for (var t = 0; t <= 3; t++) {
+    var gy   = PAD_T + gH * t / 3;
+    var yVal = maxVal * (1 - t / 3);
+    ctx.strokeStyle = tc.grid; ctx.lineWidth = t === 3 ? 1.2 : 0.7;
+    ctx.beginPath(); ctx.moveTo(PAD_L, gy); ctx.lineTo(PAD_L + gW, gy); ctx.stroke();
+    ctx.fillStyle = axisColor; ctx.font = '10px Arial';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    var yLabel = (gChart.mode === 'jpy' && gChart.jpyRate > 0)
+      ? fmtYAxisJPY(yVal * gChart.jpyRate) : fmtYAxis(yVal);
+    ctx.fillText(yLabel, PAD_L - 5, gy);
+  }
+
+  // X軸ラベル
+  ctx.fillStyle = axisColor; ctx.font = '10px Arial';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  var xIdxs = [0, Math.floor(pts.length / 2), pts.length - 1];
+  for (var xi = 0; xi < xIdxs.length; xi++) {
+    var xIdx = xIdxs[xi];
+    ctx.fillText(pts[xIdx] + '日', PAD_L + gW * xIdx / (pts.length - 1 || 1), H - 6);
+  }
+
+  // 複利エリア グラデーション塗り（3ストップ・鮮やか）
   var grad = ctx.createLinearGradient(0, PAD_T, 0, PAD_T + gH);
-  grad.addColorStop(0, tc.fill + '0.18)');
-  grad.addColorStop(1, tc.fill + '0.01)');
+  grad.addColorStop(0,   tc.fill + '0.28)');
+  grad.addColorStop(0.5, tc.fill + '0.10)');
+  grad.addColorStop(1,   tc.fill + '0.0)');
   ctx.fillStyle = grad;
-  ctx.beginPath();
-  for (var fi = 0; fi < compData.length; fi++) {
-    if (fi === 0) ctx.moveTo(px(fi), py(compData[fi]));
-    else          ctx.lineTo(px(fi), py(compData[fi]));
-  }
-  ctx.lineTo(px(compData.length-1), PAD_T+gH);
-  ctx.lineTo(PAD_L, PAD_T+gH);
-  ctx.closePath(); ctx.fill();
+  drawSmooth(compData);
+  ctx.lineTo(px(compData.length - 1), PAD_T + gH);
+  ctx.lineTo(PAD_L, PAD_T + gH);
+  ctx.closePath();
+  ctx.fill();
 
-  // 単利（破線）
-  ctx.strokeStyle = tc.simple; ctx.lineWidth = 2; ctx.setLineDash([6,4]);
-  ctx.beginPath();
-  for (var si = 0; si < simpleData.length; si++) {
-    if (si === 0) ctx.moveTo(px(si), py(simpleData[si]));
-    else          ctx.lineTo(px(si), py(simpleData[si]));
-  }
-  ctx.stroke(); ctx.setLineDash([]);
-
-  // 複利ライン（実線）
-  ctx.strokeStyle = tc.comp; ctx.lineWidth = 2.5;
-  ctx.beginPath();
-  for (var ci = 0; ci < compData.length; ci++) {
-    if (ci === 0) ctx.moveTo(px(ci), py(compData[ci]));
-    else          ctx.lineTo(px(ci), py(compData[ci]));
-  }
+  // 単利ライン（破線・丸みある）
+  ctx.save();
+  ctx.strokeStyle = tc.simple; ctx.lineWidth = 1.8;
+  ctx.setLineDash([5, 4]); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  drawSmooth(simpleData);
   ctx.stroke();
+  ctx.restore();
 
-  // アクティブ縦線と点
+  // 複利ライン：グロー（広め・半透明）
+  ctx.save();
+  ctx.strokeStyle = tc.comp; ctx.lineWidth = 7;
+  ctx.globalAlpha = 0.12; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  drawSmooth(compData); ctx.stroke();
+  ctx.restore();
+
+  // 複利ライン：本体（実線）
+  ctx.save();
+  ctx.shadowColor = tc.comp; ctx.shadowBlur = 6;
+  ctx.strokeStyle = tc.comp; ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  drawSmooth(compData); ctx.stroke();
+  ctx.restore();
+
+  // アクティブ縦線とグロー点
   if (activeIdx >= 0 && activeIdx < pts.length) {
     var ax = px(activeIdx);
-    ctx.strokeStyle = 'rgba(100,100,120,0.3)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(ax, PAD_T); ctx.lineTo(ax, PAD_T+gH); ctx.stroke();
+    ctx.save();
+    ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)';
+    ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(ax, PAD_T); ctx.lineTo(ax, PAD_T + gH); ctx.stroke();
+    ctx.restore();
 
     [[compData, tc.comp], [simpleData, tc.simple]].forEach(function(pair) {
+      var dotY = py(pair[0][activeIdx]);
+      ctx.save();
+      ctx.shadowColor = pair[1]; ctx.shadowBlur = 10;
       ctx.fillStyle   = pair[1];
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(ax, py(pair[0][activeIdx]), 5, 0, Math.PI*2);
+      ctx.strokeStyle = tc.bg; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.arc(ax, dotY, 5.5, 0, Math.PI * 2);
       ctx.fill(); ctx.stroke();
+      ctx.restore();
     });
   }
 }
