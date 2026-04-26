@@ -128,7 +128,7 @@
     }
     .rate-num { font-size: 2.2rem; font-weight: 900; color: var(--accent); letter-spacing: -0.03em; line-height: 1; }
     .rate-unit { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
-    .rate-date { font-size: 0.64rem; color: var(--muted); text-align: right; }
+    .rate-date { font-size: 0.64rem; color: var(--muted); text-align: left; }
     .rate-btn {
       background: var(--btn-grad); color: #fff;
       border: none; border-radius: 8px;
@@ -495,19 +495,18 @@
   <div class="input-grid">
     <div class="input-group required-field" style="grid-column:1/-1">
       <label id="principalLabel">⭐ 投資金額（$）<span class="label-hint">②黄色の枠内へ入力</span></label>
-      <div style="display:flex;align-items:center;gap:10px">
-        <input type="number" id="principal" value="1000" min="1" step="100"
-               style="width:110px;flex:0 0 110px"
-               oninput="updatePrincipalYen();updateSliderFromPrincipal()" />
-        <span class="input-yen" id="principalYen" style="font-size:0.95rem;white-space:nowrap;flex:1"></span>
+      <input type="number" id="principal" value="1000" min="1" step="100"
+             oninput="updatePrincipalYen();updateSliderFromPrincipal()" />
+      <div style="margin-top:5px;min-height:1.4em">
+        <span id="principalYen" style="display:inline-block;background:var(--bg);border:1.5px solid var(--border);border-radius:20px;padding:3px 12px;font-size:0.82rem;font-weight:700;color:var(--muted)"></span>
       </div>
       <div style="margin-top:9px">
         <input type="range" id="principalSlider" class="principal-slider" min="0" max="100" value="10" step="1" oninput="onSliderInput(this.value)">
         <div class="slider-marks">
-          <span onclick="setSliderPct(25)">25%</span>
-          <span onclick="setSliderPct(50)">50%</span>
-          <span onclick="setSliderPct(75)">75%</span>
-          <span onclick="setSliderPct(100)">MAX</span>
+          <span onclick="setSliderPct(25)"><span class="smv">$1千</span></span>
+          <span onclick="setSliderPct(50)"><span class="smv">$1万</span></span>
+          <span onclick="setSliderPct(75)"><span class="smv">$10万</span></span>
+          <span onclick="setSliderPct(100)"><span class="smv">$100万</span></span>
         </div>
       </div>
     </div>
@@ -916,6 +915,7 @@ function setSimMode(mode) {
   }
   document.getElementById('principalLabel').innerHTML =
     '⭐ 投資金額（' + (isJpy ? '円' : '$') + '）<span class="label-hint">②黄色の枠内へ入力</span>';
+  updateSliderLabels();
   updatePrincipalYen();
   try { localStorage.setItem('sim_mode', mode); } catch(e) {}
   simulate();
@@ -980,22 +980,30 @@ function switchTab(idx) {
 }
 
 
-// ===== 投資額スライダー =====
-var SLIDER_MAXES = { usd: 10000, jpy: 1500000 };
+// ===== 投資額スライダー（対数スケール: $100〜$1,000,000） =====
+var SL = {
+  usd: { logMin: 2, logMax: 6, step: 100, min: 100 },       // $100 〜 $1,000,000
+  jpy: { logMin: 4, logMax: 8.176, step: 1000, min: 10000 } // ¥10,000 〜 ¥150,000,000
+};
+
+function sliderToValue(pct) {
+  pct = Math.max(0, Math.min(100, parseFloat(pct)));
+  var s = SL[simMode] || SL.usd;
+  var logVal = s.logMin + (s.logMax - s.logMin) * pct / 100;
+  var raw = Math.pow(10, logVal);
+  return Math.max(s.min, Math.round(raw / s.step) * s.step);
+}
+
+function valueToSlider(val) {
+  var s = SL[simMode] || SL.usd;
+  val = Math.max(s.min, val);
+  return Math.min(100, Math.max(0, Math.round((Math.log10(val) - s.logMin) / (s.logMax - s.logMin) * 100)));
+}
 
 function onSliderInput(pct) {
-  pct = parseFloat(pct);
-  var maxVal = SLIDER_MAXES[simMode] || 10000;
-  var val;
-  if (simMode === 'jpy') {
-    val = Math.round(pct / 100 * maxVal / 1000) * 1000;
-    if (val < 1000) val = 0;
-  } else {
-    val = Math.round(pct / 100 * maxVal / 10) * 10;
-    if (val < 10) val = 0;
-  }
-  document.getElementById('principal').value = val || '';
-  document.getElementById('principalSlider').style.setProperty('--pct', pct + '%');
+  var val = sliderToValue(pct);
+  document.getElementById('principal').value = val;
+  document.getElementById('principalSlider').style.setProperty('--pct', parseFloat(pct) + '%');
   updatePrincipalYen();
 }
 
@@ -1006,13 +1014,22 @@ function setSliderPct(pct) {
 
 function updateSliderFromPrincipal() {
   var val = parseFloat(document.getElementById('principal').value) || 0;
-  var maxVal = SLIDER_MAXES[simMode] || 10000;
-  var pct = Math.min(100, Math.max(0, Math.round(val / maxVal * 100)));
+  if (val <= 0) return;
+  var pct = valueToSlider(val);
   var slider = document.getElementById('principalSlider');
   if (slider) {
     slider.value = pct;
     slider.style.setProperty('--pct', pct + '%');
   }
+}
+
+function updateSliderLabels() {
+  var marks = document.querySelectorAll('.smv');
+  if (!marks.length) return;
+  var labels = simMode === 'jpy'
+    ? ['¥10万', '¥100万', '¥1千万', '¥1.5億']
+    : ['$1千', '$1万', '$10万', '$100万'];
+  for (var i = 0; i < marks.length && i < labels.length; i++) marks[i].textContent = labels[i];
 }
 
 // ===== ユーティリティ =====
@@ -1598,6 +1615,7 @@ window.onload = function() {
     }
   } catch(e) {}
 
+  updateSliderLabels();
   updatePrincipalYen();
   fetchRate();
   simulate();
