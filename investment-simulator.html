@@ -426,6 +426,44 @@
     .doc-btn:disabled { opacity:0.5; cursor:not-allowed; }
     .doc-btn-print { background:var(--bg); color:var(--text); border:1.5px solid var(--border); }
     .doc-btn-dl    { background:var(--btn-grad); color:#fff; }
+    /* ===== バッジスタイル（①② ヒント） ===== */
+    .step-badge {
+      display:inline-block; background:rgba(122,90,0,0.10);
+      border:1px solid var(--accent); color:var(--accent);
+      border-radius:20px; padding:3px 12px;
+      font-size:0.82rem; font-weight:700; white-space:nowrap;
+    }
+    body.dark .step-badge { background:rgba(232,184,75,0.13); }
+    /* ===== 資料集 アクションバー ===== */
+    .doc-action-bar {
+      display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap;
+    }
+    .doc-action-note { flex:1; font-size:0.72rem; color:var(--muted); min-width:80px; }
+    .doc-act-btn {
+      padding:9px 15px; border:none; border-radius:10px;
+      font-size:0.82rem; font-weight:700; cursor:pointer;
+      font-family:'Noto Sans JP',sans-serif; white-space:nowrap; flex-shrink:0;
+    }
+    .doc-act-btn:active { opacity:0.75; }
+    .doc-act-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .doc-act-print { background:var(--bg); color:var(--text); border:1.5px solid var(--border); }
+    .doc-act-dl { background:var(--btn-grad); color:#fff; }
+    .doc-check-label {
+      display:flex; align-items:center; gap:5px; cursor:pointer;
+      font-size:0.72rem; color:var(--muted); font-weight:600;
+      padding:4px 8px; border-radius:8px; margin-right:4px;
+      border:1.5px solid var(--border); white-space:nowrap; background:var(--bg);
+      transition:border-color 0.15s;
+    }
+    .doc-check-label:hover { border-color:var(--accent); color:var(--accent); }
+    .doc-check-label input[type=checkbox] { accent-color:var(--accent); width:15px; height:15px; flex-shrink:0; cursor:pointer; }
+    /* ===== 印刷エリア（チェック選択） ===== */
+    #print-area { display:none; }
+    @media print {
+      body > *:not(#print-area) { display:none !important; }
+      #print-area { display:block !important; position:fixed; top:0; left:0; width:100%; background:#fff; }
+      #print-area img { width:100%; display:block; page-break-after:always; margin:0; padding:0; }
+    }
     /* ===== 用語ツールチップ ===== */
     .tt {
       position: relative; cursor: help;
@@ -490,7 +528,7 @@
   <!-- 為替レートバナー -->
   <div class="rate-banner">
     <div style="flex:1;min-width:0">
-      <div style="font-size:0.82rem;font-weight:600;color:var(--text);margin-bottom:5px;padding-left:1em">①「更新」ボタンを押し日本円を表示</div>
+      <div style="margin-bottom:5px;padding-left:1em"><span class="step-badge">①「更新」ボタンを押し日本円を表示</span></div>
       <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
         <span class="rate-num" id="rateNum">---</span>
         <span class="rate-unit">円 / ドル</span>
@@ -498,12 +536,12 @@
         <span class="rate-date" id="rateTime"></span>
       </div>
     </div>
-    <button class="rate-btn" onclick="fetchRate()" style="padding:7px 11px;font-size:0.78rem;font-weight:700;flex-shrink:0">更新</button>
+    <button class="rate-btn" onclick="fetchRate()" style="padding:13px 13px;font-size:0.78rem;font-weight:700;flex-shrink:0;line-height:1">更新</button>
   </div>
 
   <div class="input-grid">
     <div class="input-group required-field" style="grid-column:1/-1">
-      <label id="principalLabel">②黄色の枠内へ金額を入力</label>
+      <label id="principalLabel"><span class="step-badge">②黄色の枠内へ金額を入力</span></label>
       <div style="display:flex;align-items:center;gap:8px">
         <input type="number" id="principal" value="1000" min="1" step="100"
                style="flex:1;min-width:0"
@@ -595,21 +633,25 @@
 <!-- タブ②: 資料集 -->
 <div id="tab-docs" class="tab-panel">
 
-  <p style="font-size:0.75rem;color:var(--muted);margin:0 0 10px;text-align:center">🔍 画像をタップすると拡大表示できます</p>
+  <!-- アクションバー -->
+  <div class="doc-action-bar">
+    <span class="doc-action-note">📋 資料を選択して印刷・ダウンロード</span>
+    <button class="doc-act-btn doc-act-print" onclick="printSelected()">🖨 印刷</button>
+    <button class="doc-act-btn doc-act-dl" id="docDlBtn" onclick="downloadSelected(this)">⬇ DL</button>
+  </div>
 
   <!-- 投資への流れ -->
   <div class="card">
     <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1">
         <span class="card-title-icon" style="background:rgba(15,185,129,0.12)">📈</span>投資への流れ
       </div>
+      <label class="doc-check-label" onclick="event.stopPropagation()">
+        <input type="checkbox" class="doc-check" data-prefix="new_invest" data-count="9">選択
+      </label>
       <span class="acc-arrow">▼</span>
     </div>
     <div class="acc-body">
-      <div class="doc-actions">
-        <button class="doc-btn doc-btn-print" onclick="printSection('投資への流れ',['tools/pdf_images/new_invest_p01.jpg','tools/pdf_images/new_invest_p02.jpg','tools/pdf_images/new_invest_p03.jpg','tools/pdf_images/new_invest_p04.jpg','tools/pdf_images/new_invest_p05.jpg','tools/pdf_images/new_invest_p06.jpg','tools/pdf_images/new_invest_p07.jpg','tools/pdf_images/new_invest_p08.jpg','tools/pdf_images/new_invest_p09.jpg'])">🖨 印刷</button>
-        <button class="doc-btn doc-btn-dl" onclick="downloadSection(this,'投資への流れ',['tools/pdf_images/new_invest_p01.jpg','tools/pdf_images/new_invest_p02.jpg','tools/pdf_images/new_invest_p03.jpg','tools/pdf_images/new_invest_p04.jpg','tools/pdf_images/new_invest_p05.jpg','tools/pdf_images/new_invest_p06.jpg','tools/pdf_images/new_invest_p07.jpg','tools/pdf_images/new_invest_p08.jpg','tools/pdf_images/new_invest_p09.jpg'])">⬇ ダウンロード</button>
-      </div>
       <div class="guide-title">📋 実際の操作画面（全9ページ）</div>
       <div class="pdf-pages">
         <div class="pdf-page"><img src="tools/pdf_images/new_invest_p01.jpg" alt="投資への流れ 1" loading="lazy" onclick="openLightbox(this)"></div>
@@ -628,16 +670,15 @@
   <!-- AI BOT → USDT -->
   <div class="card">
     <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1">
         <span class="card-title-icon" style="background:rgba(155,92,246,0.12)">🤖</span>【bitradex内】AI BOT → USDT変換まで
       </div>
+      <label class="doc-check-label" onclick="event.stopPropagation()">
+        <input type="checkbox" class="doc-check" data-prefix="new_aibot" data-count="7">選択
+      </label>
       <span class="acc-arrow">▼</span>
     </div>
     <div class="acc-body">
-      <div class="doc-actions">
-        <button class="doc-btn doc-btn-print" onclick="printSection('AI BOT → USDT変換',['tools/pdf_images/new_aibot_p01.jpg','tools/pdf_images/new_aibot_p02.jpg','tools/pdf_images/new_aibot_p03.jpg','tools/pdf_images/new_aibot_p04.jpg','tools/pdf_images/new_aibot_p05.jpg','tools/pdf_images/new_aibot_p06.jpg','tools/pdf_images/new_aibot_p07.jpg'])">🖨 印刷</button>
-        <button class="doc-btn doc-btn-dl" onclick="downloadSection(this,'AI BOT → USDT変換',['tools/pdf_images/new_aibot_p01.jpg','tools/pdf_images/new_aibot_p02.jpg','tools/pdf_images/new_aibot_p03.jpg','tools/pdf_images/new_aibot_p04.jpg','tools/pdf_images/new_aibot_p05.jpg','tools/pdf_images/new_aibot_p06.jpg','tools/pdf_images/new_aibot_p07.jpg'])">⬇ ダウンロード</button>
-      </div>
       <div class="guide-title">📋 実際の操作画面（全7ページ）</div>
       <div class="pdf-pages">
         <div class="pdf-page"><img src="tools/pdf_images/new_aibot_p01.jpg" alt="AI BOT 1" loading="lazy" onclick="openLightbox(this)"></div>
@@ -655,16 +696,15 @@
   <!-- bitget wallet → カードへ入金 -->
   <div class="card">
     <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1">
         <span class="card-title-icon" style="background:rgba(79,110,247,0.12)">💳</span>bitradeX → bitget wallet → カードへ入金
       </div>
+      <label class="doc-check-label" onclick="event.stopPropagation()">
+        <input type="checkbox" class="doc-check" data-prefix="new_bitget" data-count="14">選択
+      </label>
       <span class="acc-arrow">▼</span>
     </div>
     <div class="acc-body">
-      <div class="doc-actions">
-        <button class="doc-btn doc-btn-print" onclick="printSection('bitget walletカードへ入金',['tools/pdf_images/new_bitget_p01.jpg','tools/pdf_images/new_bitget_p02.jpg','tools/pdf_images/new_bitget_p03.jpg','tools/pdf_images/new_bitget_p04.jpg','tools/pdf_images/new_bitget_p05.jpg','tools/pdf_images/new_bitget_p06.jpg','tools/pdf_images/new_bitget_p07.jpg','tools/pdf_images/new_bitget_p08.jpg','tools/pdf_images/new_bitget_p09.jpg','tools/pdf_images/new_bitget_p10.jpg','tools/pdf_images/new_bitget_p11.jpg','tools/pdf_images/new_bitget_p12.jpg','tools/pdf_images/new_bitget_p13.jpg','tools/pdf_images/new_bitget_p14.jpg'])">🖨 印刷</button>
-        <button class="doc-btn doc-btn-dl" onclick="downloadSection(this,'bitget walletカードへ入金',['tools/pdf_images/new_bitget_p01.jpg','tools/pdf_images/new_bitget_p02.jpg','tools/pdf_images/new_bitget_p03.jpg','tools/pdf_images/new_bitget_p04.jpg','tools/pdf_images/new_bitget_p05.jpg','tools/pdf_images/new_bitget_p06.jpg','tools/pdf_images/new_bitget_p07.jpg','tools/pdf_images/new_bitget_p08.jpg','tools/pdf_images/new_bitget_p09.jpg','tools/pdf_images/new_bitget_p10.jpg','tools/pdf_images/new_bitget_p11.jpg','tools/pdf_images/new_bitget_p12.jpg','tools/pdf_images/new_bitget_p13.jpg','tools/pdf_images/new_bitget_p14.jpg'])">⬇ ダウンロード</button>
-      </div>
       <div class="guide-title">📋 実際の操作画面（全14ページ）</div>
       <div class="pdf-pages">
         <div class="pdf-page"><img src="tools/pdf_images/new_bitget_p01.jpg" alt="bitget 1" loading="lazy" onclick="openLightbox(this)"></div>
@@ -689,9 +729,12 @@
   <!-- TRIA カードへ入金 -->
   <div class="card">
     <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1">
         <span class="card-title-icon" style="background:rgba(247,181,0,0.15)">🏧</span>bitradeX → TRIAカードへ入金
       </div>
+      <label class="doc-check-label" onclick="event.stopPropagation()">
+        <input type="checkbox" class="doc-check" data-prefix="new_tria" data-count="10">選択
+      </label>
       <span class="acc-arrow">▼</span>
     </div>
     <div class="acc-body">
@@ -927,7 +970,7 @@ function setSimMode(mode) {
     document.getElementById('principal').step = '10000';
     document.getElementById('principal').min  = '1000';
   }
-  document.getElementById('principalLabel').textContent = '②黄色の枠内へ金額を入力';
+  document.getElementById('principalLabel').innerHTML = '<span class="step-badge">②黄色の枠内へ金額を入力</span>';
   updatePresetLabels();
   updatePrincipalYen();
   try { localStorage.setItem('sim_mode', mode); } catch(e) {}
@@ -1575,60 +1618,64 @@ function setupChartEvents(canvas, ctx, W) {
   canvas.ontouchend   = hide;
 }
 
-// ===== 資料集: 印刷 =====
-function printSection(title, srcs) {
-  var base = location.href.replace(/[^/]*$/, '');
-  var win = window.open('', '_blank', 'width=800,height=700');
-  if (!win) { alert('ポップアップをブロックしないでください。\nブラウザの設定からポップアップを許可してください。'); return; }
-  var imgs = srcs.map(function(s) { return '<img src="' + base + s + '">'; }).join('');
-  win.document.open();
-  win.document.write(
-    '<!DOCTYPE html><html><head><meta charset="utf-8">'
-    + '<meta name="viewport" content="width=device-width">'
-    + '<title>' + title + '</title>'
-    + '<style>'
-    + '*{margin:0;padding:0;box-sizing:border-box;}'
-    + 'body{background:#fff;}'
-    + 'img{width:100%;display:block;}'
-    + '@media print{img{page-break-after:always;}}'
-    + '</style></head><body>'
-    + imgs
-    + '<script>window.addEventListener("load",function(){window.print();});<\/script>'
-    + '</body></html>'
-  );
-  win.document.close();
+// ===== 資料集: 選択された画像パスを収集 =====
+function getSelectedDocs() {
+  var result = [];
+  var checks = document.querySelectorAll('.doc-check:checked');
+  for (var i = 0; i < checks.length; i++) {
+    var prefix = checks[i].getAttribute('data-prefix');
+    var count  = parseInt(checks[i].getAttribute('data-count'), 10);
+    for (var p = 1; p <= count; p++) {
+      result.push('tools/pdf_images/' + prefix + '_p' + ('0' + p).slice(-2) + '.jpg');
+    }
+  }
+  return result;
 }
 
-// ===== 資料集: ダウンロード（全ページを縦結合して1枚のJPEGで保存）=====
-function downloadSection(btn, title, srcs) {
-  var origText = btn.innerHTML;
-  btn.innerHTML = '⏳ 処理中…';
-  btn.disabled = true;
+// ===== 資料集: 印刷（ポップアップ不要・@media printで制御）=====
+function printSelected() {
+  var srcs = getSelectedDocs();
+  if (!srcs.length) { alert('印刷する資料を選択してください（「選択」チェックボックスにチェックを入れてください）'); return; }
   var base = location.href.replace(/[^/]*$/, '');
+  var area = document.getElementById('print-area');
+  area.innerHTML = srcs.map(function(s) { return '<img src="' + base + s + '">'; }).join('');
+  window.print();
+  setTimeout(function() { area.innerHTML = ''; }, 4000);
+}
+
+// ===== 資料集: ダウンロード（選択資料を縦結合して1枚のJPEGで保存）=====
+function downloadSelected(btn) {
+  var srcs = getSelectedDocs();
+  if (!srcs.length) { alert('ダウンロードする資料を選択してください（「選択」チェックボックスにチェックを入れてください）'); return; }
+  var base  = location.href.replace(/[^/]*$/, '');
+  var orig  = btn.innerHTML;
+  btn.innerHTML = '⏳ 処理中…'; btn.disabled = true;
   var images = new Array(srcs.length);
   var loaded = 0;
-  function onDone() {
-    var validImgs = images.filter(function(im) { return im; });
-    if (!validImgs.length) { btn.innerHTML = origText; btn.disabled = false; return; }
-    var W = validImgs[0].naturalWidth;
-    var H = validImgs.reduce(function(s, im) { return s + im.naturalHeight; }, 0);
-    var canvas = document.createElement('canvas');
-    canvas.width = W; canvas.height = H;
-    var ctx = canvas.getContext('2d');
+  function done() {
+    var valid = images.filter(function(im) { return im; });
+    if (!valid.length) { reset(); return; }
+    var W = valid[0].naturalWidth;
+    var H = valid.reduce(function(s, im) { return s + im.naturalHeight; }, 0);
+    var cv = document.createElement('canvas');
+    cv.width = W; cv.height = H;
+    var ctx = cv.getContext('2d');
     var y = 0;
     images.forEach(function(im) { if (im) { ctx.drawImage(im, 0, y); y += im.naturalHeight; } });
-    canvas.toBlob(function(blob) {
+    cv.toBlob(function(blob) {
+      if (!blob) { reset(); alert('ダウンロードに失敗しました。'); return; }
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
-      a.href = url; a.download = title + '.jpg'; a.click();
-      setTimeout(function() { URL.revokeObjectURL(url); }, 10000);
-      btn.innerHTML = origText; btn.disabled = false;
+      a.href = url; a.download = '資料.jpg'; a.click();
+      setTimeout(function() { URL.revokeObjectURL(url); }, 15000);
+      reset();
     }, 'image/jpeg', 0.90);
   }
+  function reset() { btn.innerHTML = orig; btn.disabled = false; }
   srcs.forEach(function(src, i) {
     var im = new Image();
-    im.onload = function() { images[i] = im; if (++loaded === srcs.length) onDone(); };
-    im.onerror = function() { images[i] = null; if (++loaded === srcs.length) onDone(); };
+    im.onload  = function() { images[i] = im; if (++loaded === srcs.length) done(); };
+    im.onerror = function() { images[i] = null; if (++loaded === srcs.length) done(); };
     im.src = base + src;
   });
 }
@@ -1649,7 +1696,7 @@ window.onload = function() {
       simMode = 'jpy';
       document.getElementById('simModeBtn-usd').classList.remove('active');
       document.getElementById('simModeBtn-jpy').classList.add('active');
-      document.getElementById('principalLabel').textContent = '②黄色の枠内へ金額を入力';
+      document.getElementById('principalLabel').innerHTML = '<span class="step-badge">②黄色の枠内へ金額を入力</span>';
       document.getElementById('principal').value = 150000;
       document.getElementById('principal').step  = '10000';
       document.getElementById('principal').min   = '1000';
@@ -1690,5 +1737,6 @@ window.onload = function() {
   <span class="lb-close" onclick="closeLightbox()">✕</span>
   <img id="lb-img" src="" alt="">
 </div>
+<div id="print-area"></div>
 </body>
 </html>
