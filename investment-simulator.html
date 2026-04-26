@@ -7,62 +7,60 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>投資シミュレーター v8</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* ===== テーマ変数 ===== */
     :root {
-      --bg:         #f0f4ff;
+      --bg:         #f7f3eb;
       --white:      #ffffff;
-      --border:     #dde3f5;
-      --accent:     #4f6ef7;
-      --accent2:    #9b5cf6;
-      --btn-grad:   linear-gradient(135deg, #4f6ef7, #9b5cf6);
-      --rate-bg:    linear-gradient(135deg, #eef2ff, #f5f0ff);
-      --rate-border:#c8d2ff;
-      --text:       #1a2040;
-      --muted:      #6b7a9e;
+      --border:     #e5d9b6;
+      --accent:     #b8860b;
+      --accent2:    #d4a017;
+      --btn-grad:   linear-gradient(135deg, #b8860b, #d4a017);
+      --rate-bg:    linear-gradient(135deg, #fdf6e3, #faf0d7);
+      --rate-border:#dfc96a;
+      --text:       #1c1a14;
+      --muted:      #7a6d52;
       --green:      #0fb981;
-      --orange:     #ff6b3d;
-      --yellow:     #f59e0b;
-      --grid-line:  #e8edff;
+      --orange:     #e07b20;
+      --yellow:     #d4a017;
+      --grid-line:  #ede5cf;
       --radius:     16px;
     }
 
-    body.theme-black {
-      --bg:          #f4f5f7;
-      --border:      #a8b4c4;
-      --accent:      #1e2a3a;
-      --accent2:     #3d4f66;
-      --btn-grad:    linear-gradient(135deg, #1e2a3a, #3d4f66);
-      --rate-bg:     linear-gradient(135deg, #ecedf0, #e4e6ea);
-      --rate-border: #a8b4c4;
-      --muted:       #546278;
-      --grid-line:   #dde0e6;
-    }
-
-    body.theme-red {
-      --bg:          #fff4f4;
-      --border:      #f5bfc5;
-      --accent:      #e63946;
-      --accent2:     #c1121f;
-      --btn-grad:    linear-gradient(135deg, #e63946, #c1121f);
-      --rate-bg:     linear-gradient(135deg, #fff0f1, #ffe6e8);
-      --rate-border: #f5b0b6;
-      --muted:       #8a5a5e;
-      --grid-line:   #ffe0e2;
+    body.dark {
+      --bg:          #100f0c;
+      --white:       #1c1a14;
+      --border:      #3a3220;
+      --accent:      #d4a017;
+      --accent2:     #e8b84b;
+      --btn-grad:    linear-gradient(135deg, #c9902a, #d4a017);
+      --rate-bg:     linear-gradient(135deg, #1a1608, #201b0a);
+      --rate-border: #5a4d25;
+      --text:        #f0e8d0;
+      --muted:       #a09070;
+      --green:       #26d89a;
+      --orange:      #f0953a;
+      --yellow:      #e8b84b;
+      --grid-line:   #2a2415;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
       font-size: 15px;
+      font-weight: 400;
       line-height: 1.6;
       min-height: 100vh;
       padding: 16px;
       max-width: 640px;
       margin: 0 auto;
+      transition: background 0.25s, color 0.25s;
     }
 
     /* ===== ヘッダー ===== */
@@ -70,33 +68,35 @@
     .title-row {
       display: flex; align-items: center; justify-content: space-between; gap: 10px;
     }
-    h1 { font-size: 1.3rem; font-weight: 800; color: var(--text); }
-    .theme-row { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    h1 { font-size: 1.3rem; font-weight: 900; color: var(--text); letter-spacing: -0.01em; }
+    .theme-row { flex-shrink: 0; }
 
-    /* ===== テーマボタン ===== */
-    .theme-btn {
-      height: 28px;
-      padding: 0 10px;
-      border-radius: 7px;
-      border: none;
+    /* ===== ダークモードトグル ===== */
+    .dark-btn {
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
       cursor: pointer;
       outline: none;
-      font-size: 0.62rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s, opacity 0.15s;
-      opacity: 0.55;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--white);
+      color: var(--text);
+      transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+      display: flex; align-items: center; gap: 5px;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-    .theme-btn:active { transform: scale(0.9) !important; }
-    .theme-btn.active { opacity: 1; transform: scale(1.08); }
-    .theme-btn-blue  { background: linear-gradient(135deg, #5b7bff, #a855f7); box-shadow: 0 2px 8px rgba(79,110,247,0.4); }
-    .theme-btn-black { background: linear-gradient(135deg, #252f40, #4a607c); box-shadow: 0 2px 8px rgba(30,42,58,0.45); }
-    .theme-btn-red   { background: linear-gradient(135deg, #f04e4e, #c1121f); box-shadow: 0 2px 8px rgba(230,57,70,0.4); }
-    .theme-btn.active.theme-btn-blue  { box-shadow: 0 0 0 3px rgba(79,110,247,0.3), 0 4px 12px rgba(79,110,247,0.45); }
-    .theme-btn.active.theme-btn-black { box-shadow: 0 0 0 3px rgba(61,79,102,0.35), 0 4px 12px rgba(30,42,58,0.45); }
-    .theme-btn.active.theme-btn-red   { box-shadow: 0 0 0 3px rgba(230,57,70,0.3), 0 4px 12px rgba(230,57,70,0.45); }
+    .dark-btn:hover { box-shadow: 0 3px 12px rgba(184,134,11,0.25); border-color: var(--accent); }
+    .dark-btn:active { transform: scale(0.95); }
+
+    /* ===== フォントウェイト ===== */
+    .card-title { font-weight: 700; }
+    label { font-weight: 300; }
+    .card-title, .guide-title, .milestone-header,
+    .comp-title, .rate-label { font-family: 'Noto Sans JP', sans-serif; }
 
     /* ===== カード ===== */
     .card {
@@ -359,18 +359,40 @@
     .lb-overlay img { max-width:100%; max-height:100%; object-fit:contain; border-radius:8px; box-shadow:0 8px 40px rgba(0,0,0,0.6); }
     .lb-close { position:fixed; top:12px; right:16px; font-size:2rem; color:#fff; cursor:pointer; line-height:1; z-index:10000; }
     .pdf-page img { cursor:zoom-in; }
+    /* ===== 用語ツールチップ ===== */
+    .tt {
+      position: relative; cursor: help;
+      border-bottom: 1.5px dotted var(--accent);
+      color: var(--accent); font-weight: 700;
+      white-space: nowrap; display: inline-block;
+    }
+    .tt-pop {
+      display: none; position: absolute;
+      bottom: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%);
+      background: #1c1a14; color: #f0e8d0;
+      font-size: 0.72rem; font-weight: 400; line-height: 1.6;
+      padding: 9px 13px; border-radius: 9px;
+      white-space: normal; width: 210px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      z-index: 2000; pointer-events: none;
+    }
+    .tt-pop::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent; border-top-color: #1c1a14;
+    }
+    .tt:hover .tt-pop, .tt.tt-open .tt-pop { display: block; }
   </style>
 </head>
-<body class="theme-blue">
+<body>
 
 <!-- ヘッダー -->
 <div class="header">
   <div class="title-row">
     <h1>投資シミュレーター</h1>
     <div class="theme-row">
-      <button class="theme-btn theme-btn-blue  active" id="btn-blue"  onclick="setTheme('blue')"  title="ブルー">blue</button>
-      <button class="theme-btn theme-btn-black"         id="btn-black" onclick="setTheme('black')" title="ブラック">black</button>
-      <button class="theme-btn theme-btn-red"           id="btn-red"   onclick="setTheme('red')"   title="レッド">red</button>
+      <button class="dark-btn" id="darkBtn" onclick="toggleDark()">🌙 ダーク</button>
     </div>
   </div>
 </div>
@@ -413,15 +435,15 @@
       <input type="number" id="days" value="365" min="1" step="1" />
     </div>
     <div class="input-group">
-      <label>年利（%）</label>
+      <label><span class="tt" ontouchstart="ttTap(this)">年利（%）<span class="tt-pop">年間の利回り（利率）。180%なら、日利換算で約0.49%/日。</span></span></label>
       <input type="number" id="annualRate" value="180" min="0.1" step="0.1" />
     </div>
     <div class="input-group">
-      <label>出金手数料（%）</label>
+      <label><span class="tt" ontouchstart="ttTap(this)">出金手数料（%）<span class="tt-pop">出金時に差し引かれる手数料の割合。5%なら、$1,000出金時に$950受取。</span></span></label>
       <input type="number" id="fee" value="5" min="0" max="99" step="0.1" />
     </div>
     <div class="input-group">
-      <label>再投資トリガー（$）</label>
+      <label><span class="tt" ontouchstart="ttTap(this)">再投資トリガー（$）<span class="tt-pop">累積利益がこの金額に達したとき、元本に自動追加（複利）する金額。例：$100ごとに元本に上乗せ。</span></span></label>
       <input type="number" id="reinvestThreshold" value="100" min="1" step="10" />
     </div>
   </div>
@@ -434,7 +456,7 @@
 <div class="card hidden" id="milestoneCard">
   <div class="card-title">
     <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
-    期間別シミュレーション（単利・複利）
+    期間別シミュレーション（<span class="tt" ontouchstart="ttTap(this)">単利<span class="tt-pop">元本だけに利息がつく計算方式。利益は元本に組み込まれない。</span></span>・<span class="tt" ontouchstart="ttTap(this)">複利<span class="tt-pop">利息を元本に組み込み、次の利息計算に使う方式。時間が長いほど雪だるま式に増加。</span></span>）
   </div>
   <div class="milestone-grid" id="milestoneGrid"></div>
 </div>
@@ -762,11 +784,34 @@
 <script>
 // ===== テーマ =====
 var THEMES = {
-  blue:  { comp: '#4f6ef7', simple: '#f59e0b', fill: 'rgba(79,110,247,',  grid: '#e8edff' },
-  black: { comp: '#1e2a3a', simple: '#888888', fill: 'rgba(30,42,58,',    grid: '#dde0e6' },
-  red:   { comp: '#e63946', simple: '#f59e0b', fill: 'rgba(230,57,70,',   grid: '#ffe0e2' }
+  light: { comp: '#b8860b', simple: '#0fb981', fill: 'rgba(184,134,11,', grid: '#ede5cf', bg: '#ffffff' },
+  dark:  { comp: '#d4a017', simple: '#26d89a', fill: 'rgba(212,160,23,', grid: '#2a2415', bg: '#1c1a14' }
 };
-var currentTheme = 'blue';
+var isDark = false;
+function getTC() { return isDark ? THEMES.dark : THEMES.light; }
+
+// ===== ダークモードトグル =====
+function toggleDark() {
+  isDark = !isDark;
+  document.body.classList.toggle('dark', isDark);
+  document.getElementById('darkBtn').textContent = isDark ? '☀️ ライト' : '🌙 ダーク';
+  try { localStorage.setItem('sim_dark', isDark ? '1' : '0'); } catch(e) {}
+  var chartCard = document.getElementById('chartCard');
+  if (!chartCard.classList.contains('hidden') && gChart.pts && gChart.pts.length > 0) {
+    redrawCurrentChart();
+  }
+}
+
+// ===== ツールチップ（タップ対応）=====
+function ttTap(el) {
+  el.classList.toggle('tt-open');
+  document.addEventListener('touchstart', function closeTt(e) {
+    if (!el.contains(e.target)) {
+      el.classList.remove('tt-open');
+      document.removeEventListener('touchstart', closeTt);
+    }
+  });
+}
 
 // ===== タブ切替 =====
 var tabIds = ['sim', 'docs', 'news'];
@@ -795,19 +840,6 @@ function switchTab(idx) {
   try { localStorage.setItem('sim_tab', idx); } catch(e) {}
 }
 
-function setTheme(name) {
-  currentTheme = name;
-  document.body.className = 'theme-' + name;
-  ['blue','black','red'].forEach(function(t) {
-    document.getElementById('btn-' + t).classList.toggle('active', t === name);
-  });
-  try { localStorage.setItem('sim_theme', name); } catch(e) {}
-  // グラフ再描画
-  var chartCard = document.getElementById('chartCard');
-  if (!chartCard.classList.contains('hidden') && gChart.pts.length > 0) {
-    redrawCurrentChart();
-  }
-}
 
 // ===== ユーティリティ =====
 function commaInt(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
@@ -1158,7 +1190,7 @@ function drawChart(principal, annualRate, fee, days, jpyRate) {
   gChart.gH = gChart.H - gChart.PAD_T - gChart.PAD_B;
 
   // 凡例更新
-  var tc = THEMES[currentTheme];
+  var tc = getTC();
   document.getElementById('chartLegend').innerHTML =
     '<div class="legend-item"><div class="legend-line" style="background:' + tc.comp + '"></div>複利（日次）</div>' +
     '<div class="legend-item"><div class="legend-line" style="height:2px;border-top:2px dashed ' + tc.simple + ';background:none;width:18px"></div>単利</div>';
@@ -1178,9 +1210,8 @@ function drawChartBase(ctx, W, activeIdx) {
   var gW = gChart.gW, gH = gChart.gH, H = gChart.H;
   var pts = gChart.pts, compData = gChart.compData, simpleData = gChart.simpleData;
   var maxVal = gChart.maxVal;
-  var tc = THEMES[currentTheme];
-
-  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+  var tc = getTC();
+  ctx.fillStyle = tc.bg; ctx.fillRect(0, 0, W, H);
 
   // グリッド & Y軸ラベル
   ctx.strokeStyle = tc.grid; ctx.lineWidth = 1;
@@ -1265,7 +1296,7 @@ function setupChartEvents(canvas, ctx, W) {
     var compV = gChart.compData[idx];
     var simpV = gChart.simpleData[idx];
     var rate  = gChart.jpyRate;
-    var tc    = THEMES[currentTheme];
+    var tc    = getTC();
     drawChartBase(ctx, W, idx);
     tooltip.innerHTML =
       '<div class="chart-tooltip-day">' + gChart.pts[idx] + '日目</div>' +
@@ -1292,10 +1323,9 @@ function setupChartEvents(canvas, ctx, W) {
 
 // ===== 起動 =====
 window.onload = function() {
-  // テーマ復元
+  // ダークモード復元
   try {
-    var saved = localStorage.getItem('sim_theme');
-    if (saved && THEMES[saved]) setTheme(saved);
+    if (localStorage.getItem('sim_dark') === '1') toggleDark();
   } catch(e) {}
 
   // タブ復元
