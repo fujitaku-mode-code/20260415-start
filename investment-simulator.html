@@ -120,22 +120,20 @@
 
     /* ===== 為替レートバナー ===== */
     .rate-banner {
-      display: flex; align-items: center; justify-content: space-between;
-      background: var(--rate-bg);
-      border: 1.5px solid var(--rate-border);
-      border-radius: 12px;
-      padding: 8px 12px;
+      display: flex; align-items: center;
+      padding: 2px 0 12px;
       margin-bottom: 10px;
-      gap: 8px;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
     }
-    .rate-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-    .rate-value { font-size: 1.1rem; font-weight: 800; color: var(--accent); }
-    .rate-date  { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+    .rate-num { font-size: 2.2rem; font-weight: 900; color: var(--accent); letter-spacing: -0.03em; line-height: 1; }
+    .rate-unit { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+    .rate-date { font-size: 0.64rem; color: var(--muted); text-align: right; }
     .rate-btn {
       background: var(--btn-grad); color: #fff;
       border: none; border-radius: 8px;
-      font-size: 0.8rem; font-weight: 700;
-      padding: 8px 12px; cursor: pointer; white-space: nowrap;
+      font-size: 0.82rem; font-weight: 700;
+      padding: 8px 14px; cursor: pointer; white-space: nowrap;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
     .rate-btn:active { opacity: 0.8; }
@@ -459,12 +457,17 @@
   <!-- 為替レートバナー -->
   <div class="rate-banner">
     <div style="flex:1">
-      <div class="rate-value" id="rateValue">--- 円 / ドル</div>
-      <div class="rate-date"  id="rateDate">取得中...</div>
-      <div style="font-size:0.7rem;color:var(--muted);margin-top:2px" id="rateTime"></div>
-      <div class="rate-hint-1">①「更新」ボタンを押し日本円を表示</div>
+      <div style="display:flex;align-items:baseline;gap:7px">
+        <span class="rate-num" id="rateNum">---</span>
+        <span class="rate-unit">円 / ドル</span>
+      </div>
+      <div class="rate-hint-1" style="margin-top:6px">①「更新」ボタンを押し日本円を表示</div>
     </div>
-    <button class="rate-btn" onclick="fetchRate()">🔄 更新</button>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0">
+      <button class="rate-btn" onclick="fetchRate()"><span style="font-size:1.3rem">🔄</span> 更新</button>
+      <div class="rate-date" id="rateDate">取得中...</div>
+      <div class="rate-date" id="rateTime"></div>
+    </div>
   </div>
 
   <div class="input-grid">
@@ -997,20 +1000,20 @@ function nowTimeStr() {
 // ===== 為替レート =====
 function applyRate(rate) {
   gJpyRate = Math.round(rate * 10) / 10;
-  document.getElementById('rateValue').textContent = gJpyRate + ' 円 / ドル';
+  document.getElementById('rateNum').textContent = gJpyRate;
   document.getElementById('rateDate').textContent  = '';
   document.getElementById('rateTime').textContent  = nowTimeStr();
   try { localStorage.setItem('sim_last_rate', gJpyRate); } catch(e) {}
   updatePrincipalYen();
 }
 function fallbackRate() {
-  document.getElementById('rateValue').textContent = gJpyRate + ' 円 / ドル';
+  document.getElementById('rateNum').textContent = gJpyRate;
   document.getElementById('rateDate').textContent  = '※設定値を使用中';
   document.getElementById('rateTime').textContent  = nowTimeStr();
 }
 function fetchRate() {
   document.getElementById('rateDate').textContent  = '取得中...';
-  document.getElementById('rateValue').textContent = (gJpyRate > 0 ? gJpyRate : '---') + ' 円 / ドル';
+  document.getElementById('rateNum').textContent = gJpyRate > 0 ? gJpyRate : '---';
   document.getElementById('rateTime').textContent  = '';
 
   // API 1: open.er-api.com
@@ -1521,7 +1524,7 @@ window.onload = function() {
     var savedRate = parseFloat(localStorage.getItem('sim_last_rate'));
     if (savedRate > 50 && savedRate < 300) {
       gJpyRate = savedRate;
-      document.getElementById('rateValue').textContent = gJpyRate + ' 円 / ドル';
+      document.getElementById('rateNum').textContent = gJpyRate;
       document.getElementById('rateDate').textContent  = '前回取得値';
     }
   } catch(e) {}
