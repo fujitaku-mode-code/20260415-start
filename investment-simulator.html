@@ -182,8 +182,13 @@
     }
     .milestone-date { font-size: 0.78rem; font-weight: 500; opacity: 0.85; }
     .milestone-days { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: rgba(255,255,255,0.4); }
-    .milestone-body { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid rgba(0,0,0,0.07); }
+    .milestone-body { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid rgba(0,0,0,0.07); background: var(--white); }
     .milestone-cell { padding: 10px; text-align: center; border-right: 1px solid rgba(0,0,0,0.07); }
+    body.dark .milestone-body { border-top-color: rgba(255,255,255,0.08); }
+    body.dark .milestone-cell { border-right-color: rgba(255,255,255,0.08); }
+    body.dark .milestone-cell-pct { background: rgba(255,255,255,0.1); }
+    body.dark .pill-yellow { background: rgba(232,184,75,0.2); color: #e8b84b; }
+    body.dark .pill-accent { color: var(--accent); }
     .milestone-cell:last-child { border-right: none; }
     .milestone-cell-label { font-size: 0.67rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.6; margin-bottom: 3px; }
     .milestone-cell-value { font-size: 0.9rem; font-weight: 800; }
@@ -368,18 +373,18 @@
     }
     .tt-pop {
       display: none; position: absolute;
-      bottom: calc(100% + 8px); left: 50%;
-      transform: translateX(-50%);
+      bottom: calc(100% + 8px); left: 0;
+      transform: none;
       background: #1c1a14; color: #f0e8d0;
       font-size: 0.72rem; font-weight: 400; line-height: 1.6;
       padding: 9px 13px; border-radius: 9px;
-      white-space: normal; width: 210px;
+      white-space: normal; width: min(210px, 80vw);
       box-shadow: 0 6px 20px rgba(0,0,0,0.4);
       z-index: 2000; pointer-events: none;
     }
     .tt-pop::after {
-      content: ''; position: absolute; top: 100%; left: 50%;
-      transform: translateX(-50%);
+      content: ''; position: absolute; top: 100%; left: 18px;
+      transform: none;
       border: 5px solid transparent; border-top-color: #1c1a14;
     }
     .tt:hover .tt-pop, .tt.tt-open .tt-pop { display: block; }
@@ -415,18 +420,17 @@
   <!-- 為替レートバナー -->
   <div class="rate-banner">
     <div style="flex:1">
-      <div class="rate-label">現在の為替レート</div>
       <div class="rate-value" id="rateValue">--- 円 / ドル</div>
       <div class="rate-date"  id="rateDate">取得中...</div>
       <div style="font-size:0.7rem;color:var(--muted);margin-top:2px" id="rateTime"></div>
-      <div style="font-size:0.68rem;color:#d32f2f;margin-top:4px;font-weight:600">①「更新」ボタンを押して、日本円を表示</div>
+      <div style="font-size:0.68rem;font-weight:700;color:#7a5a00;background:linear-gradient(135deg,rgba(255,220,50,0.18),rgba(255,180,0,0.12));border:1.5px solid #f0c030;border-radius:8px;padding:3px 9px;margin-top:6px;display:inline-block">①「更新」ボタンを押して、日本円を表示</div>
     </div>
     <button class="rate-btn" onclick="fetchRate()">🔄 更新</button>
   </div>
 
   <div class="input-grid">
     <div class="input-group required-field" style="grid-column:1/-1">
-      <label>⭐ 初期投資額（$）<span class="label-hint">※②黄色の枠内へ入力</span></label>
+      <label>⭐ 初期投資額（$）<span class="label-hint">②黄色の枠内へ入力</span></label>
       <input type="number" id="principal" value="1000" min="1" step="100" oninput="updatePrincipalYen()" />
       <div class="input-yen" id="principalYen"></div>
     </div>
@@ -443,13 +447,12 @@
       <input type="number" id="fee" value="5" min="0" max="99" step="0.1" />
     </div>
     <div class="input-group">
-      <label><span class="tt" ontouchstart="ttTap(this)">再投資トリガー（$）<span class="tt-pop">累積利益がこの金額に達したとき、元本に自動追加（複利）する金額。例：$100ごとに元本に上乗せ。</span></span></label>
+      <label><span class="tt" ontouchstart="ttTap(this)">再投資額（$）<span class="tt-pop">累積利益がこの金額に達したとき、元本に自動追加（複利）する金額。例：$100ごとに元本に上乗せ。</span></span></label>
       <input type="number" id="reinvestThreshold" value="100" min="1" step="10" />
     </div>
   </div>
 
   <button class="btn" onclick="simulate()">③ シミュレーション実行</button>
-  <p class="sim-note">※日利受取で算出したシミュレーションツールです。</p>
 </div>
 
 <!-- 期間別シミュレーション -->
@@ -1076,10 +1079,18 @@ function fmtDate(d) {
 function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
   document.getElementById('milestoneCard').classList.remove('hidden');
   var ms = [
-    { label:'3ヶ月後',  date:addMonths(startDate,3),  color:'#0fb981', bg:'linear-gradient(135deg,#d0f5e8,#b8f0d8)', border:'#82dbb8' },
-    { label:'6ヶ月後',  date:addMonths(startDate,6),  color:'#4f6ef7', bg:'linear-gradient(135deg,#dce5ff,#c8d8ff)', border:'#9ab2ff' },
-    { label:'12ヶ月後', date:addMonths(startDate,12), color:'#9b5cf6', bg:'linear-gradient(135deg,#ede0ff,#ddc8ff)', border:'#c49aff' },
-    { label:'2年後',    date:addMonths(startDate,24), color:'#f59e0b', bg:'linear-gradient(135deg,#fff3cc,#ffe8a0)', border:'#ffd260' }
+    { label:'3ヶ月後',  date:addMonths(startDate,3),
+      color:'#0a9e6d', bg:'linear-gradient(135deg,#d0f5e8,#b8f0d8)', border:'#82dbb8',
+      dColor:'#26d89a', dBg:'linear-gradient(135deg,#0a3d2a,#0f5236)', dBorder:'#1a7a50' },
+    { label:'6ヶ月後',  date:addMonths(startDate,6),
+      color:'#2a5fc9', bg:'linear-gradient(135deg,#dce5ff,#c8d8ff)', border:'#9ab2ff',
+      dColor:'#7aabff', dBg:'linear-gradient(135deg,#0a1f4a,#0d2d6a)', dBorder:'#1a3f8a' },
+    { label:'12ヶ月後', date:addMonths(startDate,12),
+      color:'#7a30d0', bg:'linear-gradient(135deg,#ede0ff,#ddc8ff)', border:'#c49aff',
+      dColor:'#c49aff', dBg:'linear-gradient(135deg,#2a1060,#3d1a8a)', dBorder:'#6030c0' },
+    { label:'2年後',    date:addMonths(startDate,24),
+      color:'#9e7a10', bg:'linear-gradient(135deg,#fff3cc,#ffe8a0)', border:'#ffd260',
+      dColor:'#e8b84b', dBg:'linear-gradient(135deg,#3a2800,#5a3e00)', dBorder:'#8a6500' }
   ];
   var html = '';
   for (var i = 0; i < ms.length; i++) {
@@ -1088,16 +1099,19 @@ function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startD
     var effD = Math.max(0, days - 1);
     var compV = compoundValue(principal, annualRate, effD) * (1 - fee / 100);
     var simpV = principal * (1 + annualRate / 100 * effD / 365) * (1 - fee / 100);
+    var mc = isDark ? m.dColor : m.color;
+    var mb = isDark ? m.dBg    : m.bg;
+    var mbd= isDark ? m.dBorder: m.border;
     html +=
-      '<div class="milestone-row" style="border-color:' + m.border + '">' +
-        '<div class="milestone-header" style="background:' + m.bg + ';color:' + m.color + '">' +
+      '<div class="milestone-row" style="border-color:' + mbd + '">' +
+        '<div class="milestone-header" style="background:' + mb + ';color:' + mc + '">' +
           '<span>' + m.label + '</span>' +
           '<span class="milestone-date">' + fmtDate(m.date) + '</span>' +
           '<span class="milestone-days">' + days + '日</span>' +
         '</div>' +
-        '<div class="milestone-body" style="background:#fff">' +
-          milestoneCell('単利',      simpV, (simpV/principal-1)*100, jpyRate, m.color) +
-          milestoneCell('複利（日次）', compV, (compV/principal-1)*100, jpyRate, m.color) +
+        '<div class="milestone-body">' +
+          milestoneCell('単利',      simpV, (simpV/principal-1)*100, jpyRate, mc) +
+          milestoneCell('複利（日次）', compV, (compV/principal-1)*100, jpyRate, mc) +
         '</div>' +
       '</div>';
   }
