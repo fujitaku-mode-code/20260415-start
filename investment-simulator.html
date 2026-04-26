@@ -437,6 +437,7 @@
   </style>
 </head>
 <body>
+<script>try{if(localStorage.getItem('sim_dark')==='1')document.body.classList.add('dark');}catch(e){}</script>
 
 <!-- ヘッダー -->
 <div class="header">
@@ -1543,9 +1544,12 @@ function setupChartEvents(canvas, ctx, W) {
 
 // ===== 起動 =====
 window.onload = function() {
-  // ダークモード復元
+  // ダークモード復元（<body>直後で class は適用済み、ここでは変数とUIだけ同期）
   try {
-    if (localStorage.getItem('sim_dark') === '1') toggleDark();
+    if (localStorage.getItem('sim_dark') === '1') {
+      isDark = true;
+      document.getElementById('darkBtn').textContent = '☀️ ライト';
+    }
   } catch(e) {}
 
   // シミュレーターモード復元（UI更新のみ、simulate()は後で呼ぶ）
