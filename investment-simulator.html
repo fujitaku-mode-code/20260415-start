@@ -492,15 +492,17 @@
 
   <div class="input-grid">
     <div class="input-group required-field" style="grid-column:1/-1">
-      <label id="principalLabel">⭐ 投資金額（$）<span class="label-hint" style="display:block;margin-left:0;margin-top:3px">②黄色の枠内へ金額を入力</span></label>
-      <input type="number" id="principal" value="1000" min="1" step="100"
-             oninput="updatePrincipalYen();updateSliderFromPrincipal()" />
-      <div style="margin-top:4px;min-height:1.3em">
-        <span id="principalYen" style="display:inline-block;background:var(--bg);border:1.5px solid var(--border);border-radius:20px;padding:2px 10px;font-size:0.78rem;font-weight:700;color:var(--muted)"></span>
+      <label id="principalLabel">⭐ 投資金額（$）<span class="label-hint">②黄色の枠内へ金額を入力</span></label>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input type="number" id="principal" value="1000" min="1" step="100"
+               style="flex:1;min-width:0"
+               oninput="updatePrincipalYen();updateSliderFromPrincipal()" />
+        <span id="principalYen" style="display:inline-block;background:var(--bg);border:1.5px solid var(--border);border-radius:20px;padding:2px 10px;font-size:0.78rem;font-weight:700;color:var(--muted);white-space:nowrap;flex-shrink:0"></span>
       </div>
       <div style="margin-top:7px">
         <input type="range" id="principalSlider" class="principal-slider" min="0" max="100" value="25" step="1" style="--pct:25%" oninput="onSliderInput(this.value)">
         <div class="slider-marks">
+          <span onclick="setSliderPct(0)"><span class="smv">100$</span></span>
           <span onclick="setSliderPct(25)"><span class="smv">1000$</span></span>
           <span onclick="setSliderPct(50)"><span class="smv">1万$</span></span>
           <span onclick="setSliderPct(75)"><span class="smv">10万$</span></span>
@@ -912,7 +914,7 @@ function setSimMode(mode) {
     document.getElementById('principal').min  = '1000';
   }
   document.getElementById('principalLabel').innerHTML =
-    '⭐ 投資金額（' + (isJpy ? '円' : '$') + '）<span class="label-hint" style="display:block;margin-left:0;margin-top:3px">②黄色の枠内へ金額を入力</span>';
+    '⭐ 投資金額（' + (isJpy ? '円' : '$') + '）<span class="label-hint">②黄色の枠内へ金額を入力</span>';
   updateSliderLabels();
   updateSliderFromPrincipal();
   updatePrincipalYen();
@@ -1026,8 +1028,8 @@ function updateSliderLabels() {
   var marks = document.querySelectorAll('.smv');
   if (!marks.length) return;
   var labels = simMode === 'jpy'
-    ? ['10万円', '100万円', '1000万円', '1.5億円']
-    : ['1000$', '1万$', '10万$', '100万$'];
+    ? ['1万円', '10万円', '100万円', '1000万円', '1.5億円']
+    : ['100$', '1000$', '1万$', '10万$', '100万$'];
   for (var i = 0; i < marks.length && i < labels.length; i++) marks[i].textContent = labels[i];
 }
 
@@ -1591,7 +1593,7 @@ window.onload = function() {
       document.getElementById('simModeBtn-usd').classList.remove('active');
       document.getElementById('simModeBtn-jpy').classList.add('active');
       document.getElementById('principalLabel').innerHTML =
-        '⭐ 投資金額（円）<span class="label-hint" style="display:block;margin-left:0;margin-top:3px">②黄色の枠内へ金額を入力</span>';
+        '⭐ 投資金額（円）<span class="label-hint">②黄色の枠内へ金額を入力</span>';
       document.getElementById('principal').value = 150000;
       document.getElementById('principal').step  = '10000';
       document.getElementById('principal').min   = '1000';
