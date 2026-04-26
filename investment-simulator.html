@@ -469,7 +469,7 @@
 
   <div class="input-grid">
     <div class="input-group required-field" style="grid-column:1/-1">
-      <label id="principalLabel">⭐ 初期投資額（$）<span class="label-hint">②黄色の枠内へ入力</span></label>
+      <label id="principalLabel">⭐ 投資金額（$）<span class="label-hint">②黄色の枠内へ入力</span></label>
       <input type="number" id="principal" value="1000" min="1" step="100" oninput="updatePrincipalYen()" />
       <div class="input-yen" id="principalYen"></div>
     </div>
@@ -496,12 +496,11 @@
 
 <!-- 投資条件サマリー枠 -->
 <div id="simSummaryBox" class="hidden" style="background:var(--rate-bg);border:1.5px solid var(--rate-border);border-radius:14px;padding:14px 16px;margin-bottom:14px;text-align:center">
-  <div style="font-size:0.8rem;font-weight:700;letter-spacing:0.06em;color:var(--muted);margin-bottom:5px">投資額</div>
+  <div style="font-size:0.8rem;font-weight:700;letter-spacing:0.06em;color:var(--muted);margin-bottom:5px">下記金額を運用した場合</div>
   <div style="display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap;line-height:1.2">
     <span id="simSummaryAmt" style="font-size:1.7rem;font-weight:900;color:var(--accent);letter-spacing:-0.03em;white-space:nowrap"></span>
     <span id="simSummarySub" style="font-size:0.85rem;font-weight:600;color:var(--muted);white-space:nowrap"></span>
   </div>
-  <div style="font-size:0.82rem;color:var(--muted);margin-top:6px;letter-spacing:0.02em">を運用した場合の試算</div>
 </div>
 
 <!-- 期間別シミュレーション -->
@@ -877,7 +876,7 @@ function setSimMode(mode) {
     document.getElementById('principal').min  = '1000';
   }
   document.getElementById('principalLabel').innerHTML =
-    '⭐ 初期投資額（' + (isJpy ? '円' : '$') + '）<span class="label-hint">②黄色の枠内へ入力</span>';
+    '⭐ 投資金額（' + (isJpy ? '円' : '$') + '）<span class="label-hint">②黄色の枠内へ入力</span>';
   updatePrincipalYen();
   try { localStorage.setItem('sim_mode', mode); } catch(e) {}
   simulate();
@@ -1504,7 +1503,7 @@ window.onload = function() {
       document.getElementById('simModeBtn-usd').classList.remove('active');
       document.getElementById('simModeBtn-jpy').classList.add('active');
       document.getElementById('principalLabel').innerHTML =
-        '⭐ 初期投資額（円）<span class="label-hint">②黄色の枠内へ入力</span>';
+        '⭐ 投資金額（円）<span class="label-hint">②黄色の枠内へ入力</span>';
       document.getElementById('principal').value = 150000;
       document.getElementById('principal').step  = '10000';
       document.getElementById('principal').min   = '1000';
