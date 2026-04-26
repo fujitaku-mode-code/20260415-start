@@ -170,7 +170,7 @@
       width: 18px; height: 18px; border-radius: 50%; background: var(--accent);
       box-shadow: 0 2px 6px rgba(0,0,0,0.22); cursor: pointer; border: 2px solid #fff;
     }
-    .slider-marks { display: flex; justify-content: space-between; margin-top: 5px; }
+    .slider-marks { display: flex; justify-content: space-between; margin-top: 5px; padding: 0 10px; }
     .slider-marks span {
       font-size: 0.65rem; font-weight: 700; color: var(--muted);
       cursor: pointer; padding: 2px 5px; border-radius: 4px;
@@ -525,11 +525,11 @@
     <div class="input-group">
       <label><span class="tt" ontouchstart="ttTap(this)">再投資額（$）<span class="tt-pop">累積利益がこの金額以上になったとき、累積利益の全額を元本に自動追加します。</span></span></label>
       <input type="number" id="reinvestThreshold" value="100" min="1" step="10" />
-      <div style="font-size:0.65rem;color:var(--muted);margin-top:2px"><span style="white-space:nowrap">※設定額以上で累積利益を全額</span><span style="white-space:nowrap">元本に追加</span></div>
     </div>
   </div>
 
   <button class="btn" onclick="simulate()">③ シミュレーション実行</button>
+  <div style="font-size:0.65rem;color:var(--muted);margin-top:5px;text-align:center"><span style="white-space:nowrap">※設定額以上で累積利益を全額</span><span style="white-space:nowrap">元本に追加</span></div>
 </div>
 
 <!-- 投資条件サマリー枠 -->
