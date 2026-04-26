@@ -426,14 +426,11 @@
     .doc-btn:disabled { opacity:0.5; cursor:not-allowed; }
     .doc-btn-print { background:var(--bg); color:var(--text); border:1.5px solid var(--border); }
     .doc-btn-dl    { background:var(--btn-grad); color:#fff; }
-    /* ===== バッジスタイル（①② ヒント） ===== */
+    /* ===== A案スタイル（①② ヒント） ===== */
     .step-badge {
-      display:inline-block; background:rgba(122,90,0,0.10);
-      border:1px solid var(--accent); color:var(--accent);
-      border-radius:20px; padding:3px 12px;
-      font-size:0.82rem; font-weight:700; white-space:nowrap;
+      font-size:0.82rem; font-weight:700; color:#2855b8; white-space:nowrap;
     }
-    body.dark .step-badge { background:rgba(232,184,75,0.13); }
+    body.dark .step-badge { color:#7eb3ff; }
     /* ===== 資料集 アクションバー ===== */
     .doc-action-bar {
       display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap;
@@ -461,7 +458,7 @@
     #print-area { display:none; }
     @media print {
       body > *:not(#print-area) { display:none !important; }
-      #print-area { display:block !important; position:fixed; top:0; left:0; width:100%; background:#fff; }
+      #print-area { display:block !important; width:100%; background:#fff; }
       #print-area img { width:100%; display:block; page-break-after:always; margin:0; padding:0; }
     }
     /* ===== 用語ツールチップ ===== */
@@ -1638,9 +1635,23 @@ function printSelected() {
   if (!srcs.length) { alert('印刷する資料を選択してください（「選択」チェックボックスにチェックを入れてください）'); return; }
   var base = location.href.replace(/[^/]*$/, '');
   var area = document.getElementById('print-area');
-  area.innerHTML = srcs.map(function(s) { return '<img src="' + base + s + '">'; }).join('');
-  window.print();
-  setTimeout(function() { area.innerHTML = ''; }, 4000);
+  area.innerHTML = '';
+  var loaded = 0;
+  var imgs = srcs.map(function(s) {
+    var im = document.createElement('img');
+    im.src = base + s;
+    area.appendChild(im);
+    return im;
+  });
+  function tryPrint() {
+    if (++loaded < imgs.length) return;
+    window.print();
+    setTimeout(function() { area.innerHTML = ''; }, 5000);
+  }
+  imgs.forEach(function(im) {
+    if (im.complete) { tryPrint(); }
+    else { im.onload = tryPrint; im.onerror = tryPrint; }
+  });
 }
 
 // ===== 資料集: ダウンロード（選択資料を縦結合して1枚のJPEGで保存）=====
