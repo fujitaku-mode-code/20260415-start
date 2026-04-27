@@ -2191,49 +2191,67 @@ function fetchMarketData() {
 
 }
 
-// ===== ニュースカード =====
+// ===== ニュースカード（Google News RSS 日本語版）=====
 function fetchNewsHeadlines() {
   var decided = false;
+  var PROXIES = [
+    'https://api.allorigins.win/raw?url=',
+    'https://corsproxy.io/?',
+    'https://api.codetabs.com/v1/proxy?quest=',
+  ];
+  var GNEWS = 'https://news.google.com/rss/search?q=' +
+    encodeURIComponent('仮想通貨 ビットコイン') + '&hl=ja&gl=JP&ceid=JP:ja';
 
-  function fmtDate(ts) {
+  function parseGNews(xml) {
+    var items = [];
     try {
-      var d = new Date(ts * 1000);
-      return (d.getMonth()+1) + '/' + d.getDate() + ' ' + ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2);
-    } catch(e) { return ''; }
+      var doc = new DOMParser().parseFromString(xml, 'text/xml');
+      Array.prototype.slice.call(doc.querySelectorAll('item')).slice(0, 12).forEach(function(node) {
+        var titleEl = node.querySelector('title');
+        var rawTitle = (titleEl ? titleEl.textContent : '').trim();
+        if (!rawTitle) return;
+        var src = 'NEWS';
+        var srcEl = node.querySelector('source');
+        if (srcEl && srcEl.textContent.trim()) {
+          src = srcEl.textContent.trim();
+          var sfx = ' - ' + src;
+          if (rawTitle.slice(-sfx.length) === sfx) rawTitle = rawTitle.slice(0, -sfx.length).trim();
+        } else {
+          var m = rawTitle.match(/^([\s\S]+?)\s+-\s+([^\-]+)$/);
+          if (m) { rawTitle = m[1].trim(); src = m[2].trim(); }
+        }
+        var linkEl = node.querySelector('link');
+        var link = linkEl ? linkEl.textContent.trim() : '';
+        var dateStr = '';
+        var dateEl = node.querySelector('pubDate');
+        if (dateEl) {
+          try {
+            var d = new Date(dateEl.textContent.trim());
+            dateStr = (d.getMonth()+1) + '/' + d.getDate() + ' ' +
+              ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2);
+          } catch(e) {}
+        }
+        items.push({ src: src, title: rawTitle, link: link, pubDate: dateStr });
+      });
+    } catch(e) {}
+    return items;
   }
 
   function tryShow(items) {
     if (decided || !items || items.length < 2) return;
     decided = true;
-    renderNewsCards(items.slice(0, 12));
+    renderNewsCards(items);
   }
 
-  // ① CryptoCompare（ lang 指定なし・最新順 ）
-  fetch('https://min-api.cryptocompare.com/data/v2/news/?sortOrder=latest')
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      var items = (d.Data || []).map(function(item) {
-        return { src: (item.source_info && item.source_info.name) || item.source || 'News',
-                 title: item.title || '', link: item.url || '', pubDate: fmtDate(item.published_on) };
-      }).filter(function(i) { return !!i.title; });
-      tryShow(items);
-    }).catch(function() {});
+  // 3つのCORSプロキシを並列試行
+  PROXIES.forEach(function(proxy) {
+    fetch(proxy + encodeURIComponent(GNEWS))
+      .then(function(r) { if (!r.ok) throw 0; return r.text(); })
+      .then(function(xml) { tryShow(parseGNews(xml)); })
+      .catch(function() {});
+  });
 
-  // ② Reddit r/CryptoCurrency（並列・確実に動作）
-  fetch('https://www.reddit.com/r/CryptoCurrency/hot.json?limit=15&raw_json=1')
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      var items = ((d.data && d.data.children) || []).map(function(c) {
-        var p = c.data;
-        if (!p || !p.title || p.stickied) return null;
-        var link = (!p.is_self && p.url && p.url.indexOf('reddit.com') < 0)
-                   ? p.url : 'https://www.reddit.com' + p.permalink;
-        return { src: 'r/' + p.subreddit, title: p.title, link: link, pubDate: fmtDate(p.created_utc) };
-      }).filter(Boolean);
-      tryShow(items);
-    }).catch(function() {});
-
-  // 15秒後に両方失敗ならエラー表示
+  // 15秒タイムアウト
   setTimeout(function() { if (!decided) { decided = true; renderNewsCards(null); } }, 15000);
 }
 
@@ -2241,8 +2259,14 @@ function renderNewsCards(items) {
   var el = document.getElementById('newsCardList');
   if (!el) return;
   if (!items || !items.length) {
-    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:0.82rem">ニュースを取得できませんでした。<br>各ニュースサイトへは「2. 資料・リンク先」からアクセスできます。</div>';
-    return;
+    // 取得失敗時は日本語ニュースサイトへのリンクを表示
+    items = [
+      { src: 'CoinPost',      title: 'CoinPost ─ 仮想通貨・ブロックチェーン最新情報',      link: 'https://coinpost.jp/' },
+      { src: 'CT Japan',      title: 'コインテレグラフ ジャパン ─ 最新ニュース',            link: 'https://cointelegraph.jp/' },
+      { src: 'CoinDesk JP',   title: 'CoinDesk JAPAN ─ 仮想通貨・ブロックチェーン情報',    link: 'https://www.coindesk.com/ja' },
+      { src: 'あたらしい経済', title: 'あたらしい経済 ─ ブロックチェーン・暗号資産ニュース', link: 'https://www.neweconomy.jp/' },
+      { src: 'CRYPTO TIMES',  title: 'CRYPTO TIMES ─ 仮想通貨・暗号資産の最新情報',       link: 'https://crypto-times.jp/' },
+    ];
   }
   el.innerHTML = items.map(function(o) {
     var dateStr = '';
