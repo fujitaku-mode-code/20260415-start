@@ -2191,34 +2191,50 @@ function fetchMarketData() {
 
 }
 
-// ===== ニュースカード（CryptoCompare News API）=====
+// ===== ニュースカード =====
 function fetchNewsHeadlines() {
-  function parseCC(d) {
-    return (d.Data || []).slice(0, 10).map(function(item) {
-      var dt = new Date((item.published_on || 0) * 1000);
-      var dateStr = '';
-      if (!isNaN(dt.getTime())) {
-        dateStr = (dt.getMonth()+1) + '/' + dt.getDate() + ' ' + ('0'+dt.getHours()).slice(-2) + ':' + ('0'+dt.getMinutes()).slice(-2);
-      }
-      var src = (item.source_info && item.source_info.name) || item.source || 'NEWS';
-      return { src: src, title: item.title || '', link: item.url || '', pubDate: dateStr };
-    }).filter(function(i) { return !!i.title; });
+  var decided = false;
+
+  function fmtDate(ts) {
+    try {
+      var d = new Date(ts * 1000);
+      return (d.getMonth()+1) + '/' + d.getDate() + ' ' + ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2);
+    } catch(e) { return ''; }
   }
 
-  // 日本語ニュース優先、なければ英語
-  fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=JA&sortOrder=latest')
-    .then(function(r) { if (!r.ok) throw 0; return r.json(); })
+  function tryShow(items) {
+    if (decided || !items || items.length < 2) return;
+    decided = true;
+    renderNewsCards(items.slice(0, 12));
+  }
+
+  // ① CryptoCompare（ lang 指定なし・最新順 ）
+  fetch('https://min-api.cryptocompare.com/data/v2/news/?sortOrder=latest')
+    .then(function(r) { return r.json(); })
     .then(function(d) {
-      var items = parseCC(d);
-      if (items.length >= 3) { renderNewsCards(items); return; }
-      throw 0; // JA記事が少ない→英語にフォールバック
-    })
-    .catch(function() {
-      fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN&sortOrder=latest')
-        .then(function(r) { return r.json(); })
-        .then(function(d) { renderNewsCards(parseCC(d)); })
-        .catch(function() { renderNewsCards(null); });
-    });
+      var items = (d.Data || []).map(function(item) {
+        return { src: (item.source_info && item.source_info.name) || item.source || 'News',
+                 title: item.title || '', link: item.url || '', pubDate: fmtDate(item.published_on) };
+      }).filter(function(i) { return !!i.title; });
+      tryShow(items);
+    }).catch(function() {});
+
+  // ② Reddit r/CryptoCurrency（並列・確実に動作）
+  fetch('https://www.reddit.com/r/CryptoCurrency/hot.json?limit=15&raw_json=1')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var items = ((d.data && d.data.children) || []).map(function(c) {
+        var p = c.data;
+        if (!p || !p.title || p.stickied) return null;
+        var link = (!p.is_self && p.url && p.url.indexOf('reddit.com') < 0)
+                   ? p.url : 'https://www.reddit.com' + p.permalink;
+        return { src: 'r/' + p.subreddit, title: p.title, link: link, pubDate: fmtDate(p.created_utc) };
+      }).filter(Boolean);
+      tryShow(items);
+    }).catch(function() {});
+
+  // 15秒後に両方失敗ならエラー表示
+  setTimeout(function() { if (!decided) { decided = true; renderNewsCards(null); } }, 15000);
 }
 
 function renderNewsCards(items) {
