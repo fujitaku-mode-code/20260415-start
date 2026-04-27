@@ -496,6 +496,31 @@
     .ticker-sep  { color:var(--accent); opacity:0.4; font-size:0.7rem; }
     body.dark .ticker-wrap { background:#f0e8d0; }
     body.dark .ticker-item { color:#1c1a14; }
+    /* ===== リンク先セクション（タブ②） ===== */
+    .links-wrap { margin-top:22px; }
+    .links-head {
+      font-size:0.78rem; font-weight:800; color:var(--text);
+      display:flex; align-items:center; gap:8px; margin-bottom:14px;
+    }
+    .links-head::before { content:''; display:block; width:4px; height:18px; background:var(--btn-grad); border-radius:2px; flex-shrink:0; }
+    .links-section { margin-bottom:16px; }
+    .links-cat { font-size:0.6rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; padding-left:2px; }
+    .links-grid { display:flex; flex-direction:column; gap:5px; }
+    .link-card {
+      display:flex; align-items:center; gap:12px;
+      padding:9px 14px; background:var(--white);
+      border:1.5px solid var(--border); border-radius:10px;
+      text-decoration:none; color:var(--text);
+      transition:border-color 0.15s, transform 0.1s;
+    }
+    .link-card:hover { border-color:var(--accent); }
+    .link-card:active { transform:scale(0.97); }
+    .link-ico { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .link-ico svg { width:16px; height:16px; }
+    .link-text { flex:1; min-width:0; }
+    .link-name { font-size:0.8rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .link-sub { font-size:0.65rem; color:var(--muted); margin-top:1px; }
+    .link-arr { color:var(--border); font-size:1.3rem; flex-shrink:0; line-height:1; }
     /* ===== マーケット指標リスト ===== */
     .market-list {
       border:1.5px solid var(--border); border-radius:12px;
@@ -573,7 +598,7 @@
 <!-- タブバー -->
 <div class="tab-bar">
   <button class="tab-btn active" id="tabBtn-0" onclick="switchTab(0)">1. シミュレーター</button>
-  <button class="tab-btn"        id="tabBtn-1" onclick="switchTab(1)">2. 資料集</button>
+  <button class="tab-btn"        id="tabBtn-1" onclick="switchTab(1)">2. 資料・リンク先</button>
   <button class="tab-btn"        id="tabBtn-2" onclick="switchTab(2)">3. その他</button>
 </div>
 
@@ -822,6 +847,164 @@
     </div>
   </div>
 
+  <!-- ======= リンク先 ======= -->
+  <div class="links-wrap">
+    <div class="links-head">リンク先</div>
+
+    <!-- X (Twitter) -->
+    <div class="links-section">
+      <div class="links-cat">X (Twitter)</div>
+      <div class="links-grid">
+        <a class="link-card" href="https://x.com/Bitradexen" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+          <div class="link-text"><div class="link-name">Bitradex（英語）</div><div class="link-sub">@Bitradexen</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://x.com/BitradeXCapital" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+          <div class="link-text"><div class="link-name">BitradeX Capital</div><div class="link-sub">@BitradeXCapital</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://x.com/BitradexJP" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+          <div class="link-text"><div class="link-name">Bitradex（日本語）</div><div class="link-sub">@BitradexJP</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://x.com/BitgetWallet" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+          <div class="link-text"><div class="link-name">Bitget Wallet</div><div class="link-sub">@BitgetWallet</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://x.com/BitgetWalletJP" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+          <div class="link-text"><div class="link-name">Bitget Wallet（日本語）</div><div class="link-sub">@BitgetWalletJP</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://x.com/useTria" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+          <div class="link-text"><div class="link-name">Tria</div><div class="link-sub">@useTria</div></div>
+          <span class="link-arr">›</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- WEBサイト -->
+    <div class="links-section">
+      <div class="links-cat">WEBサイト</div>
+      <div class="links-grid">
+        <a class="link-card" href="https://www.bitradex.ai/ja" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:linear-gradient(135deg,#1a3a8f,#4f6ef7)"><span style="color:#fff;font-weight:800;font-size:0.7rem">BTX</span></div>
+          <div class="link-text"><div class="link-name">Bitradex 公式サイト</div><div class="link-sub">www.bitradex.ai</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://coinmarketcap.com/ja/" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#2575fc"><span style="color:#fff;font-weight:800;font-size:0.62rem">CMC</span></div>
+          <div class="link-text"><div class="link-name">CoinMarketCap</div><div class="link-sub">coinmarketcap.com</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://skynet.certik.com/leaderboards/exchange" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#00b4d8"><span style="color:#fff;font-weight:800;font-size:0.62rem">CER</span></div>
+          <div class="link-text"><div class="link-name">CertiK Skynet</div><div class="link-sub">skynet.certik.com</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://web3.bitget.com/ja" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:linear-gradient(135deg,#00c6fb,#005bea)"><span style="color:#fff;font-weight:800;font-size:0.62rem">BGT</span></div>
+          <div class="link-text"><div class="link-name">Bitget Wallet</div><div class="link-sub">web3.bitget.com</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://www.tria.so/ja" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:linear-gradient(135deg,#7b2ff7,#f107a3)"><span style="color:#fff;font-weight:800;font-size:0.72rem">TR</span></div>
+          <div class="link-text"><div class="link-name">Tria</div><div class="link-sub">www.tria.so</div></div>
+          <span class="link-arr">›</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 暗号資産ニュース -->
+    <div class="links-section">
+      <div class="links-cat">暗号資産ニュース</div>
+      <div class="links-grid">
+        <a class="link-card" href="https://coinpost.jp/" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><span style="color:#fff;font-weight:800;font-size:0.62rem">CP</span></div>
+          <div class="link-text"><div class="link-name">CoinPost（コインポスト）</div><div class="link-sub">coinpost.jp</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://www.coindesk.com/ja" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"><span style="color:#fff;font-weight:800;font-size:0.55rem">CDJ</span></div>
+          <div class="link-text"><div class="link-name">CoinDesk JAPAN</div><div class="link-sub">coindesk.com/ja</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://cointelegraph.jp/" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:linear-gradient(135deg,#e63946,#c1121f)"><span style="color:#fff;font-weight:800;font-size:0.55rem">CTJ</span></div>
+          <div class="link-text"><div class="link-name">コインテレグラフジャパン</div><div class="link-sub">cointelegraph.jp</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://www.neweconomy.jp/" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:linear-gradient(135deg,#06b6d4,#0284c7)"><span style="color:#fff;font-weight:800;font-size:0.55rem">NEW</span></div>
+          <div class="link-text"><div class="link-name">あたらしい経済（幻冬舎）</div><div class="link-sub">neweconomy.jp</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://crypto-times.jp/" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)"><span style="color:#fff;font-weight:800;font-size:0.55rem">CT</span></div>
+          <div class="link-text"><div class="link-name">CRYPTO TIMES</div><div class="link-sub">crypto-times.jp</div></div>
+          <span class="link-arr">›</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- YouTubeチャンネル -->
+    <div class="links-section">
+      <div class="links-cat">YouTube チャンネル</div>
+      <div class="links-grid">
+        <a class="link-card" href="https://www.youtube.com/@keitasasaki" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#ff0000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+          <div class="link-text"><div class="link-name">佐々木啓太 投資チャンネル</div><div class="link-sub">仮想通貨・マクロ経済</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://www.youtube.com/@trader-merry" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#ff0000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+          <div class="link-text"><div class="link-name">メリー チャート分析</div><div class="link-sub">テクニカル分析</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://www.youtube.com/@Cryptocurrency-jv6md" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#ff0000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+          <div class="link-text"><div class="link-name">冬人【仮想通貨チャート分析】</div><div class="link-sub">毎日チャート相場解説</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://www.youtube.com/@Yurufuwa_Bitcoin" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#ff0000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+          <div class="link-text"><div class="link-name">ビットコイン₿リサーチャーゆるふわ</div><div class="link-sub">DeFi・ステーキング収益</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://www.youtube.com/@BTCmari" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#ff0000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+          <div class="link-text"><div class="link-name">BTCまり 仮想通貨</div><div class="link-sub">初心者向け注目銘柄</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://www.youtube.com/@rin_cryptofire" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#ff0000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+          <div class="link-text"><div class="link-name">ProjectRin 投資FIREチャンネル</div><div class="link-sub">先物取引・FIRE戦略</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://www.youtube.com/@Joe_Bitcoin" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#ff0000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+          <div class="link-text"><div class="link-name">Joe Takayama</div><div class="link-sub">マクロ経済×クリプト分析</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://www.youtube.com/@MoshinChannel" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#ff0000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+          <div class="link-text"><div class="link-name">Moshin / ビットコイン</div><div class="link-sub">毎日BTC動向・最新ニュース</div></div>
+          <span class="link-arr">›</span>
+        </a>
+        <a class="link-card" href="https://www.youtube.com/@angorou" target="_blank" rel="noopener">
+          <div class="link-ico" style="background:#ff0000"><svg fill="#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+          <div class="link-text"><div class="link-name">アンゴロウ暗号資産研究</div><div class="link-sub">データ分析・プロジェクト検証</div></div>
+          <span class="link-arr">›</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- タブ③: その他 -->
@@ -866,6 +1049,11 @@
       <span class="ml-val" id="mcv-gold">---</span>
       <span class="ml-chg" id="mcc-gold"></span>
     </div>
+    <div class="ml-row" style="background:rgba(0,0,0,0.02)">
+      <span class="ml-label" style="font-size:0.65rem;">　└ (¥/g)</span>
+      <span class="ml-val" id="mcv-goldg">---</span>
+      <span class="ml-chg" id="mcc-goldg"></span>
+    </div>
     <div class="ml-row">
       <span class="ml-label">BTC / JPY</span>
       <span class="ml-val" id="mcv-btc">---</span>
@@ -875,186 +1063,6 @@
       <span class="ml-label">BTX / USDT</span>
       <span class="ml-val" id="mcv-btx">---</span>
       <span class="ml-chg" id="mcc-btx"></span>
-    </div>
-  </div>
-
-  <!-- リンク先 -->
-  <div class="card-title" style="font-size:0.78rem;margin-bottom:10px;padding-left:2px">
-    <span class="card-title-icon" style="background:rgba(99,102,241,0.12)">🔗</span>リンク先
-  </div>
-
-  <!-- X（Twitter） -->
-  <div class="card">
-    <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
-        <span class="card-title-icon" style="background:rgba(0,0,0,0.08)"><svg style="width:18px;height:18px;fill:currentColor;vertical-align:middle" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>
-        X（Twitter）
-      </div>
-      <span class="acc-arrow">▼</span>
-    </div>
-    <div class="acc-body">
-      <a class="sns-card" href="https://x.com/Bitradexen" target="_blank" rel="noopener">
-        <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-        <div><div class="sns-name">Bitradex（英語）</div><div class="sns-handle">@Bitradexen</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://x.com/BitradeXCapital" target="_blank" rel="noopener">
-        <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-        <div><div class="sns-name">BitradeX Capital</div><div class="sns-handle">@BitradeXCapital</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://x.com/BitradexJP" target="_blank" rel="noopener">
-        <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-        <div><div class="sns-name">Bitradex（日本語）</div><div class="sns-handle">@BitradexJP</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://x.com/BitgetWallet" target="_blank" rel="noopener">
-        <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-        <div><div class="sns-name">Bitget Wallet</div><div class="sns-handle">@BitgetWallet</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://x.com/BitgetWalletJP" target="_blank" rel="noopener">
-        <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-        <div><div class="sns-name">Bitget Wallet（日本語）</div><div class="sns-handle">@BitgetWalletJP</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://x.com/useTria" target="_blank" rel="noopener">
-        <div class="sns-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
-        <div><div class="sns-name">Tria</div><div class="sns-handle">@useTria</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- WEBサイト -->
-  <div class="card">
-    <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
-        <span class="card-title-icon" style="background:rgba(15,185,129,0.1)">🌐</span>WEBサイト
-      </div>
-      <span class="acc-arrow">▼</span>
-    </div>
-    <div class="acc-body">
-      <a class="sns-card" href="https://www.bitradex.ai/ja" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:linear-gradient(135deg,#1a3a8f,#4f6ef7)"><span style="color:#fff;font-weight:800;font-size:0.7rem">BTX</span></div>
-        <div><div class="sns-name">Bitradex 公式サイト</div><div class="sns-handle">www.bitradex.ai</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://coinmarketcap.com/ja/" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:#2575fc"><span style="color:#fff;font-weight:800;font-size:0.62rem">CMC</span></div>
-        <div><div class="sns-name">CoinMarketCap</div><div class="sns-handle">coinmarketcap.com</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://skynet.certik.com/leaderboards/exchange" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:#00b4d8"><span style="color:#fff;font-weight:800;font-size:0.62rem">CER</span></div>
-        <div><div class="sns-name">CertiK Skynet</div><div class="sns-handle">skynet.certik.com</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://web3.bitget.com/ja" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:linear-gradient(135deg,#00c6fb,#005bea)"><span style="color:#fff;font-weight:800;font-size:0.62rem">BGT</span></div>
-        <div><div class="sns-name">Bitget Wallet</div><div class="sns-handle">web3.bitget.com</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://www.tria.so/ja" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:linear-gradient(135deg,#7b2ff7,#f107a3)"><span style="color:#fff;font-weight:800;font-size:0.72rem">TR</span></div>
-        <div><div class="sns-name">Tria</div><div class="sns-handle">www.tria.so</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- 暗号資産ニュース -->
-  <div class="card">
-    <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
-        <span class="card-title-icon" style="background:rgba(245,158,11,0.12)">📰</span>暗号資産ニュース
-      </div>
-      <span class="acc-arrow">▼</span>
-    </div>
-    <div class="acc-body">
-      <a class="sns-card" href="https://coinpost.jp/" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><span style="color:#fff;font-weight:800;font-size:0.62rem">CP</span></div>
-        <div><div class="sns-name">CoinPost（コインポスト）</div><div class="sns-handle">coinpost.jp</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://www.coindesk.com/ja" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"><span style="color:#fff;font-weight:800;font-size:0.55rem">CDJ</span></div>
-        <div><div class="sns-name">CoinDesk JAPAN</div><div class="sns-handle">coindesk.com/ja</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://cointelegraph.jp/" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:linear-gradient(135deg,#e63946,#c1121f)"><span style="color:#fff;font-weight:800;font-size:0.55rem">CTJ</span></div>
-        <div><div class="sns-name">コインテレグラフジャパン</div><div class="sns-handle">cointelegraph.jp</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://www.neweconomy.jp/" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:linear-gradient(135deg,#06b6d4,#0284c7)"><span style="color:#fff;font-weight:800;font-size:0.55rem">NEW</span></div>
-        <div><div class="sns-name">あたらしい経済（幻冬舎）</div><div class="sns-handle">neweconomy.jp</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://crypto-times.jp/" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)"><span style="color:#fff;font-weight:800;font-size:0.55rem">CT</span></div>
-        <div><div class="sns-name">CRYPTO TIMES</div><div class="sns-handle">crypto-times.jp</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- YouTubeチャンネル -->
-  <div class="card">
-    <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none">
-        <span class="card-title-icon" style="background:rgba(255,0,0,0.1)"><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></span>
-        暗号資産 YouTubeチャンネル
-      </div>
-      <span class="acc-arrow">▼</span>
-    </div>
-    <div class="acc-body">
-      <a class="sns-card" href="https://www.youtube.com/@keitasasaki" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:#ff0000"><svg style="width:18px;height:18px;fill:#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
-        <div><div class="sns-name">佐々木啓太 投資チャンネル</div><div class="sns-handle">仮想通貨・マクロ経済</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://www.youtube.com/@trader-merry" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:#ff0000"><svg style="width:18px;height:18px;fill:#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
-        <div><div class="sns-name">メリー チャート分析</div><div class="sns-handle">テクニカル分析</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://www.youtube.com/@Cryptocurrency-jv6md" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:#ff0000"><svg style="width:18px;height:18px;fill:#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
-        <div><div class="sns-name">冬人【仮想通貨チャート分析】</div><div class="sns-handle">毎日チャート相場解説</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://www.youtube.com/@Yurufuwa_Bitcoin" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:#ff0000"><svg style="width:18px;height:18px;fill:#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
-        <div><div class="sns-name">ビットコイン₿リサーチャーゆるふわ</div><div class="sns-handle">DeFi・ステーキング収益</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://www.youtube.com/@BTCmari" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:#ff0000"><svg style="width:18px;height:18px;fill:#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
-        <div><div class="sns-name">BTCまり 仮想通貨</div><div class="sns-handle">初心者向け注目銘柄</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://www.youtube.com/@rin_cryptofire" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:#ff0000"><svg style="width:18px;height:18px;fill:#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
-        <div><div class="sns-name">ProjectRin 投資FIREチャンネル</div><div class="sns-handle">先物取引・FIRE戦略</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://www.youtube.com/@Joe_Bitcoin" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:#ff0000"><svg style="width:18px;height:18px;fill:#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
-        <div><div class="sns-name">Joe Takayama</div><div class="sns-handle">マクロ経済×クリプト分析</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://www.youtube.com/@MoshinChannel" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:#ff0000"><svg style="width:18px;height:18px;fill:#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
-        <div><div class="sns-name">Moshin / ビットコイン</div><div class="sns-handle">毎日BTC動向・最新ニュース</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
-      <a class="sns-card" href="https://www.youtube.com/@angorou" target="_blank" rel="noopener">
-        <div class="sns-icon" style="background:#ff0000"><svg style="width:18px;height:18px;fill:#fff" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
-        <div><div class="sns-name">アンゴロウ暗号資産研究</div><div class="sns-handle">データ分析・プロジェクト検証</div></div>
-        <div class="sns-arrow">›</div>
-      </a>
     </div>
   </div>
 
@@ -1283,6 +1291,7 @@ function fetchRate() {
         if (rate > 50 && rate < 300) {
           done = true;
           gTickerData = { btc: d.bitcoin, eth: d.ethereum };
+          applyRate(rate); // gJpyRateを先に確定
           // BTC（JPY＋USD両方表示）
           if (d.bitcoin && d.bitcoin.jpy) {
             var bc = d.bitcoin.jpy_24h_change || 0;
@@ -1292,11 +1301,16 @@ function fetchRate() {
               + (busd ? '<br><span style="font-size:0.72rem;color:var(--muted);font-weight:600">$' + commaInt(busd) + '</span>' : '');
             setMC('btc', btcHtml, bc, true, true);
           }
-          // ゴールド
+          // ゴールド（$/oz）＋ ゴールド（¥/g）
           if (d['pax-gold'] && d['pax-gold'].usd) {
-            setMC('gold', '$' + commaInt(Math.round(d['pax-gold'].usd)), d['pax-gold'].usd_24h_change || 0, true, false);
+            var goldUsd = d['pax-gold'].usd;
+            var gc = d['pax-gold'].usd_24h_change || 0;
+            setMC('gold', '$' + commaInt(Math.round(goldUsd)), gc, true, false);
+            if (gJpyRate > 0) {
+              var goldGramJpy = Math.round(goldUsd / 31.1035 * gJpyRate);
+              setMC('goldg', '¥' + commaInt(goldGramJpy), gc, true, false);
+            }
           }
-          applyRate(rate);
           updateTicker();
           return;
         }
