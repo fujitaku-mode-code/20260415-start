@@ -524,21 +524,24 @@
     .link-card.reg { border-color:var(--accent); }
     .link-card.reg .link-name { color:var(--accent); }
     .links-cat.reg-cat { color:var(--accent); }
-    /* ===== マーケット指標リスト ===== */
-    .market-list {
-      border:1.5px solid var(--border); border-radius:12px;
-      overflow:hidden; margin-bottom:14px; background:var(--white);
-    }
-    .ml-row {
-      display:flex; align-items:center;
-      padding:9px 14px; border-bottom:1px solid var(--border); gap:10px;
-    }
-    .ml-row:last-child { border-bottom:none; }
-    .ml-label { font-size:0.72rem; font-weight:700; color:var(--muted); flex:0 0 100px; white-space:nowrap; }
-    .ml-val { font-size:0.9rem; font-weight:900; color:var(--text); flex:1; white-space:nowrap; }
-    .ml-chg { font-size:0.72rem; font-weight:700; white-space:nowrap; text-align:right; flex-shrink:0; }
-    .ml-chg.up { color:#0a9e6d; }
-    .ml-chg.down { color:#e05050; }
+    /* ===== マーケット指標コンパクトグリッド ===== */
+    .market-compact { display:grid; grid-template-columns:repeat(2,1fr); gap:3px; margin-bottom:10px; }
+    .mc-cell { background:var(--white); border:1px solid var(--border); border-radius:6px; padding:4px 8px; }
+    .mc-cell-lbl { font-size:0.54rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; }
+    .mc-cell-row { display:flex; align-items:baseline; justify-content:space-between; gap:3px; }
+    .mc-cell-val { font-size:0.72rem; font-weight:900; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .mc-cell-chg { font-size:0.56rem; font-weight:700; flex-shrink:0; }
+    .mc-cell-chg.up { color:#0a9e6d; }
+    .mc-cell-chg.down { color:#e05050; }
+    /* ===== ニュースティッカー ===== */
+    .news-wrap { background:var(--white); border:1.5px solid var(--border); overflow:hidden; border-radius:10px; margin-bottom:14px; height:30px; display:flex; align-items:center; }
+    .news-label { background:#0f172a; color:#94a3b8; font-size:0.58rem; font-weight:900; padding:0 10px; height:100%; display:flex; align-items:center; letter-spacing:0.08em; flex-shrink:0; white-space:nowrap; }
+    .news-body { flex:1; overflow:hidden; height:100%; }
+    .news-items { display:inline-flex; align-items:center; height:100%; white-space:nowrap; animation:tickerScroll 120s linear infinite; will-change:transform; }
+    .news-items:hover { animation-play-state:paused; }
+    .news-item { color:var(--text); font-size:0.66rem; padding:0 10px; cursor:default; }
+    .news-src { color:var(--accent); font-weight:700; font-size:0.6rem; margin-right:3px; }
+    .news-sep { color:var(--border); padding:0 2px; }
     /* ===== 印刷エリア ===== */
     #print-area { display:none; }
     @media print {
@@ -1057,47 +1060,27 @@
     </div>
   </div>
 
-  <!-- マーケット指標リスト -->
-  <div class="market-list">
-    <div class="ml-row">
-      <span class="ml-label">ドル円</span>
-      <span class="ml-val" id="mcv-usdjpy">---</span>
-      <span class="ml-chg" id="mcc-usdjpy"></span>
-    </div>
-    <div class="ml-row">
-      <span class="ml-label">ユーロ円</span>
-      <span class="ml-val" id="mcv-eurjpy">---</span>
-      <span class="ml-chg" id="mcc-eurjpy"></span>
-    </div>
-    <div class="ml-row">
-      <span class="ml-label">NYダウ</span>
-      <span class="ml-val" id="mcv-dow">---</span>
-      <span class="ml-chg" id="mcc-dow"></span>
-    </div>
-    <div class="ml-row">
-      <span class="ml-label">日経平均先物</span>
-      <span class="ml-val" id="mcv-nkd">---</span>
-      <span class="ml-chg" id="mcc-nkd"></span>
-    </div>
-    <div class="ml-row">
-      <span class="ml-label">ゴールド($/oz)</span>
-      <span class="ml-val" id="mcv-gold">---</span>
-      <span class="ml-chg" id="mcc-gold"></span>
-    </div>
-    <div class="ml-row" style="background:rgba(0,0,0,0.02)">
-      <span class="ml-label" style="font-size:0.65rem;">　└ (¥/g)</span>
-      <span class="ml-val" id="mcv-goldg">---</span>
-      <span class="ml-chg" id="mcc-goldg"></span>
-    </div>
-    <div class="ml-row">
-      <span class="ml-label">BTC / JPY</span>
-      <span class="ml-val" id="mcv-btc">---</span>
-      <span class="ml-chg" id="mcc-btc"></span>
-    </div>
-    <div class="ml-row">
-      <span class="ml-label">BTX / USDT</span>
-      <span class="ml-val" id="mcv-btx">---</span>
-      <span class="ml-chg" id="mcc-btx"></span>
+  <!-- マーケット指標コンパクトグリッド -->
+  <div class="market-compact">
+    <div class="mc-cell"><span class="mc-cell-lbl">ドル円</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-usdjpy">---</span><span class="mc-cell-chg" id="mcc-usdjpy"></span></div></div>
+    <div class="mc-cell"><span class="mc-cell-lbl">ユーロ円</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-eurjpy">---</span><span class="mc-cell-chg" id="mcc-eurjpy"></span></div></div>
+    <div class="mc-cell"><span class="mc-cell-lbl">NYダウ</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-dow">---</span><span class="mc-cell-chg" id="mcc-dow"></span></div></div>
+    <div class="mc-cell"><span class="mc-cell-lbl">日経平均先物</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-nkd">---</span><span class="mc-cell-chg" id="mcc-nkd"></span></div></div>
+    <div class="mc-cell"><span class="mc-cell-lbl">Gold $/oz</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-gold">---</span><span class="mc-cell-chg" id="mcc-gold"></span></div></div>
+    <div class="mc-cell" style="background:rgba(0,0,0,0.015)"><span class="mc-cell-lbl">└ Gold ¥/g</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-goldg">---</span><span class="mc-cell-chg" id="mcc-goldg"></span></div></div>
+    <div class="mc-cell"><span class="mc-cell-lbl">BTC/JPY</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-btc">---</span><span class="mc-cell-chg" id="mcc-btc"></span></div></div>
+    <div class="mc-cell"><span class="mc-cell-lbl">ETH/JPY</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-eth">---</span><span class="mc-cell-chg" id="mcc-eth"></span></div></div>
+    <div class="mc-cell"><span class="mc-cell-lbl">XRP/JPY</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-xrp">---</span><span class="mc-cell-chg" id="mcc-xrp"></span></div></div>
+    <div class="mc-cell"><span class="mc-cell-lbl">SOL/JPY</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-sol">---</span><span class="mc-cell-chg" id="mcc-sol"></span></div></div>
+  </div>
+
+  <!-- ニュースティッカー -->
+  <div class="news-wrap">
+    <div class="news-label">NEWS</div>
+    <div class="news-body">
+      <div class="news-items" id="newsItems">
+        <span class="news-item">ニュース読み込み中... / Loading news headlines...</span>
+      </div>
     </div>
   </div>
 
@@ -1315,7 +1298,7 @@ function fetchRate() {
 
   // API 1: CoinGecko — USDT/JPY+BTC+ETH+ゴールド、1リクエストでまとめて取得
   var xg = new XMLHttpRequest();
-  xg.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=tether,bitcoin,ethereum,pax-gold&vs_currencies=jpy,usd&include_24hr_change=true', true);
+  xg.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=tether,bitcoin,ethereum,pax-gold,ripple,solana&vs_currencies=jpy,usd&include_24hr_change=true', true);
   xg.timeout = 12000;
   xg.onload = function() {
     if (done) return;
@@ -1327,14 +1310,26 @@ function fetchRate() {
           done = true;
           gTickerData = { btc: d.bitcoin, eth: d.ethereum };
           applyRate(rate); // gJpyRateを先に確定
-          // BTC（JPY＋USD両方表示）
+          // BTC
           if (d.bitcoin && d.bitcoin.jpy) {
             var bc = d.bitcoin.jpy_24h_change || 0;
-            var bjpy = Math.round(d.bitcoin.jpy / 1000) * 1000;
-            var busd = d.bitcoin.usd ? Math.round(d.bitcoin.usd) : 0;
-            var btcHtml = '¥' + commaInt(bjpy)
-              + (busd ? '<br><span style="font-size:0.72rem;color:var(--muted);font-weight:600">$' + commaInt(busd) + '</span>' : '');
-            setMC('btc', btcHtml, bc, true, true);
+            setMC('btc', '¥' + commaInt(Math.round(d.bitcoin.jpy / 1000) * 1000), bc, true, false);
+          }
+          // ETH
+          if (d.ethereum && d.ethereum.jpy) {
+            var ec = d.ethereum.jpy_24h_change || 0;
+            setMC('eth', '¥' + commaInt(Math.round(d.ethereum.jpy / 1000) * 1000), ec, true, false);
+          }
+          // XRP
+          if (d.ripple && d.ripple.jpy) {
+            var xc = d.ripple.jpy_24h_change || 0;
+            var xv = d.ripple.jpy < 10 ? d.ripple.jpy.toFixed(2) : Math.round(d.ripple.jpy);
+            setMC('xrp', '¥' + xv, xc, true, false);
+          }
+          // SOL
+          if (d.solana && d.solana.jpy) {
+            var sc = d.solana.jpy_24h_change || 0;
+            setMC('sol', '¥' + commaInt(Math.round(d.solana.jpy)), sc, true, false);
           }
           // ゴールド（$/oz）＋ ゴールド（¥/g）
           if (d['pax-gold'] && d['pax-gold'].usd) {
@@ -2016,10 +2011,10 @@ function setMC(key, value, changePct, hasChange, isHtml) {
   if (isHtml) { vel.innerHTML = value; } else { vel.textContent = value; }
   if (!cel) return;
   if (!hasChange || !changePct) {
-    cel.textContent = ''; cel.className = 'ml-chg';
+    cel.textContent = ''; cel.className = 'mc-cell-chg';
   } else {
     var cls = changePct > 0 ? 'up' : 'down';
-    cel.className = 'ml-chg ' + cls;
+    cel.className = 'mc-cell-chg ' + cls;
     cel.textContent = (changePct > 0 ? '▲' : '▼') + Math.abs(changePct).toFixed(2) + '%';
   }
 }
@@ -2084,33 +2079,57 @@ function fetchMarketData() {
   }
   tryYF(0);
 
-  // ⑤ BitradeX API: BTX/USDT（USD＋JPY両方表示）
-  var btxUrls = [
-    'https://www.bitradex.ai/api/v2/peatio/public/markets/btxusdt/tickers',
-    'https://www.bitradex.ai/api/v2/peatio/public/markets/tickers',
-    'https://www.bitradex.ai/api/v2/peatio/public/markets/btx_usdt/tickers',
+}
+
+// ===== ニュースティッカー =====
+function fetchNewsHeadlines() {
+  var proxy = 'https://api.rss2json.com/v1/api.json?count=5&rss_url=';
+  var feeds = [
+    { n: 'CoinPost',     u: 'https://coinpost.jp/?feed=rss2' },
+    { n: 'CoinDesk',     u: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
+    { n: 'CT Japan',     u: 'https://jp.cointelegraph.com/rss' },
+    { n: 'The Block',    u: 'https://www.theblock.co/rss' },
+    { n: 'Bloomberg',    u: 'https://feeds.bloomberg.com/crypto/news.rss' },
+    { n: 'Reuters',      u: 'https://feeds.reuters.com/reuters/businessNews' },
   ];
-  function tryBTX(i) {
-    if (i >= btxUrls.length) { setMC('btx', '---', 0, false, false); return; }
-    fetch(btxUrls[i])
+  var pending = feeds.length;
+  var items = [];
+  function onDone() {
+    if (--pending > 0) return;
+    setNewsTicker(items.length ? items : null);
+  }
+  feeds.forEach(function(f) {
+    fetch(proxy + encodeURIComponent(f.u))
       .then(function(r) { return r.json(); })
       .then(function(d) {
-        var tk = i === 0 ? (d.ticker || d)
-               : i === 2 ? (d.ticker || d)
-               : ((d['btxusdt'] || d['BTXUSDT'] || d['btx_usdt'] || {}).ticker);
-        if (!tk) throw 0;
-        var last = parseFloat(tk.last || tk.price || tk.close || 0);
-        var open = parseFloat(tk.open || last);
-        if (!(last > 0)) throw 0;
-        var chg = open > 0 ? ((last - open) / open * 100) : 0;
-        var jpyVal = gJpyRate > 0 ? (last * gJpyRate) : 0;
-        var html = '$' + last.toFixed(4)
-          + (jpyVal > 0 ? '<br><span style="font-size:0.72rem;color:var(--muted);font-weight:600">¥' + jpyVal.toFixed(2) + '</span>' : '');
-        setMC('btx', html, Math.abs(chg) > 0.001 ? chg : 0, Math.abs(chg) > 0.001, true);
+        (d.items || []).slice(0, 4).forEach(function(item) {
+          if (item.title) items.push({ src: f.n, title: item.title });
+        });
+        onDone();
       })
-      .catch(function() { tryBTX(i + 1); });
+      .catch(function() { onDone(); });
+  });
+}
+
+function setNewsTicker(items) {
+  var el = document.getElementById('newsItems');
+  if (!el) return;
+  if (!items || !items.length) {
+    items = [
+      { src: 'CoinPost',  title: '仮想通貨・ブロックチェーン最新情報' },
+      { src: 'CoinDesk',  title: 'Crypto market analysis and news' },
+      { src: 'CT Japan',  title: 'ビットコイン・アルトコインのニュース' },
+      { src: 'TheBlock',  title: 'DeFi and blockchain research' },
+      { src: 'Bloomberg', title: 'Global crypto and financial news' },
+      { src: 'Reuters',   title: 'World financial markets update' },
+    ];
   }
-  tryBTX(0);
+  var all = items.concat(items); // seamless loop
+  el.innerHTML = all.map(function(o) {
+    return '<span class="news-item"><span class="news-src">[' + o.src + ']</span>' + o.title + '</span>'
+      + '<span class="news-sep"> ◆ </span>';
+  }).join('');
+  el.style.animationDuration = Math.max(60, items.length * 9) + 's';
 }
 
 // ===== 起動 =====
@@ -2158,8 +2177,10 @@ window.onload = function() {
   simulate();
   updateTicker();
   fetchMarketData();
-  // 5分毎にレート＆指標を自動更新
+  fetchNewsHeadlines();
+  // 5分毎にレート＆指標を自動更新、30分毎にニュースを更新
   setInterval(function() { fetchRate(); fetchMarketData(); }, 5 * 60 * 1000);
+  setInterval(fetchNewsHeadlines, 30 * 60 * 1000);
 };
 
 // スクリプトはbody末尾にあるためDOMは即座に利用可能
