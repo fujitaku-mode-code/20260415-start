@@ -2191,62 +2191,34 @@ function fetchMarketData() {
 
 }
 
-// ===== ニュースカード =====
+// ===== ニュースカード（CryptoCompare News API）=====
 function fetchNewsHeadlines() {
-  var PROXY = 'https://api.allorigins.win/raw?url=';
-  var feeds = [
-    { n: 'CoinPost', u: 'https://coinpost.jp/?feed=rss2' },
-    { n: 'CT Japan', u: 'https://jp.cointelegraph.com/rss' },
-    { n: 'CoinDesk', u: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
-    { n: 'The Block', u: 'https://www.theblock.co/rss' },
-  ];
-  var pending = feeds.length;
-  var items = [];
-  function onDone() { if (--pending > 0) return; renderNewsCards(items.length ? items : null); }
-
-  function parseRSS(xml, srcName) {
-    try {
-      var doc = new DOMParser().parseFromString(xml, 'text/xml');
-      var nodes = Array.prototype.slice.call(doc.querySelectorAll('item, entry'));
-      nodes.slice(0, 4).forEach(function(node) {
-        var titleEl = node.querySelector('title');
-        var title = titleEl ? titleEl.textContent.trim() : '';
-        var link = '';
-        var linkEl = node.querySelector('link');
-        if (linkEl) link = (linkEl.textContent || linkEl.getAttribute('href') || '').trim();
-        var dateEl = node.querySelector('pubDate, published, updated');
-        var pubDate = dateEl ? dateEl.textContent.trim() : '';
-        if (title) items.push({ src: srcName, title: title, link: link, pubDate: pubDate });
-      });
-    } catch(e) {}
+  function parseCC(d) {
+    return (d.Data || []).slice(0, 10).map(function(item) {
+      var dt = new Date((item.published_on || 0) * 1000);
+      var dateStr = '';
+      if (!isNaN(dt.getTime())) {
+        dateStr = (dt.getMonth()+1) + '/' + dt.getDate() + ' ' + ('0'+dt.getHours()).slice(-2) + ':' + ('0'+dt.getMinutes()).slice(-2);
+      }
+      var src = (item.source_info && item.source_info.name) || item.source || 'NEWS';
+      return { src: src, title: item.title || '', link: item.url || '', pubDate: dateStr };
+    }).filter(function(i) { return !!i.title; });
   }
 
-  feeds.forEach(function(f) {
-    var done = false;
-    // 1st: allorigins.win → XML parse
-    fetch(PROXY + encodeURIComponent(f.u), { cache: 'no-store' })
-      .then(function(r) { if (!r.ok) throw 0; return r.text(); })
-      .then(function(xml) {
-        if (done) return; done = true;
-        parseRSS(xml, f.n);
-        onDone();
-      })
-      .catch(function() {
-        // 2nd fallback: rss2json
-        fetch('https://api.rss2json.com/v1/api.json?count=4&rss_url=' + encodeURIComponent(f.u))
-          .then(function(r) { return r.json(); })
-          .then(function(d) {
-            if (!done) {
-              done = true;
-              (d.items || []).slice(0, 4).forEach(function(item) {
-                if (item.title) items.push({ src: f.n, title: item.title, link: item.link || '', pubDate: item.pubDate || '' });
-              });
-            }
-            onDone();
-          })
-          .catch(function() { if (!done) { done = true; } onDone(); });
-      });
-  });
+  // 日本語ニュース優先、なければ英語
+  fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=JA&sortOrder=latest')
+    .then(function(r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function(d) {
+      var items = parseCC(d);
+      if (items.length >= 3) { renderNewsCards(items); return; }
+      throw 0; // JA記事が少ない→英語にフォールバック
+    })
+    .catch(function() {
+      fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN&sortOrder=latest')
+        .then(function(r) { return r.json(); })
+        .then(function(d) { renderNewsCards(parseCC(d)); })
+        .catch(function() { renderNewsCards(null); });
+    });
 }
 
 function renderNewsCards(items) {
