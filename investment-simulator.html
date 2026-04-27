@@ -496,6 +496,10 @@
     .ticker-sep  { color:var(--accent); opacity:0.4; font-size:0.7rem; }
     body.dark .ticker-wrap { background:#f0e8d0; }
     body.dark .ticker-item { color:#1c1a14; }
+    /* ===== マニュアルカード（コンパクトアコーディオン） ===== */
+    .manual-card { border:1.5px solid var(--border); border-radius:10px; margin-bottom:5px; background:var(--white); overflow:hidden; }
+    .manual-card .acc-header { padding:9px 14px; gap:12px; }
+    .manual-card .acc-header .link-ico { font-size:1.1rem; }
     /* ===== リンク先セクション（タブ②） ===== */
     .links-wrap { margin-top:22px; }
     .links-head {
@@ -582,6 +586,48 @@
       border: 5px solid transparent; border-top-color: #1c1a14;
     }
     .tt:hover .tt-pop, .tt.tt-open .tt-pop { display: block; }
+
+    /* ===== マーケットテーブル（新） ===== */
+    .mkt-table-wrap { border-radius: 10px; border: 1.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
+    .mkt-table { width: 100%; border-collapse: collapse; }
+    .mkt-table thead tr { background: var(--bg); }
+    .mkt-table th { padding: 7px 10px; font-size: 0.6rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+    .mkt-table th:first-child { width: 32px; text-align: center; }
+    .mkt-table th:nth-child(2) { text-align: left; }
+    .mkt-table th:nth-child(3) { text-align: right; }
+    .mkt-table th:nth-child(4) { text-align: right; padding-right: 12px; }
+    .mkt-table td { padding: 8px 10px; border-top: 1px solid var(--border); vertical-align: middle; }
+    .mkt-table td:first-child { text-align: center; color: var(--muted); font-size: 0.65rem; font-weight: 500; width: 32px; }
+    .mkt-table td:nth-child(2) { text-align: left; }
+    .mkt-table td:nth-child(3) { text-align: right; }
+    .mkt-table td:nth-child(4) { text-align: right; padding-right: 12px; }
+    .mkt-name-cell { display: flex; align-items: center; gap: 8px; }
+    .mkt-icon { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 900; color: #fff; }
+    .mkt-sym { font-size: 0.78rem; font-weight: 700; color: var(--text); }
+    .mkt-full { font-size: 0.58rem; color: var(--muted); margin-top: 1px; }
+    .mkt-price { font-size: 0.8rem; font-weight: 700; color: var(--text); white-space: nowrap; }
+    .mkt-chg { font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+    .mkt-chg.up   { color: var(--green); }
+    .mkt-chg.down { color: #e05050; }
+    .mkt-sep td { background: var(--bg) !important; padding: 4px 10px !important; border-top: 1.5px solid var(--border) !important; }
+    .mkt-sep-lbl { font-size: 0.55rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* ===== ニュースカード（新） ===== */
+    .news-card {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      text-decoration: none; color: var(--text);
+    }
+    .news-card:last-child { border-bottom: none; padding-bottom: 0; }
+    .news-card:active { opacity: 0.72; }
+    .news-card-body { flex: 1; min-width: 0; }
+    .news-card-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; flex-wrap: wrap; }
+    .news-card-src  { font-size: 0.6rem; font-weight: 800; color: var(--accent); background: rgba(122,90,0,0.09); padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+    body.dark .news-card-src { background: rgba(232,184,75,0.12); }
+    .news-card-date { font-size: 0.6rem; color: var(--muted); }
+    .news-card-title { font-size: 0.88rem; font-weight: 700; line-height: 1.45; color: var(--text); }
+    .news-card-img     { width: 82px; height: 62px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+    .news-card-img-box { width: 82px; height: 62px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
   </style>
 </head>
 <body>
@@ -605,7 +651,7 @@
 <div class="tab-bar">
   <button class="tab-btn active" id="tabBtn-0" onclick="switchTab(0)">1. シミュレーター</button>
   <button class="tab-btn"        id="tabBtn-1" onclick="switchTab(1)">2. 資料・リンク先</button>
-  <button class="tab-btn"        id="tabBtn-2" onclick="switchTab(2)">3. その他</button>
+  <button class="tab-btn"        id="tabBtn-2" onclick="switchTab(2)">3. 経済ニュース</button>
 </div>
 
 <!-- タブ①: 投資シミュレーター -->
@@ -731,7 +777,8 @@
 <!-- タブ②: 資料集 -->
 <div id="tab-docs" class="tab-panel">
 
-  <!-- アクションバー -->
+  <!-- マニュアル見出し + アクションバー -->
+  <div class="links-head" style="margin-bottom:8px">マニュアル</div>
   <div class="doc-action-bar">
     <span class="doc-action-note">📋 資料を選択して印刷・ダウンロード</span>
     <button class="doc-act-btn doc-act-print" onclick="printSelected()">🖨 印刷</button>
@@ -739,10 +786,10 @@
   </div>
 
   <!-- 投資への流れ -->
-  <div class="card">
-    <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1">
-        <span class="card-title-icon" style="background:rgba(15,185,129,0.12)">📈</span>投資への流れ
+  <div class="card" style="padding:0;margin-bottom:6px">
+    <div class="acc-header" onclick="toggleAcc(this)" style="padding:10px 14px;gap:10px">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1;font-size:0.82rem">
+        <span class="card-title-icon" style="background:rgba(15,185,129,0.12);width:30px;height:30px">📈</span>投資への流れ
       </div>
       <label class="doc-check-label" onclick="event.stopPropagation()">
         <input type="checkbox" class="doc-check" data-prefix="new_invest" data-count="9">選択
@@ -766,10 +813,10 @@
   </div>
 
   <!-- AI BOT → USDT -->
-  <div class="card">
-    <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1">
-        <span class="card-title-icon" style="background:rgba(155,92,246,0.12)">🤖</span>【bitradex内】AI BOT → USDT変換まで
+  <div class="card" style="padding:0;margin-bottom:6px">
+    <div class="acc-header" onclick="toggleAcc(this)" style="padding:10px 14px;gap:10px">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1;font-size:0.82rem">
+        <span class="card-title-icon" style="background:rgba(155,92,246,0.12);width:30px;height:30px">🤖</span>【bitradex内】AI BOT → USDT変換まで
       </div>
       <label class="doc-check-label" onclick="event.stopPropagation()">
         <input type="checkbox" class="doc-check" data-prefix="new_aibot" data-count="7">選択
@@ -792,10 +839,10 @@
   </div>
 
   <!-- bitget wallet → カードへ入金 -->
-  <div class="card">
-    <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1">
-        <span class="card-title-icon" style="background:rgba(79,110,247,0.12)">💳</span>bitradeX → bitget wallet → カードへ入金
+  <div class="card" style="padding:0;margin-bottom:6px">
+    <div class="acc-header" onclick="toggleAcc(this)" style="padding:10px 14px;gap:10px">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1;font-size:0.82rem">
+        <span class="card-title-icon" style="background:rgba(79,110,247,0.12);width:30px;height:30px">💳</span>bitradeX → bitget wallet → カードへ入金
       </div>
       <label class="doc-check-label" onclick="event.stopPropagation()">
         <input type="checkbox" class="doc-check" data-prefix="new_bitget" data-count="14">選択
@@ -825,10 +872,10 @@
   </div>
 
   <!-- TRIA カードへ入金 -->
-  <div class="card">
-    <div class="acc-header" onclick="toggleAcc(this)">
-      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1">
-        <span class="card-title-icon" style="background:rgba(247,181,0,0.15)">🏧</span>bitradeX → TRIAカードへ入金
+  <div class="card" style="padding:0;margin-bottom:14px">
+    <div class="acc-header" onclick="toggleAcc(this)" style="padding:10px 14px;gap:10px">
+      <div class="card-title" style="margin:0;padding:0;background:none;box-shadow:none;border:none;flex:1;font-size:0.82rem">
+        <span class="card-title-icon" style="background:rgba(247,181,0,0.15);width:30px;height:30px">🏧</span>bitradeX → TRIAカードへ入金
       </div>
       <label class="doc-check-label" onclick="event.stopPropagation()">
         <input type="checkbox" class="doc-check" data-prefix="new_tria" data-count="10">選択
@@ -882,8 +929,8 @@
           <span class="link-arr">›</span>
         </a>
         <a class="link-card reg" href="https://url.hk/i/jp/rpf46" target="_blank" rel="noopener">
-          <div class="link-ico" style="background:linear-gradient(135deg,#0f172a,#334155)"><span style="color:#fff;font-weight:800;font-size:0.62rem">🔗</span></div>
-          <div class="link-text"><div class="link-name">紹介リンク</div><div class="link-sub">url.hk/i/jp/rpf46</div></div>
+          <div class="link-ico" style="background:linear-gradient(135deg,#c62828,#ef5350)"><span style="color:#fff;font-weight:800;font-size:0.55rem">RDP</span></div>
+          <div class="link-text"><div class="link-name">RedotPay 紹介リンク</div><div class="link-sub">url.hk/i/jp/rpf46</div></div>
           <span class="link-arr">›</span>
         </a>
       </div>
@@ -1060,27 +1107,106 @@
     </div>
   </div>
 
-  <!-- マーケット指標コンパクトグリッド -->
-  <div class="market-compact">
-    <div class="mc-cell"><span class="mc-cell-lbl">ドル円</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-usdjpy">---</span><span class="mc-cell-chg" id="mcc-usdjpy"></span></div></div>
-    <div class="mc-cell"><span class="mc-cell-lbl">ユーロ円</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-eurjpy">---</span><span class="mc-cell-chg" id="mcc-eurjpy"></span></div></div>
-    <div class="mc-cell"><span class="mc-cell-lbl">NYダウ</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-dow">---</span><span class="mc-cell-chg" id="mcc-dow"></span></div></div>
-    <div class="mc-cell"><span class="mc-cell-lbl">日経平均先物</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-nkd">---</span><span class="mc-cell-chg" id="mcc-nkd"></span></div></div>
-    <div class="mc-cell"><span class="mc-cell-lbl">Gold $/oz</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-gold">---</span><span class="mc-cell-chg" id="mcc-gold"></span></div></div>
-    <div class="mc-cell" style="background:rgba(0,0,0,0.015)"><span class="mc-cell-lbl">└ Gold ¥/g</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-goldg">---</span><span class="mc-cell-chg" id="mcc-goldg"></span></div></div>
-    <div class="mc-cell"><span class="mc-cell-lbl">BTC/JPY</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-btc">---</span><span class="mc-cell-chg" id="mcc-btc"></span></div></div>
-    <div class="mc-cell"><span class="mc-cell-lbl">ETH/JPY</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-eth">---</span><span class="mc-cell-chg" id="mcc-eth"></span></div></div>
-    <div class="mc-cell"><span class="mc-cell-lbl">XRP/JPY</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-xrp">---</span><span class="mc-cell-chg" id="mcc-xrp"></span></div></div>
-    <div class="mc-cell"><span class="mc-cell-lbl">SOL/JPY</span><div class="mc-cell-row"><span class="mc-cell-val" id="mcv-sol">---</span><span class="mc-cell-chg" id="mcc-sol"></span></div></div>
+  <!-- 旧mc-cell（JS互換のため非表示で残す） -->
+  <div style="display:none">
+    <span id="mcv-usdjpy"></span><span id="mcc-usdjpy"></span>
+    <span id="mcv-eurjpy"></span><span id="mcc-eurjpy"></span>
+    <span id="mcv-dow"></span><span id="mcc-dow"></span>
+    <span id="mcv-nkd"></span><span id="mcc-nkd"></span>
+    <span id="mcv-gold"></span><span id="mcc-gold"></span>
+    <span id="mcv-goldg"></span><span id="mcc-goldg"></span>
+    <span id="mcv-btc"></span><span id="mcc-btc"></span>
+    <span id="mcv-eth"></span><span id="mcc-eth"></span>
+    <span id="mcv-xrp"></span><span id="mcc-xrp"></span>
+    <span id="mcv-sol"></span><span id="mcc-sol"></span>
   </div>
 
-  <!-- ニュースティッカー -->
-  <div class="news-wrap">
-    <div class="news-label">NEWS</div>
-    <div class="news-body">
-      <div class="news-items" id="newsItems">
-        <span class="news-item">ニュース読み込み中... / Loading news headlines...</span>
-      </div>
+  <!-- マーケット指標テーブル（新） -->
+  <div class="mkt-table-wrap">
+    <table class="mkt-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>名前</th>
+          <th>価格</th>
+          <th>24h%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#f7931a">₿</div><div><div class="mkt-sym">BTC</div><div class="mkt-full">ビットコイン</div></div></div></td>
+          <td class="mkt-price"><span id="mkt-p-btc">---</span></td>
+          <td><span class="mkt-chg" id="mkt-c-btc">---</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#627eea">Ξ</div><div><div class="mkt-sym">ETH</div><div class="mkt-full">イーサリアム</div></div></div></td>
+          <td class="mkt-price"><span id="mkt-p-eth">---</span></td>
+          <td><span class="mkt-chg" id="mkt-c-eth">---</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#26a17b">₮</div><div><div class="mkt-sym">USDT</div><div class="mkt-full">テザー</div></div></div></td>
+          <td class="mkt-price"><span id="mkt-p-usdt">---</span></td>
+          <td><span class="mkt-chg" id="mkt-c-usdt">---</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#00aae4">✕</div><div><div class="mkt-sym">XRP</div><div class="mkt-full">リップル</div></div></div></td>
+          <td class="mkt-price"><span id="mkt-p-xrp">---</span></td>
+          <td><span class="mkt-chg" id="mkt-c-xrp">---</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#9945ff">◎</div><div><div class="mkt-sym">SOL</div><div class="mkt-full">ソラナ</div></div></div></td>
+          <td class="mkt-price"><span id="mkt-p-sol">---</span></td>
+          <td><span class="mkt-chg" id="mkt-c-sol">---</span></td>
+        </tr>
+        <tr>
+          <td>—</td>
+          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#c9a227">Au</div><div><div class="mkt-sym">GOLD</div><div class="mkt-full">金 ($/oz)</div></div></div></td>
+          <td class="mkt-price"><span id="mkt-p-gold">---</span></td>
+          <td><span class="mkt-chg" id="mkt-c-gold">---</span></td>
+        </tr>
+        <tr class="mkt-sep"><td colspan="4"><span class="mkt-sep-lbl">為替 / 株式</span></td></tr>
+        <tr>
+          <td>—</td>
+          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#2575fc">$¥</div><div><div class="mkt-sym">USD/JPY</div><div class="mkt-full">ドル円</div></div></div></td>
+          <td class="mkt-price"><span id="mkt-p-usdjpy">---</span></td>
+          <td><span class="mkt-chg" id="mkt-c-usdjpy">---</span></td>
+        </tr>
+        <tr>
+          <td>—</td>
+          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#003087">€¥</div><div><div class="mkt-sym">EUR/JPY</div><div class="mkt-full">ユーロ円</div></div></div></td>
+          <td class="mkt-price"><span id="mkt-p-eurjpy">---</span></td>
+          <td><span class="mkt-chg" id="mkt-c-eurjpy">---</span></td>
+        </tr>
+        <tr>
+          <td>—</td>
+          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#1a3a8f">DJI</div><div><div class="mkt-sym">NYダウ</div><div class="mkt-full">ダウ平均</div></div></div></td>
+          <td class="mkt-price"><span id="mkt-p-dow">---</span></td>
+          <td><span class="mkt-chg" id="mkt-c-dow">---</span></td>
+        </tr>
+        <tr>
+          <td>—</td>
+          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#c62828">NK</div><div><div class="mkt-sym">日経先物</div><div class="mkt-full">Nikkei Futures</div></div></div></td>
+          <td class="mkt-price"><span id="mkt-p-nkd">---</span></td>
+          <td><span class="mkt-chg" id="mkt-c-nkd">---</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ニュースカード（新） -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📰</span>
+      暗号資産ニュース
+      <span style="font-size:0.68rem;font-weight:400;color:var(--muted);margin-left:4px">タップで記事へ</span>
+    </div>
+    <div id="newsCardList">
+      <div style="text-align:center;padding:20px;color:var(--muted);font-size:0.85rem">読み込み中...</div>
     </div>
   </div>
 
@@ -1281,14 +1407,14 @@ function applyRate(rate) {
   document.getElementById('rateTime').textContent  = nowTimeStr();
   try { localStorage.setItem('sim_last_rate', gJpyRate); } catch(e) {}
   updatePrincipalYen();
-  setMC('usdjpy', gJpyRate, 0, false, false); // 指標パネルにも即時反映
+  setMC('usdjpy', '¥' + gJpyRate, 0, false, false); // 指標パネルにも即時反映
 }
 function fallbackRate() {
   document.getElementById('rateNum').textContent = gJpyRate;
   document.getElementById('rateDate').textContent  = '※設定値を使用中';
   document.getElementById('rateTime').textContent  = nowTimeStr();
   updateTicker();
-  setMC('usdjpy', gJpyRate > 0 ? gJpyRate : '---', 0, false);
+  setMC('usdjpy', gJpyRate > 0 ? '¥' + gJpyRate : '---', 0, false);
 }
 function fetchRate() {
   document.getElementById('rateDate').textContent = '取得中...';
@@ -1310,6 +1436,11 @@ function fetchRate() {
           done = true;
           gTickerData = { btc: d.bitcoin, eth: d.ethereum };
           applyRate(rate); // gJpyRateを先に確定
+          // USDT
+          if (d.tether && d.tether.jpy) {
+            var uc = d.tether.jpy_24h_change || 0;
+            setMC('usdt', '¥' + rate.toFixed(2), uc, true, false);
+          }
           // BTC
           if (d.bitcoin && d.bitcoin.jpy) {
             var bc = d.bitcoin.jpy_24h_change || 0;
@@ -1366,7 +1497,7 @@ function fetchRate() {
             done = true;
             if (d.rates.EUR > 0) {
               gEurJpy = Math.round(rate / d.rates.EUR * 100) / 100;
-              setMC('eurjpy', gEurJpy.toFixed(2), 0, false);
+              setMC('eurjpy', '¥' + gEurJpy.toFixed(2), 0, false);
             }
             applyRate(rate); updateTicker(); return;
           }
@@ -2005,25 +2136,72 @@ function titleRefresh() {
 
 // ===== マーケット指標: 行更新ユーティリティ =====
 function setMC(key, value, changePct, hasChange, isHtml) {
+  // 旧mc-cell（互換用）
   var vel = document.getElementById('mcv-' + key);
   var cel = document.getElementById('mcc-' + key);
-  if (!vel) return;
-  if (isHtml) { vel.innerHTML = value; } else { vel.textContent = value; }
-  if (!cel) return;
-  if (!hasChange || !changePct) {
-    cel.textContent = ''; cel.className = 'mc-cell-chg';
-  } else {
-    var cls = changePct > 0 ? 'up' : 'down';
-    cel.className = 'mc-cell-chg ' + cls;
-    cel.textContent = (changePct > 0 ? '▲' : '▼') + Math.abs(changePct).toFixed(2) + '%';
+  if (vel) { if (isHtml) { vel.innerHTML = value; } else { vel.textContent = value; } }
+  // 新マーケットテーブル
+  var mktP = document.getElementById('mkt-p-' + key);
+  var mktC = document.getElementById('mkt-c-' + key);
+  if (mktP) { if (isHtml) { mktP.innerHTML = value; } else { mktP.textContent = value; } }
+  var chgTxt = '';
+  var chgCls = '';
+  if (hasChange && changePct) {
+    chgCls = changePct > 0 ? 'up' : 'down';
+    chgTxt = (changePct > 0 ? '▲' : '▼') + Math.abs(changePct).toFixed(2) + '%';
   }
+  if (cel) { cel.textContent = chgTxt; cel.className = 'mc-cell-chg' + (chgCls ? ' ' + chgCls : ''); }
+  if (mktC) { mktC.textContent = chgTxt || '---'; mktC.className = 'mkt-chg' + (chgCls ? ' ' + chgCls : ''); }
+}
+
+// ===== 株式指標ヘルパー（Yahoo v8 → CORSプロキシ → FMP） =====
+function fetchStockIndex(sym, key) {
+  var enc = encodeURIComponent(sym);
+  var base = '/v8/finance/chart/' + enc + '?interval=1d&range=5d';
+  var urls = [
+    'https://query1.finance.yahoo.com' + base,
+    'https://query2.finance.yahoo.com' + base,
+    'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://query1.finance.yahoo.com' + base),
+    'https://corsproxy.io/?' + encodeURIComponent('https://query1.finance.yahoo.com' + base),
+  ];
+  var done = false;
+  function tryIdx(i) {
+    if (done || i >= urls.length) {
+      if (!done) fmpFallback();
+      return;
+    }
+    fetch(urls[i])
+      .then(function(r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function(d) {
+        if (done) return;
+        var res = d && d.chart && d.chart.result && d.chart.result[0];
+        if (!res || !res.meta || !res.meta.regularMarketPrice) throw 0;
+        done = true;
+        var price = res.meta.regularMarketPrice;
+        var prev  = res.meta.chartPreviousClose || res.meta.previousClose || 0;
+        var chg   = prev > 0 ? (price - prev) / prev * 100 : 0;
+        setMC(key, commaInt(Math.round(price)), chg, true, false);
+      })
+      .catch(function() { tryIdx(i + 1); });
+  }
+  function fmpFallback() {
+    fetch('https://financialmodelingprep.com/api/v3/quote/' + enc + '?apikey=demo')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d && d[0] && d[0].price && !done) {
+          done = true;
+          setMC(key, commaInt(Math.round(d[0].price)), d[0].changesPercentage || 0, true, false);
+        }
+      }).catch(function() {});
+  }
+  tryIdx(0);
 }
 
 // ===== マーケット指標: 一括取得 =====
 function fetchMarketData() {
   // ① USD/JPY（即時反映、applyRate()でも更新される）
-  if (gJpyRate > 0) setMC('usdjpy', gJpyRate, 0, false, false);
-  if (gEurJpy > 0) setMC('eurjpy', gEurJpy.toFixed(2), 0, false, false);
+  if (gJpyRate > 0) setMC('usdjpy', '¥' + gJpyRate, 0, false, false);
+  if (gEurJpy > 0) setMC('eurjpy', '¥' + gEurJpy.toFixed(2), 0, false, false);
 
   // ② EUR/JPY: open.er-api.com → jsdelivr EUR建てJSON
   fetch('https://open.er-api.com/v6/latest/USD')
@@ -2031,79 +2209,48 @@ function fetchMarketData() {
     .then(function(d) {
       if (d.rates && d.rates.EUR > 0 && d.rates.JPY > 0) {
         gEurJpy = Math.round(d.rates.JPY / d.rates.EUR * 100) / 100;
-        setMC('eurjpy', gEurJpy.toFixed(2), 0, false, false);
+        setMC('eurjpy', '¥' + gEurJpy.toFixed(2), 0, false, false);
       }
     }).catch(function() {
       fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json')
         .then(function(r) { return r.json(); })
         .then(function(d) {
           var v = d.eur && d.eur.jpy ? Math.round(d.eur.jpy * 100) / 100 : 0;
-          if (v > 100) { gEurJpy = v; setMC('eurjpy', gEurJpy.toFixed(2), 0, false, false); }
+          if (v > 100) { gEurJpy = v; setMC('eurjpy', '¥' + gEurJpy.toFixed(2), 0, false, false); }
         }).catch(function() {});
     });
 
-  // ③ Yahoo Finance: NYダウ・日経先物
-  var yfUrls = [
-    'https://query1.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2CNKD%3DF',
-    'https://query2.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2CNKD%3DF',
-    'https://query1.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2C%5EN225',
-  ];
-  function tryYF(i) {
-    if (i >= yfUrls.length) { tryFMP(); return; }
-    fetch(yfUrls[i])
-      .then(function(r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function(d) {
-        var rs = (d.quoteResponse && d.quoteResponse.result) || [];
-        if (!rs.length) throw 0;
-        rs.forEach(function(q) {
-          var p = q.regularMarketPrice, c = q.regularMarketChangePercent || 0;
-          if (q.symbol === '^DJI') setMC('dow', commaInt(Math.round(p)), c, true, false);
-          if (q.symbol === 'NKD=F' || q.symbol === '^N225') setMC('nkd', commaInt(Math.round(p)), c, true, false);
-        });
-      })
-      .catch(function() { tryYF(i + 1); });
-  }
-  // ④ Financial Modeling Prep デモキー フォールバック
-  function tryFMP() {
-    ['%5EDJI', '%5EN225'].forEach(function(sym, idx) {
-      fetch('https://financialmodelingprep.com/api/v3/quote/' + sym + '?apikey=demo')
-        .then(function(r) { return r.json(); })
-        .then(function(d) {
-          if (d && d[0] && d[0].price) {
-            setMC(idx === 0 ? 'dow' : 'nkd',
-                  commaInt(Math.round(d[0].price)),
-                  d[0].changesPercentage || 0, true, false);
-          }
-        }).catch(function() {});
-    });
-  }
-  tryYF(0);
+  // ③ 株式指標（v8チャートAPI → CORSプロキシ → FMP の順で試行）
+  [
+    { sym: '^DJI',  key: 'dow' },
+    { sym: 'NKD=F', key: 'nkd' },
+  ].forEach(function(si) { fetchStockIndex(si.sym, si.key); });
 
 }
 
-// ===== ニュースティッカー =====
+// ===== ニュースカード =====
 function fetchNewsHeadlines() {
-  var proxy = 'https://api.rss2json.com/v1/api.json?count=5&rss_url=';
+  var proxy = 'https://api.rss2json.com/v1/api.json?count=4&rss_url=';
   var feeds = [
-    { n: 'CoinPost',     u: 'https://coinpost.jp/?feed=rss2' },
-    { n: 'CoinDesk',     u: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
-    { n: 'CT Japan',     u: 'https://jp.cointelegraph.com/rss' },
-    { n: 'The Block',    u: 'https://www.theblock.co/rss' },
-    { n: 'Bloomberg',    u: 'https://feeds.bloomberg.com/crypto/news.rss' },
-    { n: 'Reuters',      u: 'https://feeds.reuters.com/reuters/businessNews' },
+    { n: 'CoinPost',   u: 'https://coinpost.jp/?feed=rss2' },
+    { n: 'CoinDesk',   u: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
+    { n: 'CT Japan',   u: 'https://jp.cointelegraph.com/rss' },
+    { n: 'The Block',  u: 'https://www.theblock.co/rss' },
   ];
   var pending = feeds.length;
   var items = [];
   function onDone() {
     if (--pending > 0) return;
-    setNewsTicker(items.length ? items : null);
+    renderNewsCards(items.length ? items : null);
   }
   feeds.forEach(function(f) {
     fetch(proxy + encodeURIComponent(f.u))
       .then(function(r) { return r.json(); })
       .then(function(d) {
-        (d.items || []).slice(0, 4).forEach(function(item) {
-          if (item.title) items.push({ src: f.n, title: item.title });
+        (d.items || []).slice(0, 3).forEach(function(item) {
+          if (!item.title) return;
+          var thumb = item.thumbnail || (item.enclosure && item.enclosure.link) || '';
+          items.push({ src: f.n, title: item.title, link: item.link || '', thumbnail: thumb, pubDate: item.pubDate || '' });
         });
         onDone();
       })
@@ -2111,25 +2258,41 @@ function fetchNewsHeadlines() {
   });
 }
 
-function setNewsTicker(items) {
-  var el = document.getElementById('newsItems');
+function renderNewsCards(items) {
+  var el = document.getElementById('newsCardList');
   if (!el) return;
   if (!items || !items.length) {
     items = [
-      { src: 'CoinPost',  title: '仮想通貨・ブロックチェーン最新情報' },
-      { src: 'CoinDesk',  title: 'Crypto market analysis and news' },
-      { src: 'CT Japan',  title: 'ビットコイン・アルトコインのニュース' },
-      { src: 'TheBlock',  title: 'DeFi and blockchain research' },
-      { src: 'Bloomberg', title: 'Global crypto and financial news' },
-      { src: 'Reuters',   title: 'World financial markets update' },
+      { src: 'CoinPost',  title: '仮想通貨・ブロックチェーン最新情報をチェック',  link: 'https://coinpost.jp/', thumbnail: '', pubDate: '' },
+      { src: 'CoinDesk',  title: 'Crypto market analysis and latest news',        link: 'https://www.coindesk.com/ja', thumbnail: '', pubDate: '' },
+      { src: 'CT Japan',  title: 'ビットコイン・アルトコインの最新ニュース',       link: 'https://cointelegraph.jp/', thumbnail: '', pubDate: '' },
+      { src: 'The Block', title: 'DeFi and blockchain research',                  link: 'https://www.theblock.co/', thumbnail: '', pubDate: '' },
     ];
   }
-  var all = items.concat(items); // seamless loop
-  el.innerHTML = all.map(function(o) {
-    return '<span class="news-item"><span class="news-src">[' + o.src + ']</span>' + o.title + '</span>'
-      + '<span class="news-sep"> ◆ </span>';
+  el.innerHTML = items.map(function(o) {
+    var dateStr = '';
+    if (o.pubDate) {
+      try {
+        var d = new Date(o.pubDate);
+        if (!isNaN(d.getTime())) {
+          dateStr = (d.getMonth()+1) + '/' + d.getDate() + ' ' + ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2);
+        }
+      } catch(e) {}
+    }
+    var imgHtml = o.thumbnail
+      ? '<img class="news-card-img" src="' + o.thumbnail + '" alt="" loading="lazy" onerror="this.outerHTML=\'<div class=&quot;news-card-img-box&quot;>📰</div>\'">'
+      : '<div class="news-card-img-box">📰</div>';
+    return '<a class="news-card" href="' + (o.link || '#') + '" target="_blank" rel="noopener">' +
+      '<div class="news-card-body">' +
+        '<div class="news-card-meta">' +
+          '<span class="news-card-src">' + o.src + '</span>' +
+          (dateStr ? '<span class="news-card-date">' + dateStr + '</span>' : '') +
+        '</div>' +
+        '<div class="news-card-title">' + o.title + '</div>' +
+      '</div>' +
+      imgHtml +
+    '</a>';
   }).join('');
-  el.style.animationDuration = Math.max(60, items.length * 9) + 's';
 }
 
 // ===== 起動 =====
