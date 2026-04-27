@@ -587,30 +587,21 @@
     }
     .tt:hover .tt-pop, .tt.tt-open .tt-pop { display: block; }
 
-    /* ===== マーケットテーブル（新） ===== */
-    .mkt-table-wrap { border-radius: 10px; border: 1.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
-    .mkt-table { width: 100%; border-collapse: collapse; }
-    .mkt-table thead tr { background: var(--bg); }
-    .mkt-table th { padding: 7px 10px; font-size: 0.6rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
-    .mkt-table th:first-child { width: 32px; text-align: center; }
-    .mkt-table th:nth-child(2) { text-align: left; }
-    .mkt-table th:nth-child(3) { text-align: right; }
-    .mkt-table th:nth-child(4) { text-align: right; padding-right: 12px; }
-    .mkt-table td { padding: 8px 10px; border-top: 1px solid var(--border); vertical-align: middle; }
-    .mkt-table td:first-child { text-align: center; color: var(--muted); font-size: 0.65rem; font-weight: 500; width: 32px; }
-    .mkt-table td:nth-child(2) { text-align: left; }
-    .mkt-table td:nth-child(3) { text-align: right; }
-    .mkt-table td:nth-child(4) { text-align: right; padding-right: 12px; }
-    .mkt-name-cell { display: flex; align-items: center; gap: 8px; }
-    .mkt-icon { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 900; color: #fff; }
-    .mkt-sym { font-size: 0.78rem; font-weight: 700; color: var(--text); }
-    .mkt-full { font-size: 0.58rem; color: var(--muted); margin-top: 1px; }
-    .mkt-price { font-size: 0.8rem; font-weight: 700; color: var(--text); white-space: nowrap; }
-    .mkt-chg { font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+    /* ===== マーケットコンパクトリスト ===== */
+    .mkt-wrap  { border-radius: 10px; border: 1.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
+    .mkt-grp   { font-size: 0.54rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; padding: 5px 12px 3px; background: var(--bg); display: block; border-top: 1px solid var(--border); }
+    .mkt-grp:first-child { border-top: none; }
+    .mkt-row2  { display: flex; align-items: center; padding: 7px 12px; border-top: 1px solid var(--border); }
+    .mkt-l2    { display: flex; align-items: center; gap: 7px; flex: 1; min-width: 0; }
+    .mkt-ico2  { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.58rem; font-weight: 900; color: #fff; flex-shrink: 0; }
+    .mkt-sym2  { font-size: 0.75rem; font-weight: 700; color: var(--text); }
+    .mkt-sub2  { font-size: 0.58rem; color: var(--muted); margin-left: 2px; font-weight: 400; }
+    .mkt-price { font-size: 0.76rem; font-weight: 700; color: var(--text); white-space: nowrap; min-width: 82px; text-align: right; margin-right: 8px; }
+    .mkt-chg   { font-size: 0.68rem; font-weight: 700; white-space: nowrap; min-width: 54px; text-align: right; }
     .mkt-chg.up   { color: var(--green); }
     .mkt-chg.down { color: #e05050; }
-    .mkt-sep td { background: var(--bg) !important; padding: 4px 10px !important; border-top: 1.5px solid var(--border) !important; }
-    .mkt-sep-lbl { font-size: 0.55rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+    .mkt-sub-row  { padding-left: 41px; background: rgba(0,0,0,0.018); }
+    body.dark .mkt-sub-row { background: rgba(255,255,255,0.025); }
 
     /* ===== ニュースカード（新） ===== */
     .news-card {
@@ -1124,69 +1115,50 @@
     <span id="mcv-sol"></span><span id="mcc-sol"></span>
   </div>
 
-  <!-- マーケット指標テーブル（新） -->
-  <div class="mkt-table-wrap">
-    <table class="mkt-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>名前</th>
-          <th>価格</th>
-          <th>24h%</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#f7931a">₿</div><div><div class="mkt-sym">BTC</div><div class="mkt-full">ビットコイン</div></div></div></td>
-          <td class="mkt-price"><span id="mkt-p-btc">---</span></td>
-          <td><span class="mkt-chg" id="mkt-c-btc">---</span></td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#627eea">Ξ</div><div><div class="mkt-sym">ETH</div><div class="mkt-full">イーサリアム</div></div></div></td>
-          <td class="mkt-price"><span id="mkt-p-eth">---</span></td>
-          <td><span class="mkt-chg" id="mkt-c-eth">---</span></td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#00aae4">✕</div><div><div class="mkt-sym">XRP</div><div class="mkt-full">リップル</div></div></div></td>
-          <td class="mkt-price"><span id="mkt-p-xrp">---</span></td>
-          <td><span class="mkt-chg" id="mkt-c-xrp">---</span></td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#9945ff">◎</div><div><div class="mkt-sym">SOL</div><div class="mkt-full">ソラナ</div></div></div></td>
-          <td class="mkt-price"><span id="mkt-p-sol">---</span></td>
-          <td><span class="mkt-chg" id="mkt-c-sol">---</span></td>
-        </tr>
-        <tr>
-          <td>—</td>
-          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#c9a227">Au</div><div><div class="mkt-sym">GOLD</div><div class="mkt-full">金 ($/oz)</div></div></div></td>
-          <td class="mkt-price"><span id="mkt-p-gold">---</span></td>
-          <td><span class="mkt-chg" id="mkt-c-gold">---</span></td>
-        </tr>
-        <tr class="mkt-sep"><td colspan="4"><span class="mkt-sep-lbl">為替 / 株式</span></td></tr>
-        <tr>
-          <td>—</td>
-          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#2575fc">$¥</div><div><div class="mkt-sym">USD/JPY</div><div class="mkt-full">ドル円</div></div></div></td>
-          <td class="mkt-price"><span id="mkt-p-usdjpy">---</span></td>
-          <td><span class="mkt-chg" id="mkt-c-usdjpy">---</span></td>
-        </tr>
-        <tr>
-          <td>—</td>
-          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#1a3a8f">DJI</div><div><div class="mkt-sym">NYダウ</div><div class="mkt-full">ダウ平均</div></div></div></td>
-          <td class="mkt-price"><span id="mkt-p-dow">---</span></td>
-          <td><span class="mkt-chg" id="mkt-c-dow">---</span></td>
-        </tr>
-        <tr>
-          <td>—</td>
-          <td><div class="mkt-name-cell"><div class="mkt-icon" style="background:#c62828">NK</div><div><div class="mkt-sym">日経先物</div><div class="mkt-full">Nikkei Futures</div></div></div></td>
-          <td class="mkt-price"><span id="mkt-p-nkd">---</span></td>
-          <td><span class="mkt-chg" id="mkt-c-nkd">---</span></td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- マーケット指標リスト -->
+  <div class="mkt-wrap">
+    <span class="mkt-grp">仮想通貨</span>
+    <div class="mkt-row2">
+      <div class="mkt-l2"><div class="mkt-ico2" style="background:#f7931a">₿</div><span class="mkt-sym2">BTC</span></div>
+      <span class="mkt-price" id="mkt-p-btc">---</span>
+      <span class="mkt-chg" id="mkt-c-btc">---</span>
+    </div>
+    <div class="mkt-row2">
+      <div class="mkt-l2"><div class="mkt-ico2" style="background:#627eea">Ξ</div><span class="mkt-sym2">ETH</span></div>
+      <span class="mkt-price" id="mkt-p-eth">---</span>
+      <span class="mkt-chg" id="mkt-c-eth">---</span>
+    </div>
+    <div class="mkt-row2">
+      <div class="mkt-l2"><div class="mkt-ico2" style="background:#00aae4">✕</div><span class="mkt-sym2">XRP</span></div>
+      <span class="mkt-price" id="mkt-p-xrp">---</span>
+      <span class="mkt-chg" id="mkt-c-xrp">---</span>
+    </div>
+    <div class="mkt-row2">
+      <div class="mkt-l2"><div class="mkt-ico2" style="background:#c9a227">Au</div><span class="mkt-sym2">GOLD<span class="mkt-sub2">$/oz</span></span></div>
+      <span class="mkt-price" id="mkt-p-gold">---</span>
+      <span class="mkt-chg" id="mkt-c-gold">---</span>
+    </div>
+    <div class="mkt-row2 mkt-sub-row">
+      <div class="mkt-l2"><span class="mkt-sym2" style="font-size:0.68rem;color:var(--muted)">└ 円/g</span></div>
+      <span class="mkt-price" id="mkt-p-goldg">---</span>
+      <span class="mkt-chg" id="mkt-c-goldg">---</span>
+    </div>
+    <span class="mkt-grp">為替 / 株式</span>
+    <div class="mkt-row2">
+      <div class="mkt-l2"><div class="mkt-ico2" style="background:#2575fc;font-size:0.48rem">$¥</div><span class="mkt-sym2">USD / JPY</span></div>
+      <span class="mkt-price" id="mkt-p-usdjpy">---</span>
+      <span class="mkt-chg" id="mkt-c-usdjpy">---</span>
+    </div>
+    <div class="mkt-row2">
+      <div class="mkt-l2"><div class="mkt-ico2" style="background:#1a3a8f;font-size:0.48rem">DJI</div><span class="mkt-sym2">NYダウ</span></div>
+      <span class="mkt-price" id="mkt-p-dow">---</span>
+      <span class="mkt-chg" id="mkt-c-dow">---</span>
+    </div>
+    <div class="mkt-row2">
+      <div class="mkt-l2"><div class="mkt-ico2" style="background:#c62828;font-size:0.48rem">NK</div><span class="mkt-sym2">日経先物</span></div>
+      <span class="mkt-price" id="mkt-p-nkd">---</span>
+      <span class="mkt-chg" id="mkt-c-nkd">---</span>
+    </div>
   </div>
 
   <!-- ニュースカード（新） -->
@@ -2221,31 +2193,59 @@ function fetchMarketData() {
 
 // ===== ニュースカード =====
 function fetchNewsHeadlines() {
-  var proxy = 'https://api.rss2json.com/v1/api.json?count=4&rss_url=';
+  var PROXY = 'https://api.allorigins.win/raw?url=';
   var feeds = [
-    { n: 'CoinPost',   u: 'https://coinpost.jp/?feed=rss2' },
-    { n: 'CoinDesk',   u: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
-    { n: 'CT Japan',   u: 'https://jp.cointelegraph.com/rss' },
-    { n: 'The Block',  u: 'https://www.theblock.co/rss' },
+    { n: 'CoinPost', u: 'https://coinpost.jp/?feed=rss2' },
+    { n: 'CT Japan', u: 'https://jp.cointelegraph.com/rss' },
+    { n: 'CoinDesk', u: 'https://www.coindesk.com/arc/outboundfeeds/rss/' },
+    { n: 'The Block', u: 'https://www.theblock.co/rss' },
   ];
   var pending = feeds.length;
   var items = [];
-  function onDone() {
-    if (--pending > 0) return;
-    renderNewsCards(items.length ? items : null);
+  function onDone() { if (--pending > 0) return; renderNewsCards(items.length ? items : null); }
+
+  function parseRSS(xml, srcName) {
+    try {
+      var doc = new DOMParser().parseFromString(xml, 'text/xml');
+      var nodes = Array.prototype.slice.call(doc.querySelectorAll('item, entry'));
+      nodes.slice(0, 4).forEach(function(node) {
+        var titleEl = node.querySelector('title');
+        var title = titleEl ? titleEl.textContent.trim() : '';
+        var link = '';
+        var linkEl = node.querySelector('link');
+        if (linkEl) link = (linkEl.textContent || linkEl.getAttribute('href') || '').trim();
+        var dateEl = node.querySelector('pubDate, published, updated');
+        var pubDate = dateEl ? dateEl.textContent.trim() : '';
+        if (title) items.push({ src: srcName, title: title, link: link, pubDate: pubDate });
+      });
+    } catch(e) {}
   }
+
   feeds.forEach(function(f) {
-    fetch(proxy + encodeURIComponent(f.u))
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        (d.items || []).slice(0, 3).forEach(function(item) {
-          if (!item.title) return;
-          var thumb = item.thumbnail || (item.enclosure && item.enclosure.link) || '';
-          items.push({ src: f.n, title: item.title, link: item.link || '', thumbnail: thumb, pubDate: item.pubDate || '' });
-        });
+    var done = false;
+    // 1st: allorigins.win → XML parse
+    fetch(PROXY + encodeURIComponent(f.u), { cache: 'no-store' })
+      .then(function(r) { if (!r.ok) throw 0; return r.text(); })
+      .then(function(xml) {
+        if (done) return; done = true;
+        parseRSS(xml, f.n);
         onDone();
       })
-      .catch(function() { onDone(); });
+      .catch(function() {
+        // 2nd fallback: rss2json
+        fetch('https://api.rss2json.com/v1/api.json?count=4&rss_url=' + encodeURIComponent(f.u))
+          .then(function(r) { return r.json(); })
+          .then(function(d) {
+            if (!done) {
+              done = true;
+              (d.items || []).slice(0, 4).forEach(function(item) {
+                if (item.title) items.push({ src: f.n, title: item.title, link: item.link || '', pubDate: item.pubDate || '' });
+              });
+            }
+            onDone();
+          })
+          .catch(function() { if (!done) { done = true; } onDone(); });
+      });
   });
 }
 
