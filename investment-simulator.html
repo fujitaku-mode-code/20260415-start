@@ -455,12 +455,18 @@
     /* ===== 印刷エリア ===== */
     #print-area { display:none; }
     @media print {
+      @page { margin:0; }
       body > *:not(#print-overlay) { display:none !important; }
       #print-overlay {
         position:static !important; overflow:visible !important;
-        height:auto !important; z-index:auto !important;
+        height:auto !important; z-index:auto !important; width:100% !important;
       }
-      #print-overlay img { width:100%; display:block; page-break-after:always; margin:0; padding:0; }
+      #print-overlay img {
+        width:100%; display:block;
+        page-break-after:always; break-after:page;
+        margin:0; padding:0;
+        max-height:none !important;
+      }
     }
     /* ===== 用語ツールチップ ===== */
     .tt {
@@ -1630,21 +1636,20 @@ function getSelectedDocs() {
   return result;
 }
 
-// ===== 資料集: 印刷（白い全画面オーバーレイで画像を実際に表示してから印刷）=====
+// ===== 資料集: 印刷（白い全画面オーバーレイで実際に表示→印刷）=====
 function printSelected() {
   var srcs = getSelectedDocs();
   if (!srcs.length) { alert('印刷する資料を選択してください（「選択」チェックボックスにチェックを入れてください）'); return; }
-  var base = location.origin + location.pathname.replace(/[^/]+$/, '');
-  // 白い全画面オーバーレイを作成（iOSはdisplay:noneの画像を印刷できないため実際に描画する）
   var ov = document.createElement('div');
   ov.id = 'print-overlay';
-  ov.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:88888;overflow:hidden;';
+  // overflow:auto でiOSが全ページを認識できるようにする
+  ov.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:88888;overflow-y:auto;-webkit-overflow-scrolling:touch;';
   document.body.appendChild(ov);
   var loaded = 0;
   var imgs = srcs.map(function(s) {
     var im = document.createElement('img');
-    im.style.cssText = 'width:100%;display:block;page-break-after:always;';
-    im.src = base + s;
+    im.style.cssText = 'width:100%;display:block;page-break-after:always;break-after:page;';
+    im.src = s;  // 相対パスをそのまま使用（URL構築ミスを防ぐ）
     ov.appendChild(im);
     return im;
   });
@@ -1655,7 +1660,7 @@ function printSelected() {
         setTimeout(function() {
           window.print();
           setTimeout(function() { if (ov.parentNode) ov.parentNode.removeChild(ov); }, 5000);
-        }, 500);
+        }, 800);
       });
     });
   }
@@ -1674,30 +1679,31 @@ function downloadSelected(btn) {
   // iOS Safari: a.click()ダウンロード非対応 → 画像ギャラリーオーバーレイで長押し保存
   if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
     var ovId = 'dl-ov-' + Date.now();
-    var base2 = location.origin + location.pathname.replace(/[^/]+$/, '');
     var ov = document.createElement('div');
     ov.id = ovId;
     ov.style.cssText = 'position:fixed;inset:0;background:#111;z-index:99999;overflow-y:auto;-webkit-overflow-scrolling:touch;';
-    // スティッキーヘッダー（スクロールしても常に「閉じる」が見える）
+    // スティッキーヘッダー
     var hdr = document.createElement('div');
-    hdr.style.cssText = 'position:sticky;top:0;background:#111;z-index:1;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #333;';
+    hdr.style.cssText = 'position:sticky;top:0;background:#222;z-index:2;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #444;';
     var note = document.createElement('span');
     note.textContent = '長押し→「写真に保存」で保存できます';
     note.style.cssText = 'color:#ccc;font-size:12px;line-height:1.4;';
     var closeBtn = document.createElement('button');
     closeBtn.textContent = '✕ 閉じる';
-    closeBtn.style.cssText = 'padding:7px 16px;background:#555;color:#fff;border:none;border-radius:16px;font-size:13px;cursor:pointer;flex-shrink:0;margin-left:10px;';
-    closeBtn.addEventListener('click', function() {
+    closeBtn.style.cssText = 'padding:8px 18px;background:#666;color:#fff;border:none;border-radius:20px;font-size:14px;cursor:pointer;flex-shrink:0;margin-left:10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;';
+    function doClose() {
       var el = document.getElementById(ovId);
       if (el && el.parentNode) el.parentNode.removeChild(el);
-    });
+    }
+    closeBtn.addEventListener('touchend', function(e) { e.preventDefault(); doClose(); });
+    closeBtn.addEventListener('click', doClose);
     hdr.appendChild(note);
     hdr.appendChild(closeBtn);
     ov.appendChild(hdr);
-    // 画像をcreateElementで追加（innerHTML不使用、iOSで確実に読み込まれる）
+    // 相対パスをそのまま使用（URL構築ミスを防ぐ）
     srcs.forEach(function(s) {
       var im = document.createElement('img');
-      im.src = base2 + s;
+      im.src = s;
       im.style.cssText = 'width:100%;display:block;margin-bottom:4px;';
       ov.appendChild(im);
     });
