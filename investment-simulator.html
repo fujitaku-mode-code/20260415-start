@@ -466,6 +466,36 @@
     }
     .title-refresh-btn:active { opacity:0.75; }
     .title-refresh-btn svg { flex-shrink:0; }
+    /* ===== 経済指標ティッカー ===== */
+    .ticker-wrap {
+      background:var(--text); overflow:hidden; border-radius:10px;
+      margin-bottom:14px; height:36px; display:flex; align-items:center;
+    }
+    .ticker-label {
+      background:var(--accent); color:#fff; font-size:0.65rem; font-weight:900;
+      padding:0 10px; height:100%; display:flex; align-items:center;
+      white-space:nowrap; flex-shrink:0; letter-spacing:0.08em;
+    }
+    .ticker-body { flex:1; overflow:hidden; height:100%; position:relative; }
+    .ticker-items {
+      display:inline-flex; align-items:center; height:100%;
+      white-space:nowrap; animation:tickerScroll 60s linear infinite;
+      will-change:transform;
+    }
+    .ticker-items:hover { animation-play-state:paused; }
+    @keyframes tickerScroll {
+      from { transform:translateX(0); }
+      to   { transform:translateX(-50%); }
+    }
+    .ticker-item {
+      color:var(--bg); font-size:0.74rem; font-weight:600;
+      padding:0 14px; font-family:'Noto Sans JP',sans-serif;
+    }
+    .ticker-up   { color:#26d89a !important; }
+    .ticker-down { color:#f08080 !important; }
+    .ticker-sep  { color:var(--accent); opacity:0.4; font-size:0.7rem; }
+    body.dark .ticker-wrap { background:#f0e8d0; }
+    body.dark .ticker-item { color:#1c1a14; }
     /* ===== 印刷エリア ===== */
     #print-area { display:none; }
     @media print {
@@ -781,6 +811,16 @@
 
 <!-- タブ③: その他 -->
 <div id="tab-news" class="tab-panel">
+
+  <!-- 経済指標ティッカー -->
+  <div class="ticker-wrap">
+    <div class="ticker-label">LIVE</div>
+    <div class="ticker-body">
+      <div class="ticker-items" id="tickerItems">
+        <span class="ticker-item">データ取得中...</span>
+      </div>
+    </div>
+  </div>
 
   <!-- X（Twitter） -->
   <div class="card">
@@ -1161,48 +1201,107 @@ function fallbackRate() {
   document.getElementById('rateTime').textContent  = nowTimeStr();
 }
 function fetchRate() {
-  document.getElementById('rateDate').textContent  = '取得中...';
-  document.getElementById('rateNum').textContent = gJpyRate > 0 ? gJpyRate : '---';
+  document.getElementById('rateDate').textContent = '取得中...';
+  document.getElementById('rateNum').textContent  = gJpyRate > 0 ? gJpyRate : '---';
   document.getElementById('rateTime').textContent  = '';
-
-  // API 1: open.er-api.com
-  var xhr1 = new XMLHttpRequest();
-  xhr1.open('GET', 'https://open.er-api.com/v6/latest/USD', true);
-  xhr1.timeout = 8000;
   var done = false;
-  xhr1.onload = function() {
+
+  // API 1: CoinGecko — USDT/JPY≈USD/JPY、BTC/ETH付き、数分毎に更新
+  var xg = new XMLHttpRequest();
+  xg.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=tether,bitcoin,ethereum&vs_currencies=jpy,usd&include_24hr_change=true', true);
+  xg.timeout = 9000;
+  xg.onload = function() {
     if (done) return;
-    if (xhr1.status === 200) {
+    if (xg.status === 200) {
       try {
-        var d = JSON.parse(xhr1.responseText);
-        var rate = Math.round(d.rates.JPY * 10) / 10;
-        if (rate > 50 && rate < 300) { done = true; applyRate(rate); return; }
+        var d = JSON.parse(xg.responseText);
+        var rate = d.tether && d.tether.jpy ? Math.round(d.tether.jpy * 10) / 10 : 0;
+        if (rate > 50 && rate < 300) {
+          done = true;
+          gTickerData = { btc: d.bitcoin, eth: d.ethereum };
+          applyRate(rate);
+          updateTicker();
+          return;
+        }
       } catch(e) {}
     }
     if (!done) tryApi2();
   };
-  xhr1.onerror = xhr1.ontimeout = function() { if (!done) tryApi2(); };
-  xhr1.send();
+  xg.onerror = xg.ontimeout = function() { if (!done) tryApi2(); };
+  xg.send();
 
+  // API 2: open.er-api.com（日次更新）
   function tryApi2() {
-    // API 2: cdn.jsdelivr.net currency-api
-    var xhr2 = new XMLHttpRequest();
-    xhr2.open('GET', 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json', true);
-    xhr2.timeout = 8000;
-    xhr2.onload = function() {
+    var x2 = new XMLHttpRequest();
+    x2.open('GET', 'https://open.er-api.com/v6/latest/USD', true);
+    x2.timeout = 8000;
+    x2.onload = function() {
       if (done) return;
-      if (xhr2.status === 200) {
+      if (x2.status === 200) {
         try {
-          var d2 = JSON.parse(xhr2.responseText);
-          var rate2 = Math.round(d2.usd.jpy * 10) / 10;
-          if (rate2 > 50 && rate2 < 300) { done = true; applyRate(rate2); return; }
+          var d = JSON.parse(x2.responseText);
+          var rate = Math.round(d.rates.JPY * 10) / 10;
+          if (rate > 50 && rate < 300) { done = true; applyRate(rate); updateTicker(); return; }
+        } catch(e) {}
+      }
+      if (!done) tryApi3();
+    };
+    x2.onerror = x2.ontimeout = function() { if (!done) tryApi3(); };
+    x2.send();
+  }
+
+  // API 3: jsdelivr currency-api（日次更新）
+  function tryApi3() {
+    var x3 = new XMLHttpRequest();
+    x3.open('GET', 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json', true);
+    x3.timeout = 8000;
+    x3.onload = function() {
+      if (done) return;
+      if (x3.status === 200) {
+        try {
+          var d = JSON.parse(x3.responseText);
+          var rate = Math.round(d.usd.jpy * 10) / 10;
+          if (rate > 50 && rate < 300) { done = true; applyRate(rate); updateTicker(); return; }
         } catch(e) {}
       }
       if (!done) { done = true; fallbackRate(); }
     };
-    xhr2.onerror = xhr2.ontimeout = function() { if (!done) { done = true; fallbackRate(); } };
-    xhr2.send();
+    x3.onerror = x3.ontimeout = function() { if (!done) { done = true; fallbackRate(); } };
+    x3.send();
   }
+}
+
+// ===== 経済指標ティッカー更新 =====
+function updateTicker() {
+  var el = document.getElementById('tickerItems');
+  if (!el) return;
+  var items = [];
+  if (gJpyRate > 0)
+    items.push({ t: '💴 USD/JPY: ' + gJpyRate + '円', c: '' });
+  if (gTickerData) {
+    var b = gTickerData.btc, e = gTickerData.eth;
+    if (b && b.jpy) {
+      var bc = b.jpy_24h_change || 0;
+      items.push({ t: '₿ BTC/JPY: ¥' + commaInt(Math.round(b.jpy / 1000) * 1000) + '　' + (bc >= 0 ? '▲' : '▼') + Math.abs(bc).toFixed(2) + '%', c: bc >= 0 ? 'ticker-up' : 'ticker-down' });
+    }
+    if (e && e.jpy) {
+      var ec = e.jpy_24h_change || 0;
+      items.push({ t: 'Ξ ETH/JPY: ¥' + commaInt(Math.round(e.jpy)) + '　' + (ec >= 0 ? '▲' : '▼') + Math.abs(ec).toFixed(2) + '%', c: ec >= 0 ? 'ticker-up' : 'ticker-down' });
+    }
+  }
+  var news = [
+    '📈 BitradeX AI BOT 24時間自動運用稼働中',
+    '🌏 グローバル仮想通貨市場 24h/365d 対応',
+    '💹 USDT残高をいつでもUSD/JPY換算で確認',
+    '🔒 操作ガイドは「2. 資料集」から',
+  ];
+  news.forEach(function(n) { items.push({ t: n, c: '' }); });
+  // seamlessループのため2倍複製
+  var all = items.concat(items);
+  el.innerHTML = all.map(function(o) {
+    return '<span class="ticker-item' + (o.c ? ' ' + o.c : '') + '">◆ ' + o.t + '</span>'
+           + '<span class="ticker-sep">｜</span>';
+  }).join('');
 }
 
 function updatePrincipalYen() {
@@ -1218,6 +1317,7 @@ function updatePrincipalYen() {
 
 // ===== グローバル状態 =====
 var gJpyRate = 0;
+var gTickerData = null;
 var lastRows = [], lastJpyRate = 0, lastStartDate = null, fullTableVisible = false;
 var gSimParams = {};
 
@@ -1808,6 +1908,9 @@ window.onload = function() {
   updatePrincipalYen();
   fetchRate();
   simulate();
+  updateTicker();
+  // 5分毎にレート＆ティッカーを自動更新
+  setInterval(fetchRate, 5 * 60 * 1000);
 };
 
 // スクリプトはbody末尾にあるためDOMは即座に利用可能
