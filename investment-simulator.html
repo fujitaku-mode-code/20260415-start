@@ -1255,6 +1255,7 @@ function applyRate(rate) {
   document.getElementById('rateTime').textContent  = nowTimeStr();
   try { localStorage.setItem('sim_last_rate', gJpyRate); } catch(e) {}
   updatePrincipalYen();
+  setMC('usdjpy', gJpyRate, 0, false, false); // 指標パネルにも即時反映
 }
 function fallbackRate() {
   document.getElementById('rateNum').textContent = gJpyRate;
@@ -1269,10 +1270,10 @@ function fetchRate() {
   document.getElementById('rateTime').textContent  = '';
   var done = false;
 
-  // API 1: CoinGecko — USDT/JPY≈USD/JPY、BTC/ETH付き、数分毎に更新
+  // API 1: CoinGecko — USDT/JPY+BTC+ETH+ゴールド、1リクエストでまとめて取得
   var xg = new XMLHttpRequest();
-  xg.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=tether,bitcoin,ethereum&vs_currencies=jpy,usd&include_24hr_change=true', true);
-  xg.timeout = 9000;
+  xg.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=tether,bitcoin,ethereum,pax-gold&vs_currencies=jpy,usd&include_24hr_change=true', true);
+  xg.timeout = 12000;
   xg.onload = function() {
     if (done) return;
     if (xg.status === 200) {
@@ -1282,6 +1283,19 @@ function fetchRate() {
         if (rate > 50 && rate < 300) {
           done = true;
           gTickerData = { btc: d.bitcoin, eth: d.ethereum };
+          // BTC（JPY＋USD両方表示）
+          if (d.bitcoin && d.bitcoin.jpy) {
+            var bc = d.bitcoin.jpy_24h_change || 0;
+            var bjpy = Math.round(d.bitcoin.jpy / 1000) * 1000;
+            var busd = d.bitcoin.usd ? Math.round(d.bitcoin.usd) : 0;
+            var btcHtml = '¥' + commaInt(bjpy)
+              + (busd ? '<br><span style="font-size:0.72rem;color:var(--muted);font-weight:600">$' + commaInt(busd) + '</span>' : '');
+            setMC('btc', btcHtml, bc, true, true);
+          }
+          // ゴールド
+          if (d['pax-gold'] && d['pax-gold'].usd) {
+            setMC('gold', '$' + commaInt(Math.round(d['pax-gold'].usd)), d['pax-gold'].usd_24h_change || 0, true, false);
+          }
           applyRate(rate);
           updateTicker();
           return;
@@ -1946,13 +1960,13 @@ function titleRefresh() {
 }
 
 // ===== マーケット指標: 行更新ユーティリティ =====
-function setMC(key, value, changePct, hasChange) {
+function setMC(key, value, changePct, hasChange, isHtml) {
   var vel = document.getElementById('mcv-' + key);
   var cel = document.getElementById('mcc-' + key);
   if (!vel) return;
-  vel.textContent = value;
+  if (isHtml) { vel.innerHTML = value; } else { vel.textContent = value; }
   if (!cel) return;
-  if (!hasChange || changePct === 0) {
+  if (!hasChange || !changePct) {
     cel.textContent = ''; cel.className = 'ml-chg';
   } else {
     var cls = changePct > 0 ? 'up' : 'down';
@@ -1963,32 +1977,35 @@ function setMC(key, value, changePct, hasChange) {
 
 // ===== マーケット指標: 一括取得 =====
 function fetchMarketData() {
-  // ① USD/JPY・EUR/JPY（既存データから即時反映）
-  if (gJpyRate > 0) setMC('usdjpy', gJpyRate, 0, false);
-  if (gEurJpy > 0) setMC('eurjpy', gEurJpy.toFixed(2), 0, false);
+  // ① USD/JPY（即時反映、applyRate()でも更新される）
+  if (gJpyRate > 0) setMC('usdjpy', gJpyRate, 0, false, false);
+  if (gEurJpy > 0) setMC('eurjpy', gEurJpy.toFixed(2), 0, false, false);
 
-  // ② CoinGecko: BTC + ゴールド(PAXG) — CORSあり、モバイルでも動作
-  fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,pax-gold&vs_currencies=jpy,usd&include_24hr_change=true')
+  // ② EUR/JPY: open.er-api.com → jsdelivr EUR建てJSON
+  fetch('https://open.er-api.com/v6/latest/USD')
     .then(function(r) { return r.json(); })
     .then(function(d) {
-      if (d.bitcoin && d.bitcoin.jpy) {
-        var bc = d.bitcoin.jpy_24h_change || 0;
-        setMC('btc', '¥' + commaInt(Math.round(d.bitcoin.jpy / 1000) * 1000), bc, true);
+      if (d.rates && d.rates.EUR > 0 && d.rates.JPY > 0) {
+        gEurJpy = Math.round(d.rates.JPY / d.rates.EUR * 100) / 100;
+        setMC('eurjpy', gEurJpy.toFixed(2), 0, false, false);
       }
-      if (d['pax-gold'] && d['pax-gold'].usd) {
-        var gc = d['pax-gold'].usd_24h_change || 0;
-        setMC('gold', '$' + commaInt(Math.round(d['pax-gold'].usd)), gc, true);
-      }
-    }).catch(function() {});
+    }).catch(function() {
+      fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          var v = d.eur && d.eur.jpy ? Math.round(d.eur.jpy * 100) / 100 : 0;
+          if (v > 100) { gEurJpy = v; setMC('eurjpy', gEurJpy.toFixed(2), 0, false, false); }
+        }).catch(function() {});
+    });
 
-  // ③ Yahoo Finance: NYダウ・日経先物・ユーロ円 — 複数エンドポイントを順番に試行
+  // ③ Yahoo Finance: NYダウ・日経先物
   var yfUrls = [
-    'https://query1.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2CNKD%3DF%2CEURJPY%3DX',
-    'https://query2.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2CNKD%3DF%2CEURJPY%3DX',
-    'https://query1.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2C%5EN225%2CEURJPY%3DX',
+    'https://query1.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2CNKD%3DF',
+    'https://query2.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2CNKD%3DF',
+    'https://query1.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2C%5EN225',
   ];
   function tryYF(i) {
-    if (i >= yfUrls.length) { tryStooq(); return; }
+    if (i >= yfUrls.length) { tryFMP(); return; }
     fetch(yfUrls[i])
       .then(function(r) { if (!r.ok) throw 0; return r.json(); })
       .then(function(d) {
@@ -1996,46 +2013,55 @@ function fetchMarketData() {
         if (!rs.length) throw 0;
         rs.forEach(function(q) {
           var p = q.regularMarketPrice, c = q.regularMarketChangePercent || 0;
-          if (q.symbol === '^DJI') setMC('dow', commaInt(Math.round(p)), c, true);
-          if (q.symbol === 'NKD=F' || q.symbol === '^N225') setMC('nkd', commaInt(Math.round(p)), c, true);
-          if (q.symbol === 'EURJPY=X') {
-            gEurJpy = Math.round(p * 100) / 100;
-            setMC('eurjpy', gEurJpy.toFixed(2), c, true);
-          }
+          if (q.symbol === '^DJI') setMC('dow', commaInt(Math.round(p)), c, true, false);
+          if (q.symbol === 'NKD=F' || q.symbol === '^N225') setMC('nkd', commaInt(Math.round(p)), c, true, false);
         });
       })
       .catch(function() { tryYF(i + 1); });
   }
-
-  // ④ stooq.com フォールバック（Yahoo Finance が全滅した場合）
-  function tryStooq() {
-    if (gEurJpy > 0) setMC('eurjpy', gEurJpy.toFixed(2), 0, false);
-    ['%5Edji', '%5En225'].forEach(function(sym, idx) {
-      fetch('https://stooq.com/q/l/?s=' + sym + '&f=sd2t2ohlcv&h&e=json')
+  // ④ Financial Modeling Prep デモキー フォールバック
+  function tryFMP() {
+    ['%5EDJI', '%5EN225'].forEach(function(sym, idx) {
+      fetch('https://financialmodelingprep.com/api/v3/quote/' + sym + '?apikey=demo')
         .then(function(r) { return r.json(); })
         .then(function(d) {
-          var s = d.symbols && d.symbols[0];
-          if (s && s.close) {
-            var key = idx === 0 ? 'dow' : 'nkd';
-            setMC(key, commaInt(Math.round(s.close)), 0, false);
+          if (d && d[0] && d[0].price) {
+            setMC(idx === 0 ? 'dow' : 'nkd',
+                  commaInt(Math.round(d[0].price)),
+                  d[0].changesPercentage || 0, true, false);
           }
         }).catch(function() {});
     });
   }
   tryYF(0);
 
-  // ⑤ BitradeX API: BTX/USDT
-  fetch('https://www.bitradex.ai/api/v2/peatio/public/markets/tickers')
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      var btx = d['btxusdt'] || d['BTXUSDT'] || d['btx_usdt'];
-      if (btx && btx.ticker) {
-        var last = parseFloat(btx.ticker.last || btx.ticker.price || 0);
-        var open = parseFloat(btx.ticker.open || last);
+  // ⑤ BitradeX API: BTX/USDT（USD＋JPY両方表示）
+  var btxUrls = [
+    'https://www.bitradex.ai/api/v2/peatio/public/markets/btxusdt/tickers',
+    'https://www.bitradex.ai/api/v2/peatio/public/markets/tickers',
+    'https://www.bitradex.ai/api/v2/peatio/public/markets/btx_usdt/tickers',
+  ];
+  function tryBTX(i) {
+    if (i >= btxUrls.length) { setMC('btx', '---', 0, false, false); return; }
+    fetch(btxUrls[i])
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var tk = i === 0 ? (d.ticker || d)
+               : i === 2 ? (d.ticker || d)
+               : ((d['btxusdt'] || d['BTXUSDT'] || d['btx_usdt'] || {}).ticker);
+        if (!tk) throw 0;
+        var last = parseFloat(tk.last || tk.price || tk.close || 0);
+        var open = parseFloat(tk.open || last);
+        if (!(last > 0)) throw 0;
         var chg = open > 0 ? ((last - open) / open * 100) : 0;
-        if (last > 0) setMC('btx', '$' + last.toFixed(4), chg, chg !== 0);
-      }
-    }).catch(function() { setMC('btx', '取得不可', 0, false); });
+        var jpyVal = gJpyRate > 0 ? (last * gJpyRate) : 0;
+        var html = '$' + last.toFixed(4)
+          + (jpyVal > 0 ? '<br><span style="font-size:0.72rem;color:var(--muted);font-weight:600">¥' + jpyVal.toFixed(2) + '</span>' : '');
+        setMC('btx', html, Math.abs(chg) > 0.001 ? chg : 0, Math.abs(chg) > 0.001, true);
+      })
+      .catch(function() { tryBTX(i + 1); });
+  }
+  tryBTX(0);
 }
 
 // ===== 起動 =====
