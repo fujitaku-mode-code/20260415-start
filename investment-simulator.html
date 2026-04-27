@@ -496,17 +496,21 @@
     .ticker-sep  { color:var(--accent); opacity:0.4; font-size:0.7rem; }
     body.dark .ticker-wrap { background:#f0e8d0; }
     body.dark .ticker-item { color:#1c1a14; }
-    /* ===== マーケット指標グリッド ===== */
-    .market-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:14px; }
-    .market-card {
-      background:var(--white); border:1.5px solid var(--border); border-radius:12px;
-      padding:10px 12px; min-width:0;
+    /* ===== マーケット指標リスト ===== */
+    .market-list {
+      border:1.5px solid var(--border); border-radius:12px;
+      overflow:hidden; margin-bottom:14px; background:var(--white);
     }
-    .mc-label { font-size:0.62rem; color:var(--muted); font-weight:700; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:3px; }
-    .mc-value { font-size:1.05rem; font-weight:900; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .mc-change { font-size:0.7rem; font-weight:700; margin-top:2px; color:var(--muted); }
-    .mc-change.up { color:#0a9e6d; }
-    .mc-change.down { color:#e05050; }
+    .ml-row {
+      display:flex; align-items:center;
+      padding:9px 14px; border-bottom:1px solid var(--border); gap:10px;
+    }
+    .ml-row:last-child { border-bottom:none; }
+    .ml-label { font-size:0.72rem; font-weight:700; color:var(--muted); flex:0 0 100px; white-space:nowrap; }
+    .ml-val { font-size:0.9rem; font-weight:900; color:var(--text); flex:1; white-space:nowrap; }
+    .ml-chg { font-size:0.72rem; font-weight:700; white-space:nowrap; text-align:right; flex-shrink:0; }
+    .ml-chg.up { color:#0a9e6d; }
+    .ml-chg.down { color:#e05050; }
     /* ===== 印刷エリア ===== */
     #print-area { display:none; }
     @media print {
@@ -835,37 +839,42 @@
     </div>
   </div>
 
-  <!-- マーケット指標パネル -->
-  <div class="market-grid">
-    <div class="market-card">
-      <div class="mc-label">ドル円</div>
-      <div class="mc-value" id="mcv-usdjpy">---</div>
-      <div class="mc-change" id="mcc-usdjpy">取得中</div>
+  <!-- マーケット指標リスト -->
+  <div class="market-list">
+    <div class="ml-row">
+      <span class="ml-label">ドル円</span>
+      <span class="ml-val" id="mcv-usdjpy">---</span>
+      <span class="ml-chg" id="mcc-usdjpy"></span>
     </div>
-    <div class="market-card">
-      <div class="mc-label">ユーロ円</div>
-      <div class="mc-value" id="mcv-eurjpy">---</div>
-      <div class="mc-change" id="mcc-eurjpy">取得中</div>
+    <div class="ml-row">
+      <span class="ml-label">ユーロ円</span>
+      <span class="ml-val" id="mcv-eurjpy">---</span>
+      <span class="ml-chg" id="mcc-eurjpy"></span>
     </div>
-    <div class="market-card">
-      <div class="mc-label">NYダウ</div>
-      <div class="mc-value" id="mcv-dow">---</div>
-      <div class="mc-change" id="mcc-dow">取得中</div>
+    <div class="ml-row">
+      <span class="ml-label">NYダウ</span>
+      <span class="ml-val" id="mcv-dow">---</span>
+      <span class="ml-chg" id="mcc-dow"></span>
     </div>
-    <div class="market-card">
-      <div class="mc-label">日経平均先物</div>
-      <div class="mc-value" id="mcv-nkd">---</div>
-      <div class="mc-change" id="mcc-nkd">取得中</div>
+    <div class="ml-row">
+      <span class="ml-label">日経平均先物</span>
+      <span class="ml-val" id="mcv-nkd">---</span>
+      <span class="ml-chg" id="mcc-nkd"></span>
     </div>
-    <div class="market-card">
-      <div class="mc-label">ゴールド（$/oz）</div>
-      <div class="mc-value" id="mcv-gold">---</div>
-      <div class="mc-change" id="mcc-gold">取得中</div>
+    <div class="ml-row">
+      <span class="ml-label">ゴールド($/oz)</span>
+      <span class="ml-val" id="mcv-gold">---</span>
+      <span class="ml-chg" id="mcc-gold"></span>
     </div>
-    <div class="market-card">
-      <div class="mc-label">BTC / JPY</div>
-      <div class="mc-value" id="mcv-btc">---</div>
-      <div class="mc-change" id="mcc-btc">取得中</div>
+    <div class="ml-row">
+      <span class="ml-label">BTC / JPY</span>
+      <span class="ml-val" id="mcv-btc">---</span>
+      <span class="ml-chg" id="mcc-btc"></span>
+    </div>
+    <div class="ml-row">
+      <span class="ml-label">BTX / USDT</span>
+      <span class="ml-val" id="mcv-btx">---</span>
+      <span class="ml-chg" id="mcc-btx"></span>
     </div>
   </div>
 
@@ -1936,29 +1945,29 @@ function titleRefresh() {
   requestAnimationFrame(function() { switchTab(curTab); });
 }
 
-// ===== マーケット指標: カード更新ユーティリティ =====
+// ===== マーケット指標: 行更新ユーティリティ =====
 function setMC(key, value, changePct, hasChange) {
   var vel = document.getElementById('mcv-' + key);
   var cel = document.getElementById('mcc-' + key);
   if (!vel) return;
   vel.textContent = value;
-  if (cel) {
-    if (hasChange === false || changePct === 0) {
-      cel.textContent = ''; cel.className = 'mc-change';
-    } else {
-      var cls = changePct > 0 ? 'up' : 'down';
-      cel.className = 'mc-change ' + cls;
-      cel.textContent = (changePct > 0 ? '▲' : '▼') + Math.abs(changePct).toFixed(2) + '%';
-    }
+  if (!cel) return;
+  if (!hasChange || changePct === 0) {
+    cel.textContent = ''; cel.className = 'ml-chg';
+  } else {
+    var cls = changePct > 0 ? 'up' : 'down';
+    cel.className = 'ml-chg ' + cls;
+    cel.textContent = (changePct > 0 ? '▲' : '▼') + Math.abs(changePct).toFixed(2) + '%';
   }
 }
 
 // ===== マーケット指標: 一括取得 =====
 function fetchMarketData() {
-  // USD/JPY（既存データから即時反映）
+  // ① USD/JPY・EUR/JPY（既存データから即時反映）
   if (gJpyRate > 0) setMC('usdjpy', gJpyRate, 0, false);
+  if (gEurJpy > 0) setMC('eurjpy', gEurJpy.toFixed(2), 0, false);
 
-  // CoinGecko: BTC + ゴールド(PAXG)
+  // ② CoinGecko: BTC + ゴールド(PAXG) — CORSあり、モバイルでも動作
   fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,pax-gold&vs_currencies=jpy,usd&include_24hr_change=true')
     .then(function(r) { return r.json(); })
     .then(function(d) {
@@ -1972,24 +1981,61 @@ function fetchMarketData() {
       }
     }).catch(function() {});
 
-  // Yahoo Finance: NYダウ・日経平均先物・ユーロ円
-  fetch('https://query2.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2CNKD%3DF%2CEURJPY%3DX&corsDomain=finance.yahoo.com')
+  // ③ Yahoo Finance: NYダウ・日経先物・ユーロ円 — 複数エンドポイントを順番に試行
+  var yfUrls = [
+    'https://query1.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2CNKD%3DF%2CEURJPY%3DX',
+    'https://query2.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2CNKD%3DF%2CEURJPY%3DX',
+    'https://query1.finance.yahoo.com/v7/finance/quote?symbols=%5EDJI%2C%5EN225%2CEURJPY%3DX',
+  ];
+  function tryYF(i) {
+    if (i >= yfUrls.length) { tryStooq(); return; }
+    fetch(yfUrls[i])
+      .then(function(r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function(d) {
+        var rs = (d.quoteResponse && d.quoteResponse.result) || [];
+        if (!rs.length) throw 0;
+        rs.forEach(function(q) {
+          var p = q.regularMarketPrice, c = q.regularMarketChangePercent || 0;
+          if (q.symbol === '^DJI') setMC('dow', commaInt(Math.round(p)), c, true);
+          if (q.symbol === 'NKD=F' || q.symbol === '^N225') setMC('nkd', commaInt(Math.round(p)), c, true);
+          if (q.symbol === 'EURJPY=X') {
+            gEurJpy = Math.round(p * 100) / 100;
+            setMC('eurjpy', gEurJpy.toFixed(2), c, true);
+          }
+        });
+      })
+      .catch(function() { tryYF(i + 1); });
+  }
+
+  // ④ stooq.com フォールバック（Yahoo Finance が全滅した場合）
+  function tryStooq() {
+    if (gEurJpy > 0) setMC('eurjpy', gEurJpy.toFixed(2), 0, false);
+    ['%5Edji', '%5En225'].forEach(function(sym, idx) {
+      fetch('https://stooq.com/q/l/?s=' + sym + '&f=sd2t2ohlcv&h&e=json')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          var s = d.symbols && d.symbols[0];
+          if (s && s.close) {
+            var key = idx === 0 ? 'dow' : 'nkd';
+            setMC(key, commaInt(Math.round(s.close)), 0, false);
+          }
+        }).catch(function() {});
+    });
+  }
+  tryYF(0);
+
+  // ⑤ BitradeX API: BTX/USDT
+  fetch('https://www.bitradex.ai/api/v2/peatio/public/markets/tickers')
     .then(function(r) { return r.json(); })
     .then(function(d) {
-      var rs = (d.quoteResponse && d.quoteResponse.result) || [];
-      rs.forEach(function(q) {
-        var p = q.regularMarketPrice, c = q.regularMarketChangePercent || 0;
-        if (q.symbol === '^DJI') setMC('dow', commaInt(Math.round(p)), c, true);
-        if (q.symbol === 'NKD=F') setMC('nkd', commaInt(Math.round(p)), c, true);
-        if (q.symbol === 'EURJPY=X') {
-          gEurJpy = Math.round(p * 100) / 100;
-          setMC('eurjpy', gEurJpy.toFixed(2), c, true);
-        }
-      });
-    }).catch(function() {
-      // Yahoo Finance失敗時：計算値で補完
-      if (gEurJpy > 0) setMC('eurjpy', gEurJpy.toFixed(2), 0, false);
-    });
+      var btx = d['btxusdt'] || d['BTXUSDT'] || d['btx_usdt'];
+      if (btx && btx.ticker) {
+        var last = parseFloat(btx.ticker.last || btx.ticker.price || 0);
+        var open = parseFloat(btx.ticker.open || last);
+        var chg = open > 0 ? ((last - open) / open * 100) : 0;
+        if (last > 0) setMC('btx', '$' + last.toFixed(4), chg, chg !== 0);
+      }
+    }).catch(function() { setMC('btx', '取得不可', 0, false); });
 }
 
 // ===== 起動 =====
