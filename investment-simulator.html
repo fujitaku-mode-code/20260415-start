@@ -522,11 +522,24 @@
       border-top-color:rgba(26,58,143,0.12);
     }
     body.dark .mkt-grp.fx-grp { color:#90caf9; background:rgba(144,202,249,0.08); }
-    /* 暗号資産パネル 行: ウォームクリーム */
-    #nst-0 .mkt-row2 { background: rgba(255,248,230,0.8); }
-    #nst-0 .mkt-row2:nth-child(odd) { background: rgba(254,243,210,0.6); }
-    body.dark #nst-0 .mkt-row2 { background: rgba(48,38,18,0.5); }
-    body.dark #nst-0 .mkt-row2:nth-child(odd) { background: rgba(38,30,12,0.5); }
+    /* 暗号資産パネル: ダーク・スレート スタイル */
+    #nst-0 .mkt-wrap { background:#111827; border-color:#1f2937; }
+    #nst-0 .mkt-grp.crypto-grp {
+      background:#0f172a; color:#f87171;
+      border-top-color:#1f2937; border-bottom:none;
+    }
+    #nst-0 .mkt-row2 { background:#111827; border-top-color:#1f2937; }
+    #nst-0 .mkt-row2:nth-child(even) { background:#0f172a; }
+    #nst-0 .mkt-sym2 { color:#e5e7eb; }
+    #nst-0 .mkt-sub2 { color:#6b7280; }
+    #nst-0 .mkt-price { color:#f9fafb; }
+    #nst-0 .mkt-chg.up   { color:#34d399; }
+    #nst-0 .mkt-chg.down { color:#f87171; }
+    #nst-0 .mkt-sub-row  { background:#0d1524; }
+    body.dark #nst-0 .mkt-wrap { background:#06090f; border-color:#1a2030; }
+    body.dark #nst-0 .mkt-grp.crypto-grp { background:#04060c; border-top-color:#1a2030; }
+    body.dark #nst-0 .mkt-row2 { background:#06090f; border-top-color:#1a2030; }
+    body.dark #nst-0 .mkt-row2:nth-child(even) { background:#04060c; }
     /* 為替・株式パネル 行: クールブルー */
     #nst-1 .mkt-row2 { background: rgba(235,244,255,0.8); }
     #nst-1 .mkt-row2:nth-child(odd) { background: rgba(220,236,255,0.6); }
@@ -534,13 +547,13 @@
     body.dark #nst-1 .mkt-row2:nth-child(odd) { background: rgba(12,22,45,0.5); }
     /* ===== 経済指標ティッカー ===== */
     .ticker-wrap {
-      background:var(--text); overflow:hidden; border-radius:10px;
-      margin-bottom:14px; height:36px; display:flex; align-items:center;
+      background:var(--text); overflow:hidden; border-radius:7px;
+      margin-bottom:10px; height:22px; display:flex; align-items:center;
     }
     .ticker-label {
-      background:var(--accent); color:#fff; font-size:0.65rem; font-weight:900;
-      padding:0 10px; height:100%; display:flex; align-items:center;
-      white-space:nowrap; flex-shrink:0; letter-spacing:0.08em;
+      background:var(--accent); color:#fff; font-size:0.55rem; font-weight:900;
+      padding:0 7px; height:100%; display:flex; align-items:center;
+      white-space:nowrap; flex-shrink:0; letter-spacing:0.06em;
     }
     .ticker-body { flex:1; overflow:hidden; height:100%; position:relative; }
     .ticker-items {
@@ -554,8 +567,8 @@
       to   { transform:translateX(-50%); }
     }
     .ticker-item {
-      color:var(--bg); font-size:0.74rem; font-weight:600;
-      padding:0 14px; font-family:'Noto Sans JP',sans-serif;
+      color:var(--bg); font-size:0.62rem; font-weight:600;
+      padding:0 10px; font-family:'Noto Sans JP',sans-serif;
     }
     .ticker-up   { color:#26d89a !important; }
     .ticker-down { color:#f08080 !important; }
