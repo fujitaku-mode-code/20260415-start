@@ -2450,12 +2450,14 @@ function fetchBitradexFeed() {
           if (item.pubDate) {
             try { var dt = new Date(item.pubDate); ds = (dt.getMonth()+1)+'/'+dt.getDate(); } catch(e) {}
           }
-          return { title: item.title, link: item.link, date: ds, pubDate: item.pubDate, src: 'Medium' };
+          return { title: item.title, link: item.link, date: ds, pubDate: item.pubDate,
+                   description: item.content || item.description || '', src: 'Medium' };
         });
         renderBitradexFeed(items.length ? items : d.items.map(function(item) {
           var ds = '';
           if (item.pubDate) { try { var dt = new Date(item.pubDate); ds = (dt.getMonth()+1)+'/'+dt.getDate(); } catch(e) {} }
-          return { title: item.title, link: item.link, date: ds, src: 'Medium' };
+          return { title: item.title, link: item.link, date: ds,
+                   description: item.content || item.description || '', src: 'Medium' };
         }));
       } else { tryProxies(); }
     }).catch(function() { if (!decided) tryProxies(); });
@@ -2486,41 +2488,109 @@ function parseMediumRSS(xml) {
   var items = [];
   try {
     var doc = new DOMParser().parseFromString(xml, 'text/xml');
-    Array.prototype.slice.call(doc.querySelectorAll('item')).slice(0, 10).forEach(function(node) {
+    Array.prototype.slice.call(doc.querySelectorAll('item')).slice(0, 15).forEach(function(node) {
       var titleEl = node.querySelector('title');
       var title = (titleEl ? titleEl.textContent.trim() : '').replace(/<!\[CDATA\[|\]\]>/g, '');
       if (!title) return;
       var linkEl = node.querySelector('link');
       var link = linkEl ? (linkEl.textContent.trim() || '') : '';
-      var dateStr = '';
+      var dateStr = '', pubDate = '';
       var dateEl = node.querySelector('pubDate');
-      if (dateEl) { try { var d = new Date(dateEl.textContent.trim()); dateStr = (d.getMonth()+1)+'/'+d.getDate(); } catch(e) {} }
-      items.push({ title: title, link: link, date: dateStr, src: 'Medium' });
+      if (dateEl) {
+        pubDate = dateEl.textContent.trim();
+        try { var d2 = new Date(pubDate); dateStr = (d2.getMonth()+1)+'/'+d2.getDate(); } catch(e) {}
+      }
+      var description = '';
+      var descEl = node.querySelector('encoded') || node.querySelector('description');
+      if (descEl) description = descEl.textContent.replace(/<!\[CDATA\[|\]\]>/g, '').trim();
+      items.push({ title: title, link: link, date: dateStr, pubDate: pubDate, description: description, src: 'Medium' });
     });
   } catch(e) {}
   return items;
 }
+
+// ===== HTML→テキスト変換 =====
+function stripHtml(html) {
+  if (!html) return '';
+  var d = document.createElement('div');
+  d.innerHTML = html;
+  return (d.textContent || d.innerText || '').replace(/\s+/g, ' ').trim();
+}
+
+// ===== Google翻訳（非公開エンドポイント）=====
+function translateToJa(text, callback) {
+  if (!text || text.trim().length < 5) { callback(text); return; }
+  var q = text.trim().slice(0, 1200);
+  fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ja&dt=t&q=' + encodeURIComponent(q))
+    .then(function(r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function(d) {
+      var out = '';
+      if (d && d[0]) d[0].forEach(function(c) { if (c && c[0]) out += c[0]; });
+      callback(out.trim() || text);
+    })
+    .catch(function() { callback(text); });
+}
+
 function renderBitradexFeed(items) {
   var el = document.getElementById('bitradexFeedList');
   if (!el) return;
+
   if (!items || !items.length) {
-    // フォールバック: 各公式チャンネルへのリンクカードを表示
-    var fallback = [
-      { src: 'X / Twitter', title: 'Bitradex 公式X ─ 最新情報・お知らせ', link: 'https://x.com/Bitradexen' },
-      { src: 'Medium',      title: 'BitradeX Official ─ 公式ブログ・解説記事', link: 'https://medium.com/@BitradeX_Official' },
-      { src: 'YouTube',     title: 'BitradeX 公式YouTube ─ 動画・チュートリアル', link: 'https://www.youtube.com/@BitradeX' },
-      { src: 'Telegram',    title: 'BitradeX CEX ─ Telegramコミュニティ', link: 'https://t.me/BitradeXCEX' },
-    ];
-    el.innerHTML = fallback.map(function(o) {
-      return '<a class="news-card" href="'+o.link+'" target="_blank" rel="noopener">' +
-        '<div class="news-card-meta"><span class="news-card-src">'+o.src+'</span></div>' +
-        '<div class="news-card-title">'+o.title+'</div></a>';
-    }).join('');
+    el.innerHTML = '<div style="text-align:center;padding:20px 0">' +
+      '<p style="color:var(--muted);font-size:0.85rem;margin-bottom:10px">記事を取得できませんでした</p>' +
+      '<a href="https://medium.com/@BitradeX_Official" target="_blank" rel="noopener" ' +
+      'style="color:var(--accent);font-weight:700;font-size:0.85rem">Medium公式ブログを見る →</a></div>';
     return;
   }
-  el.innerHTML = items.map(function(o) {
-    return '<a class="news-card" href="'+(o.link||'https://medium.com/@BitradeX_Official')+'" target="_blank" rel="noopener"><div class="news-card-meta"><span class="news-card-src">'+o.src+'</span>'+(o.date?'<span class="news-card-date">'+o.date+'</span>':'')+'</div><div class="news-card-title">'+o.title+'</div></a>';
+
+  // 記事ごとの骨格HTMLを生成（本文は「翻訳中...」で埋め）
+  el.innerHTML = items.map(function(o, idx) {
+    var ds = o.date ? '<span class="news-card-date">' + o.date + '</span>' : '';
+    return '<div style="padding:14px 0;border-bottom:1px solid var(--border)" id="btx-a-' + idx + '">' +
+      '<div class="news-card-meta"><span class="news-card-src">Medium</span>' + ds + '</div>' +
+      '<a href="' + (o.link || '#') + '" target="_blank" rel="noopener" ' +
+         'style="display:block;font-size:0.92rem;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:8px;text-decoration:none">' +
+         o.title + '</a>' +
+      '<div id="btx-body-' + idx + '" ' +
+         'style="font-size:0.78rem;color:var(--muted);line-height:1.8;white-space:pre-line">' +
+         '<span style="opacity:0.5">翻訳中...</span></div>' +
+      '<div style="margin-top:8px;text-align:right">' +
+         '<a href="' + (o.link || '#') + '" target="_blank" rel="noopener" ' +
+            'style="font-size:0.72rem;font-weight:700;color:var(--accent)">→ 全文を読む</a></div>' +
+    '</div>';
   }).join('');
+
+  // 記事を1件ずつ順番に翻訳（レート制限を避けるため0.5秒ずつ間隔）
+  var idx = 0;
+  function translateNext() {
+    if (idx >= items.length) return;
+    var item = items[idx];
+    var bodyEl = document.getElementById('btx-body-' + idx);
+    idx++;
+
+    var raw = stripHtml(item.description || item.content || '');
+    if (!raw || raw.length < 10) {
+      if (bodyEl) bodyEl.innerHTML = '';
+      translateNext();
+      return;
+    }
+
+    translateToJa(raw, function(translated) {
+      if (bodyEl) {
+        // 句点・改行で文を分割し、最大10文を要約として表示
+        var sents = translated.split(/[。！？\n]+/).filter(function(s) { return s.trim().length > 3; });
+        var summary;
+        if (sents.length > 0) {
+          summary = sents.slice(0, 10).join('。\n') + (sents.length > 10 ? '\n...' : '');
+        } else {
+          summary = translated.slice(0, 500) + (translated.length > 500 ? '...' : '');
+        }
+        bodyEl.textContent = summary;
+      }
+      setTimeout(translateNext, 500);
+    });
+  }
+  translateNext();
 }
 
 
