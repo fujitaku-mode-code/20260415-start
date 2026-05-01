@@ -768,19 +768,23 @@
   <div class="card-title" style="display:none"></div>
 
   <!-- 為替レートバナー -->
-  <div class="rate-banner" style="align-items:center">
+  <div class="rate-banner">
     <div style="flex:1;min-width:0">
       <div style="margin-bottom:4px;padding-left:1em"><span class="step-badge">①「更新」ボタンを押し日本円を表示</span></div>
-      <div style="display:flex;align-items:baseline;gap:5px;padding-left:1em">
-        <span class="rate-num" id="rateNum">---</span>
-        <span class="rate-unit">円 / ドル</span>
-      </div>
-      <div style="padding-left:1em;margin-top:3px">
-        <span class="rate-date" id="rateDate">取得中...</span>
-        <span class="rate-date" id="rateTime" style="margin-left:4px"></span>
+      <div style="display:flex;align-items:flex-start;gap:8px;padding-left:1em">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:baseline;gap:5px;flex-wrap:wrap">
+            <span class="rate-num" id="rateNum">---</span>
+            <span class="rate-unit">円 / ドル</span>
+          </div>
+          <div style="margin-top:3px">
+            <span class="rate-date" id="rateDate">取得中...</span>
+            <span class="rate-date" id="rateTime" style="margin-left:4px"></span>
+          </div>
+        </div>
+        <canvas id="usdJpyMiniChart" width="68" height="40" style="flex-shrink:0;margin-top:2px;border-radius:5px"></canvas>
       </div>
     </div>
-    <canvas id="usdJpyMiniChart" width="76" height="44" style="flex-shrink:0;margin:0 6px"></canvas>
     <button class="rate-btn" onclick="fetchRate()" style="padding:12px 14px;font-size:0.85rem;font-weight:700;flex-shrink:0;line-height:1">更新</button>
   </div>
 
@@ -1253,7 +1257,7 @@
   <div class="news-sub-bar">
     <button class="news-sub-btn active" id="nstBtn-0" onclick="switchNewsSubTab(0)">暗号資産</button>
     <button class="news-sub-btn" id="nstBtn-1" onclick="switchNewsSubTab(1)">為替・株式・商品</button>
-    <button class="news-sub-btn" id="nstBtn-2" onclick="switchNewsSubTab(2)">bitradex</button>
+    <button class="news-sub-btn" id="nstBtn-2" onclick="switchNewsSubTab(2)">bitradeX公式</button>
   </div>
 
   <!-- 旧mc-cell（JS互換のため非表示で残す） -->
