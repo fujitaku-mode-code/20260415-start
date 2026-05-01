@@ -1301,7 +1301,11 @@
       <span class="mkt-grp crypto-grp">仮想通貨</span>
       <div class="mkt-row2">
         <div class="mkt-l2"><div class="mkt-ico2" style="background:#f7931a">₿</div><span class="mkt-sym2">BTC</span></div>
-        <span class="mkt-price" id="mkt-p-btc">---</span><span class="mkt-chg" id="mkt-c-btc">---</span>
+        <div style="text-align:right;margin-right:8px;min-width:90px">
+          <div class="mkt-price" id="mkt-p-btc" style="min-width:0;margin-right:0">---</div>
+          <div id="mkt-p-btc-usd" style="font-size:0.58rem;color:#6b7280;font-weight:600;line-height:1.3">---</div>
+        </div>
+        <span class="mkt-chg" id="mkt-c-btc">---</span>
       </div>
       <div class="mkt-row2">
         <div class="mkt-l2"><div class="mkt-ico2" style="background:#627eea">Ξ</div><span class="mkt-sym2">ETH</span></div>
@@ -1379,13 +1383,27 @@
 
   <!-- パネル2: bitradeX公式 -->
   <div id="nst-2" class="nst-panel">
+
+    <!-- YouTube サムネイル -->
+    <a href="https://youtu.be/M6gd3l3LuWw?si=f9xlfthEyU5q-4eT" target="_blank" rel="noopener"
+       style="display:block;position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.22)">
+      <img src="https://img.youtube.com/vi/M6gd3l3LuWw/hqdefault.jpg" alt="BitradeX 公式動画"
+           style="width:100%;display:block;aspect-ratio:16/9;object-fit:cover">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.28)">
+        <div style="width:54px;height:54px;background:#ff0000;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(255,0,0,0.45)">
+          <svg width="22" height="22" fill="#fff" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+    </a>
+
+    <!-- X (Twitter) フィード -->
     <div class="card">
       <div class="card-title">
-        <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📡</span>
-        最新記事・お知らせ
-        <span style="font-size:0.68rem;font-weight:400;color:var(--muted);margin-left:4px">タップで記事へ</span>
+        <span class="card-title-icon" style="background:#000;font-size:0.78rem;color:#fff;font-weight:900">𝕏</span>
+        @Bitradexen 最新情報
+        <span style="font-size:0.68rem;font-weight:400;color:var(--muted);margin-left:4px">タップで詳細へ</span>
       </div>
-      <div id="bitradexFeedList"><div style="text-align:center;padding:20px;color:var(--muted);font-size:0.85rem">読み込み中...</div></div>
+      <div id="xFeedList"><div style="text-align:center;padding:20px;color:var(--muted);font-size:0.85rem">読み込み中...</div></div>
     </div>
   </div>
 
@@ -1620,10 +1638,12 @@ function fetchRate() {
             var uc = d.tether.jpy_24h_change || 0;
             setMC('usdt', '¥' + rate.toFixed(2), uc, true, false);
           }
-          // BTC
+          // BTC（JPY + USD 両表示）
           if (d.bitcoin && d.bitcoin.jpy) {
             var bc = d.bitcoin.jpy_24h_change || 0;
             setMC('btc', '¥' + commaInt(Math.round(d.bitcoin.jpy / 1000) * 1000), bc, true, false);
+            var btcUsdEl = document.getElementById('mkt-p-btc-usd');
+            if (btcUsdEl && d.bitcoin.usd) btcUsdEl.textContent = '$' + commaInt(Math.round(d.bitcoin.usd));
           }
           // ETH
           if (d.ethereum && d.ethereum.jpy) {
@@ -2607,6 +2627,98 @@ function renderBitradexFeed(items) {
 }
 
 
+// ===== X (Twitter) フィード =====
+function fetchXFeed() {
+  var el = document.getElementById('xFeedList');
+  if (!el) return;
+  var decided = false;
+
+  // Nitter / RSSHub の複数インスタンスを順に試行
+  var RSS_SOURCES = [
+    'https://rsshub.app/twitter/user/Bitradexen',
+    'https://nitter.poast.org/Bitradexen/rss',
+    'https://nitter.privacydev.net/Bitradexen/rss',
+    'https://nitter.net/Bitradexen/rss',
+    'https://nitter.cz/Bitradexen/rss',
+  ];
+  var PROXIES = ['https://api.allorigins.win/raw?url=', 'https://corsproxy.io/?'];
+
+  var queue = [];
+  RSS_SOURCES.forEach(function(src) {
+    PROXIES.forEach(function(proxy) { queue.push(proxy + encodeURIComponent(src)); });
+  });
+
+  var qi = 0;
+  function tryNext() {
+    if (decided || qi >= queue.length) {
+      if (!decided) { decided = true; renderXFeed([]); }
+      return;
+    }
+    var url = queue[qi++];
+    var timer = setTimeout(function() { tryNext(); }, 8000);
+    fetch(url)
+      .then(function(r) { clearTimeout(timer); if (!r.ok) throw 0; return r.text(); })
+      .then(function(text) {
+        if (decided) return;
+        var items = parseXRSS(text);
+        if (items && items.length > 0) { decided = true; renderXFeed(items); }
+        else tryNext();
+      })
+      .catch(function() { clearTimeout(timer); tryNext(); });
+  }
+  tryNext();
+  setTimeout(function() { if (!decided) { decided = true; renderXFeed([]); } }, 25000);
+}
+
+function parseXRSS(text) {
+  var items = [];
+  try {
+    var doc = new DOMParser().parseFromString(text, 'text/xml');
+    Array.prototype.slice.call(doc.querySelectorAll('item')).slice(0, 20).forEach(function(node) {
+      var titleEl = node.querySelector('title');
+      var rawTitle = titleEl ? titleEl.textContent.replace(/<!\[CDATA\[|\]\]>/g, '').trim() : '';
+      var descEl = node.querySelector('description');
+      var rawDesc = descEl ? descEl.textContent.replace(/<!\[CDATA\[|\]\]>/g, '').trim() : '';
+      var body = stripHtml(rawDesc || rawTitle).slice(0, 400);
+      if (!body || body.length < 5) return;
+      var linkEl = node.querySelector('link');
+      var link = linkEl ? linkEl.textContent.trim() : 'https://x.com/Bitradexen';
+      var dateStr = '';
+      var dateEl = node.querySelector('pubDate');
+      if (dateEl) {
+        try { var d = new Date(dateEl.textContent.trim()); dateStr = (d.getMonth()+1)+'/'+d.getDate(); } catch(e) {}
+      }
+      items.push({ body: body, link: link, date: dateStr });
+    });
+  } catch(e) {}
+  return items;
+}
+
+function renderXFeed(items) {
+  var el = document.getElementById('xFeedList');
+  if (!el) return;
+  if (!items || !items.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px 0">' +
+      '<p style="color:var(--muted);font-size:0.82rem;margin-bottom:10px">投稿を取得できませんでした</p>' +
+      '<a href="https://x.com/Bitradexen" target="_blank" rel="noopener" ' +
+         'style="color:var(--accent);font-weight:700;font-size:0.85rem">X @Bitradexen を見る →</a></div>';
+    return;
+  }
+  el.innerHTML = items.map(function(o) {
+    var ds = o.date ? '<span class="news-card-date">' + o.date + '</span>' : '';
+    return '<div style="padding:12px 0;border-bottom:1px solid var(--border)">' +
+      '<div class="news-card-meta">' +
+        '<span class="news-card-src" style="background:#000;color:#fff;border-radius:4px">𝕏</span>' + ds +
+      '</div>' +
+      '<div style="font-size:0.83rem;color:var(--text);line-height:1.7;word-break:break-word">' + o.body + '</div>' +
+      '<div style="text-align:right;margin-top:6px">' +
+        '<a href="' + o.link + '" target="_blank" rel="noopener" ' +
+           'style="font-size:0.7rem;font-weight:700;color:var(--accent)">→ Xで見る</a>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
 // ===== 計算機 =====
 var calcState = { display: '0', prev: '', op: '', newNum: true };
 function openCalc() { document.getElementById('calcOverlay').classList.add('open'); }
@@ -2892,6 +3004,7 @@ window.onload = function() {
   fetchNewsHeadlines();
   fetchFxNewsHeadlines();
   fetchBitradexFeed();
+  fetchXFeed();
   // 5分毎にレート＆指標を自動更新、30分毎にニュースを更新
   setInterval(function() { fetchRate(); fetchMarketData(); }, 5 * 60 * 1000);
   setInterval(fetchNewsHeadlines, 30 * 60 * 1000);
