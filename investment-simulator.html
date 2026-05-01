@@ -521,8 +521,6 @@
       border-top-color:rgba(26,58,143,0.12);
     }
     body.dark .mkt-grp.fx-grp { color:#90caf9; background:rgba(144,202,249,0.08); }
-    /* USD/JPY ミニチャート */
-    #usdJpyMiniChart { display:block; border-radius:6px; }
     /* ===== 経済指標ティッカー ===== */
     .ticker-wrap {
       background:var(--text); overflow:hidden; border-radius:10px;
@@ -770,22 +768,17 @@
   <!-- 為替レートバナー -->
   <div class="rate-banner">
     <div style="flex:1;min-width:0">
-      <div style="margin-bottom:4px;padding-left:1em"><span class="step-badge">①「更新」ボタンを押し日本円を表示</span></div>
-      <div style="display:flex;align-items:flex-start;gap:8px;padding-left:1em">
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:baseline;gap:5px;flex-wrap:wrap">
-            <span class="rate-num" id="rateNum">---</span>
-            <span class="rate-unit">円 / ドル</span>
-          </div>
-          <div style="margin-top:3px">
-            <span class="rate-date" id="rateDate">取得中...</span>
-            <span class="rate-date" id="rateTime" style="margin-left:4px"></span>
-          </div>
-        </div>
-        <canvas id="usdJpyMiniChart" width="68" height="40" style="flex-shrink:0;margin-top:2px;border-radius:5px"></canvas>
+      <div style="margin-bottom:5px;padding-left:1em"><span class="step-badge">①「更新」ボタンを押し日本円を表示</span></div>
+      <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;padding-left:1em">
+        <span class="rate-num" id="rateNum">---</span>
+        <span class="rate-unit">円 / ドル</span>
+      </div>
+      <div style="padding-left:1em;margin-top:3px">
+        <span class="rate-date" id="rateDate">取得中...</span>
+        <span class="rate-date" id="rateTime" style="margin-left:4px"></span>
       </div>
     </div>
-    <button class="rate-btn" onclick="fetchRate()" style="padding:12px 14px;font-size:0.85rem;font-weight:700;flex-shrink:0;line-height:1">更新</button>
+    <button class="rate-btn" onclick="fetchRate()" style="padding:15px 18px;font-size:0.88rem;font-weight:700;flex-shrink:0;line-height:1">更新</button>
   </div>
 
   <!-- 投資額 -->
@@ -1360,17 +1353,9 @@
     </div>
   </div>
 
-  <!-- パネル2: bitradex -->
+  <!-- パネル2: bitradeX公式 -->
   <div id="nst-2" class="nst-panel">
-    <div class="card">
-      <div class="card-title">
-        <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📡</span>
-        Bitradex 最新情報
-        <span style="font-size:0.68rem;font-weight:400;color:var(--muted);margin-left:4px">タップで記事へ</span>
-      </div>
-      <div id="bitradexFeedList"><div style="text-align:center;padding:20px;color:var(--muted);font-size:0.85rem">読み込み中...</div></div>
-    </div>
-    <div class="links-section" style="margin-top:6px">
+    <div class="links-section" style="margin-bottom:14px">
       <div class="links-cat">公式アカウント・チャンネル</div>
       <div class="links-grid">
         <a class="link-card" href="https://x.com/Bitradexen" target="_blank" rel="noopener">
@@ -1394,6 +1379,14 @@
           <span class="link-arr">›</span>
         </a>
       </div>
+    </div>
+    <div class="card">
+      <div class="card-title">
+        <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📡</span>
+        最新記事・お知らせ
+        <span style="font-size:0.68rem;font-weight:400;color:var(--muted);margin-left:4px">タップで記事へ</span>
+      </div>
+      <div id="bitradexFeedList"><div style="text-align:center;padding:20px;color:var(--muted);font-size:0.85rem">読み込み中...</div></div>
     </div>
   </div>
 
@@ -2480,7 +2473,18 @@ function renderBitradexFeed(items) {
   var el = document.getElementById('bitradexFeedList');
   if (!el) return;
   if (!items || !items.length) {
-    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:0.85rem">最新情報を取得できませんでした</div>';
+    // フォールバック: 各公式チャンネルへのリンクカードを表示
+    var fallback = [
+      { src: 'X / Twitter', title: 'Bitradex 公式X ─ 最新情報・お知らせ', link: 'https://x.com/Bitradexen' },
+      { src: 'Medium',      title: 'BitradeX Official ─ 公式ブログ・解説記事', link: 'https://medium.com/@BitradeX_Official' },
+      { src: 'YouTube',     title: 'BitradeX 公式YouTube ─ 動画・チュートリアル', link: 'https://www.youtube.com/@BitradeX' },
+      { src: 'Telegram',    title: 'BitradeX CEX ─ Telegramコミュニティ', link: 'https://t.me/BitradeXCEX' },
+    ];
+    el.innerHTML = fallback.map(function(o) {
+      return '<a class="news-card" href="'+o.link+'" target="_blank" rel="noopener">' +
+        '<div class="news-card-meta"><span class="news-card-src">'+o.src+'</span></div>' +
+        '<div class="news-card-title">'+o.title+'</div></a>';
+    }).join('');
     return;
   }
   el.innerHTML = items.map(function(o) {
@@ -2488,53 +2492,6 @@ function renderBitradexFeed(items) {
   }).join('');
 }
 
-// ===== USD/JPY ミニスパークライン =====
-function fetchUsdJpyMiniChart() {
-  var urls = [
-    'https://query1.finance.yahoo.com/v8/finance/chart/USDJPY=X?interval=1d&range=30d',
-    'https://query2.finance.yahoo.com/v8/finance/chart/USDJPY=X?interval=1d&range=30d',
-    'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/USDJPY=X?interval=1d&range=30d'),
-  ];
-  var done = false;
-  function tryIdx(i) {
-    if (done || i >= urls.length) return;
-    fetch(urls[i])
-      .then(function(r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function(d) {
-        if (done) return;
-        var res = d && d.chart && d.chart.result && d.chart.result[0];
-        if (!res) throw 0;
-        var closes = res.indicators && res.indicators.quote && res.indicators.quote[0] && res.indicators.quote[0].close;
-        if (!closes || closes.length < 5) throw 0;
-        done = true;
-        drawUsdJpySparkline(closes.filter(function(v) { return v !== null && v !== undefined; }));
-      })
-      .catch(function() { tryIdx(i + 1); });
-  }
-  tryIdx(0);
-}
-function drawUsdJpySparkline(data) {
-  var canvas = document.getElementById('usdJpyMiniChart');
-  if (!canvas || !data.length) return;
-  var ctx = canvas.getContext('2d');
-  var W = canvas.width, H = canvas.height, PAD = 3;
-  var min = Math.min.apply(null, data);
-  var max = Math.max.apply(null, data);
-  var range = max - min || 1;
-  ctx.clearRect(0, 0, W, H);
-  var isUp = data[data.length - 1] >= data[0];
-  var col = isUp ? '#0a9e6d' : '#e05050';
-  ctx.beginPath();
-  data.forEach(function(v, i) {
-    var x = PAD + (W - 2 * PAD) * i / Math.max(data.length - 1, 1);
-    var y = H - PAD - (H - 2 * PAD) * (v - min) / range;
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  });
-  ctx.strokeStyle = col; ctx.lineWidth = 1.8; ctx.stroke();
-  var lastX = PAD + (W - 2 * PAD), lastY = H - PAD - (H - 2 * PAD) * (data[data.length-1] - min) / range;
-  ctx.lineTo(lastX, H - PAD); ctx.lineTo(PAD, H - PAD); ctx.closePath();
-  ctx.fillStyle = isUp ? 'rgba(10,158,109,0.12)' : 'rgba(224,80,80,0.1)'; ctx.fill();
-}
 
 // ===== 計算機 =====
 var calcState = { display: '0', prev: '', op: '', newNum: true };
@@ -2821,9 +2778,8 @@ window.onload = function() {
   fetchNewsHeadlines();
   fetchFxNewsHeadlines();
   fetchBitradexFeed();
-  fetchUsdJpyMiniChart();
   // 5分毎にレート＆指標を自動更新、30分毎にニュースを更新
-  setInterval(function() { fetchRate(); fetchMarketData(); fetchUsdJpyMiniChart(); }, 5 * 60 * 1000);
+  setInterval(function() { fetchRate(); fetchMarketData(); }, 5 * 60 * 1000);
   setInterval(fetchNewsHeadlines, 30 * 60 * 1000);
   setInterval(fetchFxNewsHeadlines, 30 * 60 * 1000);
   setInterval(fetchBitradexFeed, 60 * 60 * 1000);
