@@ -702,6 +702,42 @@
     /* ===== アコーディオン open時オーバーフロー（ツールチップ表示のため） ===== */
     .acc-body.open { overflow: visible; }
 
+    /* ===== チャートエリア（ニュースタブ内） ===== */
+    .nst-chart-area { margin-bottom: 10px; }
+    .nst-chart-btns {
+      display: flex; gap: 5px; overflow-x: auto;
+      padding-bottom: 3px; margin-bottom: 7px;
+      scrollbar-width: none;
+    }
+    .nst-chart-btns::-webkit-scrollbar { display: none; }
+    .nst-chart-btn {
+      flex-shrink: 0; padding: 4px 10px;
+      font-size: 0.67rem; font-weight: 700;
+      border: 1.5px solid var(--border); border-radius: 6px;
+      background: var(--bg); color: var(--muted); cursor: pointer;
+      font-family: 'Noto Sans JP', sans-serif;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nst-chart-btn.active { background: var(--btn-grad); color: #fff; border-color: transparent; }
+    .nst-chart-btn:active { opacity: 0.75; }
+    .nst-chart-iframe { width: 100%; height: 210px; border: none; border-radius: 10px; display: block; }
+    /* ===== 左右スプリット ===== */
+    .nst-split { display: grid; grid-template-columns: 42% 1fr; gap: 8px; align-items: start; }
+    .nst-table-col, .nst-news-col { min-width: 0; }
+    .nst-news-col .card { margin-bottom: 0; padding: 10px; }
+    .nst-news-col .card-title { font-size: 0.7rem; margin-bottom: 8px; }
+    .nst-news-col .news-card-title { font-size: 0.76rem; line-height: 1.4; }
+    .nst-news-col .news-card { padding: 10px 0; }
+    /* テーブル列をコンパクト化 */
+    .nst-table-col .mkt-wrap { margin-bottom: 0; }
+    .nst-table-col .mkt-row2 { padding: 5px 5px; }
+    .nst-table-col .mkt-ico2 { width: 17px; height: 17px; font-size: 0.42rem; flex-shrink: 0; }
+    .nst-table-col .mkt-sym2 { font-size: 0.62rem; }
+    .nst-table-col .mkt-sub2 { display: none; }
+    .nst-table-col .mkt-price { font-size: 0.62rem; min-width: 55px; margin-right: 3px; }
+    .nst-table-col .mkt-chg { font-size: 0.56rem; min-width: 38px; }
+    .nst-table-col .mkt-grp { font-size: 0.44rem; padding: 3px 5px 2px; }
+
     /* ===== ニュースサブタブ ===== */
     .news-sub-bar {
       display: flex; margin-bottom: 14px;
@@ -1299,87 +1335,81 @@
 
   <!-- パネル0: 暗号資産 -->
   <div id="nst-0" class="nst-panel active">
-    <div class="mkt-wrap">
-      <span class="mkt-grp crypto-grp">仮想通貨</span>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#f7931a">₿</div><span class="mkt-sym2">BTC</span></div>
-        <div style="text-align:right;margin-right:8px;min-width:90px">
-          <div class="mkt-price" id="mkt-p-btc" style="min-width:0;margin-right:0">---</div>
-          <div id="mkt-p-btc-usd" style="font-size:0.58rem;color:#6b7280;font-weight:600;line-height:1.3">---</div>
-        </div>
-        <span class="mkt-chg" id="mkt-c-btc">---</span>
+    <!-- チャートエリア -->
+    <div class="nst-chart-area">
+      <div class="nst-chart-btns" id="nst-crypto-btns">
+        <button class="nst-chart-btn active" data-sym="BINANCE:BTCUSDT"  onclick="switchCryptoChart(this)">BTC</button>
+        <button class="nst-chart-btn"        data-sym="BINANCE:ETHUSDT"  onclick="switchCryptoChart(this)">ETH</button>
+        <button class="nst-chart-btn"        data-sym="BINANCE:XRPUSDT"  onclick="switchCryptoChart(this)">XRP</button>
+        <button class="nst-chart-btn"        data-sym="BINANCE:SOLUSDT"  onclick="switchCryptoChart(this)">SOL</button>
+        <button class="nst-chart-btn"        data-sym="BINANCE:BNBUSDT"  onclick="switchCryptoChart(this)">BNB</button>
+        <button class="nst-chart-btn"        data-sym="BINANCE:TRXUSDT"  onclick="switchCryptoChart(this)">TRX</button>
+        <button class="nst-chart-btn"        data-sym="BINANCE:DOGEUSDT" onclick="switchCryptoChart(this)">DOGE</button>
+        <button class="nst-chart-btn"        data-sym="BINANCE:HYPEUSDT" onclick="switchCryptoChart(this)">HYPE</button>
       </div>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#627eea">Ξ</div><span class="mkt-sym2">ETH</span></div>
-        <span class="mkt-price" id="mkt-p-eth">---</span><span class="mkt-chg" id="mkt-c-eth">---</span>
-      </div>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#00aae4">✕</div><span class="mkt-sym2">XRP</span></div>
-        <span class="mkt-price" id="mkt-p-xrp">---</span><span class="mkt-chg" id="mkt-c-xrp">---</span>
-      </div>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#9945ff">◎</div><span class="mkt-sym2">SOL</span></div>
-        <span class="mkt-price" id="mkt-p-sol">---</span><span class="mkt-chg" id="mkt-c-sol">---</span>
-      </div>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#f0b90b;font-size:0.52rem;font-weight:900">BNB</div><span class="mkt-sym2">BNB</span></div>
-        <span class="mkt-price" id="mkt-p-bnb">---</span><span class="mkt-chg" id="mkt-c-bnb">---</span>
-      </div>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#ef0027;font-size:0.52rem;font-weight:900">TRX</div><span class="mkt-sym2">TRX</span></div>
-        <span class="mkt-price" id="mkt-p-trx">---</span><span class="mkt-chg" id="mkt-c-trx">---</span>
-      </div>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#c2a633">Ð</div><span class="mkt-sym2">DOGE</span></div>
-        <span class="mkt-price" id="mkt-p-doge">---</span><span class="mkt-chg" id="mkt-c-doge">---</span>
-      </div>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#00d4ff;font-size:0.48rem;font-weight:900">HYPE</div><span class="mkt-sym2">HYPE</span></div>
-        <span class="mkt-price" id="mkt-p-hype">---</span><span class="mkt-chg" id="mkt-c-hype">---</span>
-      </div>
+      <iframe id="nst-crypto-chart" class="nst-chart-iframe" loading="lazy"></iframe>
     </div>
-    <div class="card">
-      <div class="card-title">
-        <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📰</span>
-        暗号資産ニュース
-        <span style="font-size:0.68rem;font-weight:400;color:var(--muted);margin-left:4px">タップで記事へ</span>
+    <!-- 左右分割 -->
+    <div class="nst-split">
+      <div class="nst-table-col">
+        <div class="mkt-wrap">
+          <span class="mkt-grp crypto-grp">仮想通貨</span>
+          <div class="mkt-row2">
+            <div class="mkt-l2"><div class="mkt-ico2" style="background:#f7931a">₿</div><span class="mkt-sym2">BTC</span></div>
+            <div style="text-align:right;margin-right:3px;flex-shrink:0">
+              <div class="mkt-price" id="mkt-p-btc" style="min-width:0;margin-right:0">---</div>
+              <div id="mkt-p-btc-usd" style="font-size:0.52rem;color:#6b7280;font-weight:600;line-height:1.2">---</div>
+            </div>
+            <span class="mkt-chg" id="mkt-c-btc">---</span>
+          </div>
+          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#627eea">Ξ</div><span class="mkt-sym2">ETH</span></div><span class="mkt-price" id="mkt-p-eth">---</span><span class="mkt-chg" id="mkt-c-eth">---</span></div>
+          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#00aae4">✕</div><span class="mkt-sym2">XRP</span></div><span class="mkt-price" id="mkt-p-xrp">---</span><span class="mkt-chg" id="mkt-c-xrp">---</span></div>
+          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#9945ff">◎</div><span class="mkt-sym2">SOL</span></div><span class="mkt-price" id="mkt-p-sol">---</span><span class="mkt-chg" id="mkt-c-sol">---</span></div>
+          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#f0b90b;font-size:0.44rem;font-weight:900">BNB</div><span class="mkt-sym2">BNB</span></div><span class="mkt-price" id="mkt-p-bnb">---</span><span class="mkt-chg" id="mkt-c-bnb">---</span></div>
+          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#ef0027;font-size:0.44rem;font-weight:900">TRX</div><span class="mkt-sym2">TRX</span></div><span class="mkt-price" id="mkt-p-trx">---</span><span class="mkt-chg" id="mkt-c-trx">---</span></div>
+          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#c2a633">Ð</div><span class="mkt-sym2">DOGE</span></div><span class="mkt-price" id="mkt-p-doge">---</span><span class="mkt-chg" id="mkt-c-doge">---</span></div>
+          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#00d4ff;font-size:0.4rem;font-weight:900">HYPE</div><span class="mkt-sym2">HYPE</span></div><span class="mkt-price" id="mkt-p-hype">---</span><span class="mkt-chg" id="mkt-c-hype">---</span></div>
+        </div>
       </div>
-      <div id="newsCardList"><div style="text-align:center;padding:20px;color:var(--muted);font-size:0.85rem">読み込み中...</div></div>
+      <div class="nst-news-col">
+        <div class="card">
+          <div class="card-title"><span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📰</span>暗号資産ニュース</div>
+          <div id="newsCardList"><div style="text-align:center;padding:16px;color:var(--muted);font-size:0.82rem">読み込み中...</div></div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- パネル1: 為替・株式・商品 -->
   <div id="nst-1" class="nst-panel">
-    <div class="mkt-wrap">
-      <span class="mkt-grp fx-grp">為替 / 株式 / 商品</span>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#c9a227">Au</div><span class="mkt-sym2">GOLD<span class="mkt-sub2">$/oz</span></span></div>
-        <span class="mkt-price" id="mkt-p-gold">---</span><span class="mkt-chg" id="mkt-c-gold">---</span>
+    <!-- チャートエリア -->
+    <div class="nst-chart-area">
+      <div class="nst-chart-btns" id="nst-fx-btns">
+        <button class="nst-chart-btn active" data-sym="TVC:GOLD"      onclick="switchFxChart(this)">GOLD</button>
+        <button class="nst-chart-btn"        data-sym="FX_IDC:USDJPY" onclick="switchFxChart(this)">USD/JPY</button>
+        <button class="nst-chart-btn"        data-sym="TVC:DJI"       onclick="switchFxChart(this)">NYダウ</button>
+        <button class="nst-chart-btn"        data-sym="CME:NKD1!"     onclick="switchFxChart(this)">日経先物</button>
       </div>
-      <div class="mkt-row2 mkt-sub-row">
-        <div class="mkt-l2"><span class="mkt-sym2" style="font-size:0.68rem;color:var(--muted)">└ 円/g</span></div>
-        <span class="mkt-price" id="mkt-p-goldg">---</span><span class="mkt-chg" id="mkt-c-goldg">---</span>
-      </div>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#2575fc;font-size:0.48rem">$¥</div><span class="mkt-sym2">USD / JPY</span></div>
-        <span class="mkt-price" id="mkt-p-usdjpy">---</span><span class="mkt-chg" id="mkt-c-usdjpy">---</span>
-      </div>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#1a3a8f;font-size:0.48rem">DJI</div><span class="mkt-sym2">NYダウ</span></div>
-        <span class="mkt-price" id="mkt-p-dow">---</span><span class="mkt-chg" id="mkt-c-dow">---</span>
-      </div>
-      <div class="mkt-row2">
-        <div class="mkt-l2"><div class="mkt-ico2" style="background:#c62828;font-size:0.48rem">NK</div><span class="mkt-sym2">日経平均先物</span></div>
-        <span class="mkt-price" id="mkt-p-nkd">---</span><span class="mkt-chg" id="mkt-c-nkd">---</span>
-      </div>
+      <iframe id="nst-fx-chart" class="nst-chart-iframe" loading="lazy"></iframe>
     </div>
-    <div class="card">
-      <div class="card-title">
-        <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📰</span>
-        為替・株式・商品 ニュース
-        <span style="font-size:0.68rem;font-weight:400;color:var(--muted);margin-left:4px">タップで記事へ</span>
+    <!-- 左右分割 -->
+    <div class="nst-split">
+      <div class="nst-table-col">
+        <div class="mkt-wrap">
+          <span class="mkt-grp fx-grp">為替/株式/商品</span>
+          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#c9a227">Au</div><span class="mkt-sym2">GOLD</span></div><span class="mkt-price" id="mkt-p-gold">---</span><span class="mkt-chg" id="mkt-c-gold">---</span></div>
+          <div class="mkt-row2 mkt-sub-row"><div class="mkt-l2"><span class="mkt-sym2" style="font-size:0.56rem;color:var(--muted)">└ 円/g</span></div><span class="mkt-price" id="mkt-p-goldg">---</span><span class="mkt-chg" id="mkt-c-goldg">---</span></div>
+          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#2575fc;font-size:0.4rem">$¥</div><span class="mkt-sym2">USD/JPY</span></div><span class="mkt-price" id="mkt-p-usdjpy">---</span><span class="mkt-chg" id="mkt-c-usdjpy">---</span></div>
+          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#1a3a8f;font-size:0.4rem">DJI</div><span class="mkt-sym2">NYダウ</span></div><span class="mkt-price" id="mkt-p-dow">---</span><span class="mkt-chg" id="mkt-c-dow">---</span></div>
+          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#c62828;font-size:0.4rem">NK</div><span class="mkt-sym2">日経先物</span></div><span class="mkt-price" id="mkt-p-nkd">---</span><span class="mkt-chg" id="mkt-c-nkd">---</span></div>
+        </div>
       </div>
-      <div id="fxNewsCardList"><div style="text-align:center;padding:20px;color:var(--muted);font-size:0.85rem">読み込み中...</div></div>
+      <div class="nst-news-col">
+        <div class="card">
+          <div class="card-title"><span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📰</span>為替・株式ニュース</div>
+          <div id="fxNewsCardList"><div style="text-align:center;padding:16px;color:var(--muted);font-size:0.82rem">読み込み中...</div></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1506,6 +1536,14 @@ function switchTab(idx) {
     document.getElementById('tabBtn-' + i).classList.toggle('active', i === idx);
   }
   try { localStorage.setItem('sim_tab', idx); } catch(e) {}
+  // ニュースタブ初回表示時にチャートを初期化
+  if (tabIds[idx] === 'news' && !nstChartInit[0]) {
+    nstChartInit[0] = true;
+    setTimeout(function() {
+      var f = document.getElementById('nst-crypto-chart');
+      if (f) f.src = buildChartUrl('BINANCE:BTCUSDT');
+    }, 200);
+  }
 }
 
 
@@ -2407,13 +2445,48 @@ function downloadSelected(btn) {
   });
 }
 
+// ===== チャート（TradingView iframe）=====
+var nstChartInit = [false, false];
+function buildChartUrl(symbol) {
+  var theme = isDark ? 'dark' : 'light';
+  return 'https://s.tradingview.com/widgetembed/?symbol=' + encodeURIComponent(symbol) +
+    '&interval=D&theme=' + theme + '&locale=ja&hide_side_toolbar=1&save_image=0&style=1&withdateranges=1';
+}
+function switchCryptoChart(btn) {
+  var sym = btn.dataset.sym;
+  var iframe = document.getElementById('nst-crypto-chart');
+  if (iframe) iframe.src = buildChartUrl(sym);
+  [].forEach.call(document.querySelectorAll('#nst-crypto-btns .nst-chart-btn'), function(b) {
+    b.classList.toggle('active', b === btn);
+  });
+}
+function switchFxChart(btn) {
+  var sym = btn.dataset.sym;
+  var iframe = document.getElementById('nst-fx-chart');
+  if (iframe) iframe.src = buildChartUrl(sym);
+  [].forEach.call(document.querySelectorAll('#nst-fx-btns .nst-chart-btn'), function(b) {
+    b.classList.toggle('active', b === btn);
+  });
+}
+
 // ===== ニュースサブタブ =====
+var newsTabEverShown = false;
 function switchNewsSubTab(idx) {
   for (var i = 0; i < 3; i++) {
     var b = document.getElementById('nstBtn-' + i);
     var p = document.getElementById('nst-' + i);
     if (b) b.classList.toggle('active', i === idx);
     if (p) p.classList.toggle('active', i === idx);
+  }
+  if (idx === 0 && !nstChartInit[0]) {
+    nstChartInit[0] = true;
+    var f = document.getElementById('nst-crypto-chart');
+    if (f) f.src = buildChartUrl('BINANCE:BTCUSDT');
+  }
+  if (idx === 1 && !nstChartInit[1]) {
+    nstChartInit[1] = true;
+    var f2 = document.getElementById('nst-fx-chart');
+    if (f2) f2.src = buildChartUrl('TVC:GOLD');
   }
 }
 
@@ -2628,46 +2701,107 @@ function renderBitradexFeed(items) {
 }
 
 
-// ===== X (Twitter) 公式ウィジェット =====
+// ===== X フィード（RSS→日本語翻訳）=====
 function fetchXFeed() {
   var el = document.getElementById('xFeedList');
   if (!el) return;
-
-  var theme = isDark ? 'dark' : 'light';
-  el.innerHTML =
-    '<a class="twitter-timeline" ' +
-      'data-tweet-limit="10" ' +
-      'data-chrome="nofooter noborders noheader transparent" ' +
-      'data-theme="' + theme + '" ' +
-      'href="https://twitter.com/Bitradexen">' +
-      '@Bitradexen の投稿を読み込み中...' +
-    '</a>';
-
-  // Twitter widgets.js を動的に読み込み
-  if (window.twttr && window.twttr.widgets) {
-    window.twttr.widgets.load(el);
-  } else {
-    var s = document.createElement('script');
-    s.src = 'https://platform.twitter.com/widgets.js';
-    s.async = true; s.charset = 'utf-8';
-    document.body.appendChild(s);
+  var decided = false;
+  var PROXIES = ['https://api.allorigins.win/raw?url=', 'https://corsproxy.io/?'];
+  var SOURCES = [
+    'https://rsshub.app/twitter/user/Bitradexen',
+    'https://nitter.poast.org/Bitradexen/rss',
+    'https://nitter.privacydev.net/Bitradexen/rss',
+    'https://nitter.cz/Bitradexen/rss',
+    'https://nitter.net/Bitradexen/rss',
+    'https://nitter.unixfox.eu/Bitradexen/rss',
+    'https://n.opnxng.com/Bitradexen/rss',
+  ];
+  var attempts = [];
+  SOURCES.forEach(function(src) {
+    PROXIES.forEach(function(p) { attempts.push(p + encodeURIComponent(src)); });
+  });
+  var i = 0;
+  function tryNext() {
+    if (decided || i >= attempts.length) {
+      if (!decided) { decided = true; showXFallback(); }
+      return;
+    }
+    var url = attempts[i++];
+    var t = setTimeout(tryNext, 5000);
+    fetch(url)
+      .then(function(r) { clearTimeout(t); if (!r.ok) throw 0; return r.text(); })
+      .then(function(text) {
+        clearTimeout(t);
+        if (decided) return;
+        var items = parseXRSS(text);
+        if (items && items.length >= 2) { decided = true; renderXFeedWithTranslation(items); }
+        else tryNext();
+      })
+      .catch(function() { clearTimeout(t); tryNext(); });
   }
-
-  // 20秒後にiframeが表示されていなければリンクにフォールバック
+  // 3並列で試行
+  tryNext(); tryNext(); tryNext();
+  setTimeout(function() { if (!decided) { decided = true; showXFallback(); } }, 22000);
+}
+function showXFallback() {
+  var el = document.getElementById('xFeedList');
+  if (!el) return;
+  var theme = isDark ? 'dark' : 'light';
+  el.innerHTML = '<a class="twitter-timeline" data-tweet-limit="10" data-chrome="nofooter noborders noheader transparent" data-theme="' + theme + '" href="https://twitter.com/Bitradexen">@Bitradexen</a>';
+  if (window.twttr && window.twttr.widgets) { window.twttr.widgets.load(el); }
+  else {
+    var s = document.createElement('script'); s.src = 'https://platform.twitter.com/widgets.js';
+    s.async = true; s.charset = 'utf-8'; document.body.appendChild(s);
+  }
   setTimeout(function() {
-    if (!el || el.querySelector('iframe')) return;
-    el.innerHTML =
-      '<div style="text-align:center;padding:20px 0">' +
-        '<p style="color:var(--muted);font-size:0.82rem;margin-bottom:12px">' +
-          'ウィジェットの読み込みに時間がかかっています。' +
-        '</p>' +
-        '<a href="https://x.com/Bitradexen" target="_blank" rel="noopener" ' +
-           'style="display:inline-block;background:#000;color:#fff;font-weight:700;font-size:0.85rem;' +
-                  'padding:10px 20px;border-radius:20px;text-decoration:none">' +
-          '𝕏 @Bitradexen を見る →' +
-        '</a>' +
-      '</div>';
-  }, 20000);
+    if (el && !el.querySelector('iframe'))
+      el.innerHTML = '<div style="text-align:center;padding:16px"><a href="https://x.com/Bitradexen" target="_blank" rel="noopener" style="color:var(--accent);font-weight:700">X @Bitradexen を見る →</a></div>';
+  }, 18000);
+}
+function parseXRSS(text) {
+  var items = [];
+  try {
+    var doc = new DOMParser().parseFromString(text, 'text/xml');
+    Array.prototype.slice.call(doc.querySelectorAll('item')).slice(0, 20).forEach(function(node) {
+      var titleEl = node.querySelector('title');
+      var descEl  = node.querySelector('description');
+      var rawDesc = descEl  ? descEl.textContent.replace(/<!\[CDATA\[|\]\]>/g, '').trim() : '';
+      var rawTitle= titleEl ? titleEl.textContent.replace(/<!\[CDATA\[|\]\]>/g, '').trim() : '';
+      var body = stripHtml(rawDesc || rawTitle).slice(0, 500);
+      if (!body || body.length < 5) return;
+      var linkEl = node.querySelector('link');
+      var link = linkEl ? linkEl.textContent.trim() : 'https://x.com/Bitradexen';
+      var dateStr = '';
+      var dateEl = node.querySelector('pubDate');
+      if (dateEl) { try { var d = new Date(dateEl.textContent.trim()); dateStr = (d.getMonth()+1)+'/'+d.getDate(); } catch(e) {} }
+      items.push({ body: body, link: link, date: dateStr });
+    });
+  } catch(e) {}
+  return items;
+}
+function renderXFeedWithTranslation(items) {
+  var el = document.getElementById('xFeedList');
+  if (!el) return;
+  el.innerHTML = items.slice(0, 15).map(function(o, idx) {
+    var ds = o.date ? '<span class="news-card-date">'+o.date+'</span>' : '';
+    return '<div style="padding:12px 0;border-bottom:1px solid var(--border)" id="xp-'+idx+'">' +
+      '<div class="news-card-meta"><span class="news-card-src" style="background:#000;color:#fff;border-radius:4px">𝕏</span>'+ds+'</div>' +
+      '<div id="xp-body-'+idx+'" style="font-size:0.83rem;color:var(--text);line-height:1.7;word-break:break-word"><span style="opacity:0.4">翻訳中...</span></div>' +
+      '<div style="text-align:right;margin-top:4px"><a href="'+o.link+'" target="_blank" rel="noopener" style="font-size:0.7rem;font-weight:700;color:var(--accent)">→ Xで見る</a></div>' +
+    '</div>';
+  }).join('');
+  var idx = 0;
+  function nextTrans() {
+    if (idx >= items.length || idx >= 15) return;
+    var item = items[idx], bodyEl = document.getElementById('xp-body-'+idx);
+    idx++;
+    if (!item.body || !bodyEl) { nextTrans(); return; }
+    translateToJa(item.body, function(ja) {
+      if (bodyEl) bodyEl.textContent = ja || item.body;
+      setTimeout(nextTrans, 400);
+    });
+  }
+  nextTrans();
 }
 
 // ===== 計算機 =====
