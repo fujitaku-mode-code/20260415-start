@@ -522,24 +522,26 @@
       border-top-color:rgba(26,58,143,0.12);
     }
     body.dark .mkt-grp.fx-grp { color:#90caf9; background:rgba(144,202,249,0.08); }
-    /* 暗号資産パネル: ダーク・スレート スタイル */
-    #nst-0 .mkt-wrap { background:#111827; border-color:#1f2937; }
+    /* 暗号資産パネル: ライトクールグレー */
+    #nst-0 .mkt-wrap { background:#eff2f8; border-color:#c8d2e5; }
     #nst-0 .mkt-grp.crypto-grp {
-      background:#0f172a; color:#f87171;
-      border-top-color:#1f2937; border-bottom:none;
+      background:#e3e9f5; color:#c62828;
+      border-top-color:#c8d2e5; border-bottom:none;
     }
-    #nst-0 .mkt-row2 { background:#111827; border-top-color:#1f2937; }
-    #nst-0 .mkt-row2:nth-child(even) { background:#0f172a; }
-    #nst-0 .mkt-sym2 { color:#e5e7eb; }
-    #nst-0 .mkt-sub2 { color:#6b7280; }
-    #nst-0 .mkt-price { color:#f9fafb; }
-    #nst-0 .mkt-chg.up   { color:#34d399; }
-    #nst-0 .mkt-chg.down { color:#f87171; }
-    #nst-0 .mkt-sub-row  { background:#0d1524; }
-    body.dark #nst-0 .mkt-wrap { background:#06090f; border-color:#1a2030; }
-    body.dark #nst-0 .mkt-grp.crypto-grp { background:#04060c; border-top-color:#1a2030; }
-    body.dark #nst-0 .mkt-row2 { background:#06090f; border-top-color:#1a2030; }
-    body.dark #nst-0 .mkt-row2:nth-child(even) { background:#04060c; }
+    #nst-0 .mkt-row2 { background:#f5f7fc; border-top-color:#dde4f2; }
+    #nst-0 .mkt-row2:nth-child(even) { background:#edf0f8; }
+    #nst-0 .mkt-sym2 { color:#1e293b; }
+    #nst-0 .mkt-sub2 { color:#64748b; }
+    #nst-0 .mkt-price { color:#0f172a; }
+    #nst-0 .mkt-chg.up   { color:#059669; }
+    #nst-0 .mkt-chg.down { color:#dc2626; }
+    #nst-0 .mkt-sub-row  { background:#e8ecf6; }
+    body.dark #nst-0 .mkt-wrap { background:#1e2738; border-color:#2d3a52; }
+    body.dark #nst-0 .mkt-grp.crypto-grp { background:#19202e; color:#f87171; border-top-color:#2d3a52; }
+    body.dark #nst-0 .mkt-row2 { background:#1e2738; border-top-color:#2d3a52; }
+    body.dark #nst-0 .mkt-row2:nth-child(even) { background:#19202e; }
+    body.dark #nst-0 .mkt-sym2 { color:#e2e8f0; }
+    body.dark #nst-0 .mkt-price { color:#f8fafc; }
     /* 為替・株式パネル 行: クールブルー */
     #nst-1 .mkt-row2 { background: rgba(235,244,255,0.8); }
     #nst-1 .mkt-row2:nth-child(odd) { background: rgba(220,236,255,0.6); }
@@ -1384,17 +1386,16 @@
   <!-- パネル2: bitradeX公式 -->
   <div id="nst-2" class="nst-panel">
 
-    <!-- YouTube サムネイル -->
-    <a href="https://youtu.be/M6gd3l3LuWw?si=f9xlfthEyU5q-4eT" target="_blank" rel="noopener"
-       style="display:block;position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.22)">
-      <img src="https://img.youtube.com/vi/M6gd3l3LuWw/hqdefault.jpg" alt="BitradeX 公式動画"
-           style="width:100%;display:block;aspect-ratio:16/9;object-fit:cover">
-      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.28)">
-        <div style="width:54px;height:54px;background:#ff0000;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(255,0,0,0.45)">
-          <svg width="22" height="22" fill="#fff" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </div>
-      </div>
-    </a>
+    <!-- YouTube 埋め込みプレーヤー（画面内再生） -->
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18)">
+      <iframe
+        src="https://www.youtube.com/embed/M6gd3l3LuWw"
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        loading="lazy">
+      </iframe>
+    </div>
 
     <!-- X (Twitter) フィード -->
     <div class="card">
@@ -2627,96 +2628,46 @@ function renderBitradexFeed(items) {
 }
 
 
-// ===== X (Twitter) フィード =====
+// ===== X (Twitter) 公式ウィジェット =====
 function fetchXFeed() {
   var el = document.getElementById('xFeedList');
   if (!el) return;
-  var decided = false;
 
-  // Nitter / RSSHub の複数インスタンスを順に試行
-  var RSS_SOURCES = [
-    'https://rsshub.app/twitter/user/Bitradexen',
-    'https://nitter.poast.org/Bitradexen/rss',
-    'https://nitter.privacydev.net/Bitradexen/rss',
-    'https://nitter.net/Bitradexen/rss',
-    'https://nitter.cz/Bitradexen/rss',
-  ];
-  var PROXIES = ['https://api.allorigins.win/raw?url=', 'https://corsproxy.io/?'];
+  var theme = isDark ? 'dark' : 'light';
+  el.innerHTML =
+    '<a class="twitter-timeline" ' +
+      'data-tweet-limit="10" ' +
+      'data-chrome="nofooter noborders noheader transparent" ' +
+      'data-theme="' + theme + '" ' +
+      'href="https://twitter.com/Bitradexen">' +
+      '@Bitradexen の投稿を読み込み中...' +
+    '</a>';
 
-  var queue = [];
-  RSS_SOURCES.forEach(function(src) {
-    PROXIES.forEach(function(proxy) { queue.push(proxy + encodeURIComponent(src)); });
-  });
-
-  var qi = 0;
-  function tryNext() {
-    if (decided || qi >= queue.length) {
-      if (!decided) { decided = true; renderXFeed([]); }
-      return;
-    }
-    var url = queue[qi++];
-    var timer = setTimeout(function() { tryNext(); }, 8000);
-    fetch(url)
-      .then(function(r) { clearTimeout(timer); if (!r.ok) throw 0; return r.text(); })
-      .then(function(text) {
-        if (decided) return;
-        var items = parseXRSS(text);
-        if (items && items.length > 0) { decided = true; renderXFeed(items); }
-        else tryNext();
-      })
-      .catch(function() { clearTimeout(timer); tryNext(); });
+  // Twitter widgets.js を動的に読み込み
+  if (window.twttr && window.twttr.widgets) {
+    window.twttr.widgets.load(el);
+  } else {
+    var s = document.createElement('script');
+    s.src = 'https://platform.twitter.com/widgets.js';
+    s.async = true; s.charset = 'utf-8';
+    document.body.appendChild(s);
   }
-  tryNext();
-  setTimeout(function() { if (!decided) { decided = true; renderXFeed([]); } }, 25000);
-}
 
-function parseXRSS(text) {
-  var items = [];
-  try {
-    var doc = new DOMParser().parseFromString(text, 'text/xml');
-    Array.prototype.slice.call(doc.querySelectorAll('item')).slice(0, 20).forEach(function(node) {
-      var titleEl = node.querySelector('title');
-      var rawTitle = titleEl ? titleEl.textContent.replace(/<!\[CDATA\[|\]\]>/g, '').trim() : '';
-      var descEl = node.querySelector('description');
-      var rawDesc = descEl ? descEl.textContent.replace(/<!\[CDATA\[|\]\]>/g, '').trim() : '';
-      var body = stripHtml(rawDesc || rawTitle).slice(0, 400);
-      if (!body || body.length < 5) return;
-      var linkEl = node.querySelector('link');
-      var link = linkEl ? linkEl.textContent.trim() : 'https://x.com/Bitradexen';
-      var dateStr = '';
-      var dateEl = node.querySelector('pubDate');
-      if (dateEl) {
-        try { var d = new Date(dateEl.textContent.trim()); dateStr = (d.getMonth()+1)+'/'+d.getDate(); } catch(e) {}
-      }
-      items.push({ body: body, link: link, date: dateStr });
-    });
-  } catch(e) {}
-  return items;
-}
-
-function renderXFeed(items) {
-  var el = document.getElementById('xFeedList');
-  if (!el) return;
-  if (!items || !items.length) {
-    el.innerHTML = '<div style="text-align:center;padding:20px 0">' +
-      '<p style="color:var(--muted);font-size:0.82rem;margin-bottom:10px">投稿を取得できませんでした</p>' +
-      '<a href="https://x.com/Bitradexen" target="_blank" rel="noopener" ' +
-         'style="color:var(--accent);font-weight:700;font-size:0.85rem">X @Bitradexen を見る →</a></div>';
-    return;
-  }
-  el.innerHTML = items.map(function(o) {
-    var ds = o.date ? '<span class="news-card-date">' + o.date + '</span>' : '';
-    return '<div style="padding:12px 0;border-bottom:1px solid var(--border)">' +
-      '<div class="news-card-meta">' +
-        '<span class="news-card-src" style="background:#000;color:#fff;border-radius:4px">𝕏</span>' + ds +
-      '</div>' +
-      '<div style="font-size:0.83rem;color:var(--text);line-height:1.7;word-break:break-word">' + o.body + '</div>' +
-      '<div style="text-align:right;margin-top:6px">' +
-        '<a href="' + o.link + '" target="_blank" rel="noopener" ' +
-           'style="font-size:0.7rem;font-weight:700;color:var(--accent)">→ Xで見る</a>' +
-      '</div>' +
-    '</div>';
-  }).join('');
+  // 20秒後にiframeが表示されていなければリンクにフォールバック
+  setTimeout(function() {
+    if (!el || el.querySelector('iframe')) return;
+    el.innerHTML =
+      '<div style="text-align:center;padding:20px 0">' +
+        '<p style="color:var(--muted);font-size:0.82rem;margin-bottom:12px">' +
+          'ウィジェットの読み込みに時間がかかっています。' +
+        '</p>' +
+        '<a href="https://x.com/Bitradexen" target="_blank" rel="noopener" ' +
+           'style="display:inline-block;background:#000;color:#fff;font-weight:700;font-size:0.85rem;' +
+                  'padding:10px 20px;border-radius:20px;text-decoration:none">' +
+          '𝕏 @Bitradexen を見る →' +
+        '</a>' +
+      '</div>';
+  }, 20000);
 }
 
 // ===== 計算機 =====
