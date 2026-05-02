@@ -702,22 +702,41 @@
     /* ===== アコーディオン open時オーバーフロー（ツールチップ表示のため） ===== */
     .acc-body.open { overflow: visible; }
 
-    /* ===== 左右スプリット ===== */
-    .nst-split { display: grid; grid-template-columns: 42% 1fr; gap: 8px; align-items: start; }
-    .nst-table-col, .nst-news-col { min-width: 0; }
-    .nst-news-col .card { margin-bottom: 0; padding: 10px; }
-    .nst-news-col .card-title { font-size: 0.7rem; margin-bottom: 8px; }
-    .nst-news-col .news-card-title { font-size: 0.76rem; line-height: 1.4; }
-    .nst-news-col .news-card { padding: 10px 0; }
-    /* テーブル列をコンパクト化 */
-    .nst-table-col .mkt-wrap { margin-bottom: 0; }
-    .nst-table-col .mkt-row2 { padding: 5px 5px; }
-    .nst-table-col .mkt-ico2 { width: 17px; height: 17px; font-size: 0.42rem; flex-shrink: 0; }
-    .nst-table-col .mkt-sym2 { font-size: 0.62rem; }
-    .nst-table-col .mkt-sub2 { display: none; }
-    .nst-table-col .mkt-price { font-size: 0.62rem; min-width: 55px; margin-right: 3px; }
-    .nst-table-col .mkt-chg { font-size: 0.56rem; min-width: 38px; }
-    .nst-table-col .mkt-grp { font-size: 0.44rem; padding: 3px 5px 2px; }
+    /* ===== マーケットカードスライダー ===== */
+    .mkt-slider-wrap {
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; margin-bottom: 12px; padding-bottom: 2px;
+    }
+    .mkt-slider-wrap::-webkit-scrollbar { display: none; }
+    .mkt-slider { display: flex; gap: 8px; padding: 2px 1px; }
+    .mkt-card {
+      flex-shrink: 0; width: 118px;
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 10px 10px 9px;
+      display: flex; flex-direction: column; gap: 5px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.07);
+    }
+    .mkt-card-top { display: flex; align-items: center; gap: 6px; }
+    .mkt-card-ico {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.55rem; font-weight: 900; color: #fff; flex-shrink: 0;
+    }
+    .mkt-card-name { font-size: 0.75rem; font-weight: 800; color: var(--text); line-height: 1.2; }
+    .mkt-card-price {
+      font-size: 0.85rem; font-weight: 900; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3;
+    }
+    .mkt-card-sub { font-size: 0.6rem; color: var(--muted); font-weight: 600; line-height: 1.2; }
+    /* 変化率バッジ */
+    .mkt-slider .mkt-chg {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      padding: 3px 7px; border-radius: 5px; white-space: nowrap; align-self: flex-start;
+      background: var(--border); color: var(--muted);
+    }
+    .mkt-slider .mkt-chg.up   { background: #0a9e6d; color: #fff; }
+    .mkt-slider .mkt-chg.down { background: #e05050; color: #fff; }
+    body.dark .mkt-slider .mkt-chg { background: rgba(255,255,255,0.1); }
 
     /* ===== ニュースサブタブ ===== */
     .news-sub-bar {
@@ -1325,34 +1344,56 @@
         allowfullscreen loading="lazy">
       </iframe>
     </div>
-    <!-- 左右分割 -->
-    <div class="nst-split">
-      <div class="nst-table-col">
-        <div class="mkt-wrap">
-          <span class="mkt-grp crypto-grp">仮想通貨</span>
-          <div class="mkt-row2">
-            <div class="mkt-l2"><div class="mkt-ico2" style="background:#f7931a">₿</div><span class="mkt-sym2">BTC</span></div>
-            <div style="text-align:right;margin-right:3px;flex-shrink:0">
-              <div class="mkt-price" id="mkt-p-btc" style="min-width:0;margin-right:0">---</div>
-              <div id="mkt-p-btc-usd" style="font-size:0.52rem;color:#6b7280;font-weight:600;line-height:1.2">---</div>
-            </div>
-            <span class="mkt-chg" id="mkt-c-btc">---</span>
-          </div>
-          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#627eea">Ξ</div><span class="mkt-sym2">ETH</span></div><span class="mkt-price" id="mkt-p-eth">---</span><span class="mkt-chg" id="mkt-c-eth">---</span></div>
-          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#00aae4">✕</div><span class="mkt-sym2">XRP</span></div><span class="mkt-price" id="mkt-p-xrp">---</span><span class="mkt-chg" id="mkt-c-xrp">---</span></div>
-          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#9945ff">◎</div><span class="mkt-sym2">SOL</span></div><span class="mkt-price" id="mkt-p-sol">---</span><span class="mkt-chg" id="mkt-c-sol">---</span></div>
-          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#f0b90b;font-size:0.44rem;font-weight:900">BNB</div><span class="mkt-sym2">BNB</span></div><span class="mkt-price" id="mkt-p-bnb">---</span><span class="mkt-chg" id="mkt-c-bnb">---</span></div>
-          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#ef0027;font-size:0.44rem;font-weight:900">TRX</div><span class="mkt-sym2">TRX</span></div><span class="mkt-price" id="mkt-p-trx">---</span><span class="mkt-chg" id="mkt-c-trx">---</span></div>
-          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#c2a633">Ð</div><span class="mkt-sym2">DOGE</span></div><span class="mkt-price" id="mkt-p-doge">---</span><span class="mkt-chg" id="mkt-c-doge">---</span></div>
-          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#00d4ff;font-size:0.4rem;font-weight:900">HYPE</div><span class="mkt-sym2">HYPE</span></div><span class="mkt-price" id="mkt-p-hype">---</span><span class="mkt-chg" id="mkt-c-hype">---</span></div>
+    <!-- 仮想通貨カードスライダー -->
+    <div class="mkt-slider-wrap">
+      <div class="mkt-slider">
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#f7931a">₿</div><span class="mkt-card-name">BTC</span></div>
+          <div class="mkt-card-price" id="mkt-p-btc">---</div>
+          <div class="mkt-card-sub" id="mkt-p-btc-usd">---</div>
+          <span class="mkt-chg" id="mkt-c-btc">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#627eea">Ξ</div><span class="mkt-card-name">ETH</span></div>
+          <div class="mkt-card-price" id="mkt-p-eth">---</div>
+          <span class="mkt-chg" id="mkt-c-eth">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#00aae4">✕</div><span class="mkt-card-name">XRP</span></div>
+          <div class="mkt-card-price" id="mkt-p-xrp">---</div>
+          <span class="mkt-chg" id="mkt-c-xrp">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#9945ff">◎</div><span class="mkt-card-name">SOL</span></div>
+          <div class="mkt-card-price" id="mkt-p-sol">---</div>
+          <span class="mkt-chg" id="mkt-c-sol">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#f0b90b;font-size:0.44rem;font-weight:900">BNB</div><span class="mkt-card-name">BNB</span></div>
+          <div class="mkt-card-price" id="mkt-p-bnb">---</div>
+          <span class="mkt-chg" id="mkt-c-bnb">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#ef0027;font-size:0.44rem;font-weight:900">TRX</div><span class="mkt-card-name">TRX</span></div>
+          <div class="mkt-card-price" id="mkt-p-trx">---</div>
+          <span class="mkt-chg" id="mkt-c-trx">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#c2a633">Ð</div><span class="mkt-card-name">DOGE</span></div>
+          <div class="mkt-card-price" id="mkt-p-doge">---</div>
+          <span class="mkt-chg" id="mkt-c-doge">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#00d4ff;font-size:0.4rem;font-weight:900">HYPE</div><span class="mkt-card-name">HYPE</span></div>
+          <div class="mkt-card-price" id="mkt-p-hype">---</div>
+          <span class="mkt-chg" id="mkt-c-hype">---</span>
         </div>
       </div>
-      <div class="nst-news-col">
-        <div class="card">
-          <div class="card-title"><span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📰</span>暗号資産ニュース</div>
-          <div id="newsCardList"><div style="text-align:center;padding:16px;color:var(--muted);font-size:0.82rem">読み込み中...</div></div>
-        </div>
-      </div>
+    </div>
+    <!-- ニュース -->
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📰</span>暗号資産ニュース</div>
+      <div id="newsCardList"><div style="text-align:center;padding:16px;color:var(--muted);font-size:0.82rem">読み込み中...</div></div>
     </div>
   </div>
 
@@ -1367,24 +1408,40 @@
         allowfullscreen loading="lazy">
       </iframe>
     </div>
-    <!-- 左右分割 -->
-    <div class="nst-split">
-      <div class="nst-table-col">
-        <div class="mkt-wrap">
-          <span class="mkt-grp fx-grp">為替/株式/商品</span>
-          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#c9a227">Au</div><span class="mkt-sym2">GOLD</span></div><span class="mkt-price" id="mkt-p-gold">---</span><span class="mkt-chg" id="mkt-c-gold">---</span></div>
-          <div class="mkt-row2 mkt-sub-row"><div class="mkt-l2"><span class="mkt-sym2" style="font-size:0.56rem;color:var(--muted)">└ 円/g</span></div><span class="mkt-price" id="mkt-p-goldg">---</span><span class="mkt-chg" id="mkt-c-goldg">---</span></div>
-          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#2575fc;font-size:0.4rem">$¥</div><span class="mkt-sym2">USD/JPY</span></div><span class="mkt-price" id="mkt-p-usdjpy">---</span><span class="mkt-chg" id="mkt-c-usdjpy">---</span></div>
-          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#1a3a8f;font-size:0.4rem">DJI</div><span class="mkt-sym2">NYダウ</span></div><span class="mkt-price" id="mkt-p-dow">---</span><span class="mkt-chg" id="mkt-c-dow">---</span></div>
-          <div class="mkt-row2"><div class="mkt-l2"><div class="mkt-ico2" style="background:#c62828;font-size:0.4rem">NK</div><span class="mkt-sym2">日経先物</span></div><span class="mkt-price" id="mkt-p-nkd">---</span><span class="mkt-chg" id="mkt-c-nkd">---</span></div>
+    <!-- 為替・株式・商品カードスライダー -->
+    <div class="mkt-slider-wrap">
+      <div class="mkt-slider">
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#c9a227">Au</div><span class="mkt-card-name">GOLD</span></div>
+          <div class="mkt-card-price" id="mkt-p-gold">---</div>
+          <span class="mkt-chg" id="mkt-c-gold">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#c9a227;font-size:0.44rem;font-weight:900">円/g</div><span class="mkt-card-name">金（円/g）</span></div>
+          <div class="mkt-card-price" id="mkt-p-goldg">---</div>
+          <span class="mkt-chg" id="mkt-c-goldg">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#2575fc;font-size:0.4rem">$¥</div><span class="mkt-card-name">USD/JPY</span></div>
+          <div class="mkt-card-price" id="mkt-p-usdjpy">---</div>
+          <span class="mkt-chg" id="mkt-c-usdjpy">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#1a3a8f;font-size:0.4rem">DJI</div><span class="mkt-card-name">NYダウ</span></div>
+          <div class="mkt-card-price" id="mkt-p-dow">---</div>
+          <span class="mkt-chg" id="mkt-c-dow">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#c62828;font-size:0.4rem">NK</div><span class="mkt-card-name">日経先物</span></div>
+          <div class="mkt-card-price" id="mkt-p-nkd">---</div>
+          <span class="mkt-chg" id="mkt-c-nkd">---</span>
         </div>
       </div>
-      <div class="nst-news-col">
-        <div class="card">
-          <div class="card-title"><span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📰</span>為替・株式ニュース</div>
-          <div id="fxNewsCardList"><div style="text-align:center;padding:16px;color:var(--muted);font-size:0.82rem">読み込み中...</div></div>
-        </div>
-      </div>
+    </div>
+    <!-- ニュース -->
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📰</span>為替・株式ニュース</div>
+      <div id="fxNewsCardList"><div style="text-align:center;padding:16px;color:var(--muted);font-size:0.82rem">読み込み中...</div></div>
     </div>
   </div>
 
