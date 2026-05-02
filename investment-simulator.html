@@ -734,9 +734,16 @@
       padding: 3px 7px; border-radius: 5px; white-space: nowrap; align-self: flex-start;
       background: var(--border); color: var(--muted);
     }
-    .mkt-slider .mkt-chg.up   { background: #0a9e6d; color: #fff; }
-    .mkt-slider .mkt-chg.down { background: #e05050; color: #fff; }
-    body.dark .mkt-slider .mkt-chg { background: rgba(255,255,255,0.1); }
+    /* !important でID詳細度を上書き（#nst-0/.mkt-chg.up の色が干渉するため） */
+    .mkt-slider .mkt-chg.up   { background: #0a9e6d !important; color: #fff !important; }
+    .mkt-slider .mkt-chg.down { background: #e05050 !important; color: #fff !important; }
+    body.dark .mkt-slider .mkt-chg:not(.up):not(.down) { background: rgba(255,255,255,0.1); }
+    /* ===== YouTubeレスポンシブ（PCはiframe、モバイルはサムネイル） ===== */
+    .yt-thumb { display: none; }
+    @media (max-width: 639px) {
+      .yt-embed { display: none; }
+      .yt-thumb { display: block; }
+    }
 
     /* ===== ニュースサブタブ ===== */
     .news-sub-bar {
@@ -1335,9 +1342,15 @@
 
   <!-- パネル0: 暗号資産 -->
   <div id="nst-0" class="nst-panel active">
-    <!-- YouTube サムネイルリンク -->
-    <a href="https://youtu.be/T0stmsQF1bs" target="_blank" rel="noopener"
-       style="display:block;position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18);text-decoration:none">
+    <!-- YouTube: PC=iframe / モバイル=サムネイル -->
+    <div class="yt-embed" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18)">
+      <iframe src="https://www.youtube.com/embed/T0stmsQF1bs?rel=0"
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen loading="lazy"></iframe>
+    </div>
+    <a class="yt-thumb" href="https://youtu.be/T0stmsQF1bs" target="_blank" rel="noopener"
+       style="position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18);text-decoration:none">
       <img src="https://img.youtube.com/vi/T0stmsQF1bs/hqdefault.jpg" alt="暗号資産 YouTube" style="width:100%;display:block;border-radius:12px">
       <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25)">
         <div style="width:56px;height:56px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center">
@@ -1400,9 +1413,15 @@
 
   <!-- パネル1: 為替・株式・商品 -->
   <div id="nst-1" class="nst-panel">
-    <!-- YouTube サムネイルリンク -->
-    <a href="https://www.youtube.com/live/5GdUj0tgY-w" target="_blank" rel="noopener"
-       style="display:block;position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18);text-decoration:none">
+    <!-- YouTube: PC=iframe / モバイル=サムネイル -->
+    <div class="yt-embed" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18)">
+      <iframe src="https://www.youtube.com/embed/5GdUj0tgY-w?rel=0"
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen loading="lazy"></iframe>
+    </div>
+    <a class="yt-thumb" href="https://www.youtube.com/live/5GdUj0tgY-w" target="_blank" rel="noopener"
+       style="position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18);text-decoration:none">
       <img src="https://img.youtube.com/vi/5GdUj0tgY-w/hqdefault.jpg" alt="為替・株式 YouTube" style="width:100%;display:block;border-radius:12px">
       <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25)">
         <div style="width:56px;height:56px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center">
@@ -1471,6 +1490,7 @@
       </div>
       <div id="xFeedList">
         <div style="padding:14px 4px;font-size:0.83rem;line-height:1.75;color:var(--text)">
+          <p style="font-size:0.72rem;color:var(--muted);margin-bottom:3px">2026.04.30</p>
           <p style="font-weight:700;margin-bottom:6px">BXC発売中。</p>
           <p style="margin-bottom:8px">BXC Phase 3 が今、ライブです。サブスクリプションが <strong>$0.35</strong> でオープンしています。</p>
           <p style="margin-bottom:8px">100 USDT からスタート、USDN 経由で 5% オフ、または BTX 経由で 3% オフ。</p>
