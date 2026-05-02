@@ -766,6 +766,19 @@
       padding:3px 8px; border-radius:5px; text-decoration:none; white-space:nowrap;
     }
 
+    /* ===== 書籍スライダー ===== */
+    .book-cover-box { width:160px; height:220px; margin:0 auto 12px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    .book-cover-box img { max-width:100%; max-height:220px; object-fit:contain; border-radius:6px; box-shadow:0 4px 16px rgba(0,0,0,0.22); }
+    .book-slide-inner { padding:12px 8px 4px; text-align:center; }
+    .book-slide-title { font-size:0.82rem; font-weight:700; color:var(--text); line-height:1.55; margin-bottom:10px; }
+    .book-amz-btn { display:inline-block; padding:7px 18px; background:#FF9900; color:#fff; border-radius:8px; font-size:0.75rem; font-weight:700; text-decoration:none; }
+    /* ===== 雑学Q&A ===== */
+    .qa-q { font-size:0.85rem; font-weight:800; color:var(--accent); flex:1; }
+    .qa-a { padding:12px 14px 14px; font-size:0.82rem; line-height:1.75; color:var(--text); border-top:1px solid var(--border); }
+    .qa-a strong { color:var(--accent); }
+    /* ===== 資料サブタブパネル ===== */
+    .docs-panel { display:none; }
+    .docs-panel.active { display:block; }
     /* ===== ニュースサブタブ ===== */
     .news-sub-bar {
       display: flex; margin-bottom: 14px;
@@ -1001,7 +1014,133 @@
     </div>
   </div>
 
-  <!-- マニュアル見出し + アクションバー -->
+  <!-- サブタブバー -->
+  <div class="news-sub-bar" style="margin-bottom:14px">
+    <button class="news-sub-btn active" id="docsBtn-0" onclick="switchDocsTab(0)">📚 書籍</button>
+    <button class="news-sub-btn" id="docsBtn-1" onclick="switchDocsTab(1)">💡 雑学</button>
+    <button class="news-sub-btn" id="docsBtn-2" onclick="switchDocsTab(2)">📋 マニュアル</button>
+    <button class="news-sub-btn" id="docsBtn-3" onclick="switchDocsTab(3)">🔗 リンク先</button>
+  </div>
+
+  <!-- ===== パネル0: 書籍 ===== -->
+  <div id="docs-panel-0" class="docs-panel active">
+    <div class="yt-slider-wrap" id="book-swrap">
+      <div class="yt-slider">
+
+        <div class="yt-slide">
+          <a href="https://www.amazon.co.jp/dp/4839980985" target="_blank" rel="noopener" style="text-decoration:none;display:block">
+            <div class="book-slide-inner">
+              <div class="book-cover-box">
+                <img src="https://images-na.ssl-images-amazon.com/images/P/4839980985.09._SCMZZZZZZZ_.jpg" alt="一歩目からのブロックチェーンとWeb3サービス入門" loading="lazy">
+              </div>
+              <div class="book-slide-title">一歩目からの ブロックチェーンとWeb3サービス入門<br><span style="font-size:0.72rem;font-weight:400;color:var(--muted)">松村 雄太 著</span></div>
+              <span class="book-amz-btn">Amazon で見る →</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="yt-slide">
+          <a href="https://www.amazon.co.jp/dp/4866674156" target="_blank" rel="noopener" style="text-decoration:none;display:block">
+            <div class="book-slide-inner">
+              <div class="book-cover-box">
+                <img src="https://images-na.ssl-images-amazon.com/images/P/4866674156.09._SCMZZZZZZZ_.jpg" alt="暗号資産をやさしく教えてくれる本" loading="lazy">
+              </div>
+              <div class="book-slide-title">暗号資産をやさしく教えてくれる本<br><span style="font-size:0.72rem;font-weight:400;color:var(--muted)">松嶋 真倫 著</span></div>
+              <span class="book-amz-btn">Amazon で見る →</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="yt-slide">
+          <a href="https://www.amazon.co.jp/dp/B0FSJMYDJZ" target="_blank" rel="noopener" style="text-decoration:none;display:block">
+            <div class="book-slide-inner">
+              <div class="book-cover-box">
+                <img src="https://images-na.ssl-images-amazon.com/images/P/B0FSJMYDJZ.09._SCMZZZZZZZ_.jpg" alt="暗号資産で100万円が消えた僕に儲かる方法を教えてください！" loading="lazy">
+              </div>
+              <div class="book-slide-title">暗号資産で100万円が消えた僕に儲かる方法を教えてください！<br><span style="font-size:0.72rem;font-weight:400;color:var(--muted)">松田 康生 著</span></div>
+              <span class="book-amz-btn">Amazon で見る →</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="yt-slide">
+          <a href="https://www.amazon.co.jp/dp/4297128136" target="_blank" rel="noopener" style="text-decoration:none;display:block">
+            <div class="book-slide-inner">
+              <div class="book-cover-box">
+                <img src="https://images-na.ssl-images-amazon.com/images/P/4297128136.09._SCMZZZZZZZ_.jpg" alt="60分でわかる 暗号資産 超入門" loading="lazy">
+              </div>
+              <div class="book-slide-title">60分でわかる！ 暗号資産 超入門<br><span style="font-size:0.72rem;font-weight:400;color:var(--muted)">開米 瑞浩 著</span></div>
+              <span class="book-amz-btn">Amazon で見る →</span>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+    <div class="yt-dots" id="book-dots"></div>
+  </div>
+
+  <!-- ===== パネル1: 雑学Q&A ===== -->
+  <div id="docs-panel-1" class="docs-panel">
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">Q. USDTとは？</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a"><strong>A.</strong> USDT（テザー）は米ドルに価格が連動する「ステーブルコイン」です。1 USDT ≈ 1 USD で設計されており、価格変動が少ないため、暗号資産取引の一時避難先・送金手段として広く使われています。bitradex AIへの入金もUSDTで行います。</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">Q. 暗号資産をスムーズに送金するには？</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a"><strong>A.</strong> ①国内取引所（bitFlyer・Coincheckなど）で日本円 → 暗号資産に変換　②送金先のウォレットアドレスを<strong>必ず二重確認</strong>　③ネットワーク（TRC-20/ERC-20など）を送金先と揃える　④手数料が低い時間帯を選ぶと節約できます。アドレスの1文字でも違うと資産を失うため慎重に。</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">Q. ビットコイン（BTC）とは？</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a"><strong>A.</strong> 2009年に誕生した世界初の分散型暗号資産。総発行枚数が<strong>2,100万枚</strong>に限られており希少性があります。「デジタルゴールド」とも呼ばれ、世界中で投資・決済に使われています。半減期（約4年ごとに採掘報酬が半減）が価格に大きな影響を与えます。</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">Q. 複利運用と単利運用の違いは？</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a"><strong>A.</strong> <strong>単利</strong>は元本にのみ利息がつきます。<strong>複利</strong>は利益にも利息がつくため、長期間ほど差が開きます。例：年利10%・10年運用の場合、単利では+100%なのに対し、複利では+159%になります。bitradex AIは複利（日次再投資）で運用されます。</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">Q. bitradex AIとは？</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a"><strong>A.</strong> bitradex AIは、AIアルゴリズムが24時間自動で暗号資産の先物取引を行うBOTサービスです。ユーザーはUSDTを入金するだけで、AIが売買を代行します。プランごとに運用期間・年利が異なります（例：360Dプラン 年利182.5%）。</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">Q. 投資詐欺の見分け方は？</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a"><strong>A.</strong> ①「<strong>絶対に儲かる・元本保証</strong>」はほぼ詐欺　②SNS DM での突然の投資勧誘に注意　③運営会社の所在地・登録状況を確認　④<strong>出金できない・遅延が続く</strong>場合は即座に対応を。正規サービスは元本保証を約束しません。</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== パネル2: マニュアル ===== -->
+  <div id="docs-panel-2" class="docs-panel">
   <div class="links-head" style="margin-bottom:8px">マニュアル</div>
   <div class="doc-action-bar">
     <span class="doc-action-note">📋 資料を選択して印刷・ダウンロード</span>
@@ -1124,7 +1263,10 @@
     </div>
   </div>
 
-  <!-- ======= リンク先 ======= -->
+  </div><!-- /docs-panel-2 -->
+
+  <!-- ===== パネル3: リンク先 ===== -->
+  <div id="docs-panel-3" class="docs-panel">
   <div class="links-wrap">
     <div class="links-head">リンク先</div>
 
@@ -1318,6 +1460,7 @@
       </div>
     </div>
   </div>
+  </div><!-- /docs-panel-3 -->
 
 </div>
 
@@ -2663,6 +2806,16 @@ function downloadSelected(btn) {
   });
 }
 
+// ===== 資料サブタブ =====
+function switchDocsTab(idx) {
+  for (var i = 0; i < 4; i++) {
+    var b = document.getElementById('docsBtn-' + i);
+    var p = document.getElementById('docs-panel-' + i);
+    if (b) b.classList.toggle('active', i === idx);
+    if (p) p.classList.toggle('active', i === idx);
+  }
+}
+
 // ===== ニュースサブタブ =====
 var newsTabEverShown = false;
 function switchNewsSubTab(idx) {
@@ -3378,6 +3531,7 @@ window.onload = function() {
   initYtDots('yt-swrap-0', 'yt-dots-0', 3);
   initYtDots('yt-swrap-1', 'yt-dots-1', 3);
   initYtDots('yt-swrap-2', 'yt-dots-2', 2);
+  initYtDots('book-swrap', 'book-dots', 4);
   // 5分毎にレート＆指標を自動更新、30分毎にニュースを更新
   setInterval(function() { fetchRate(); fetchMarketData(); }, 5 * 60 * 1000);
   setInterval(fetchNewsHeadlines, 30 * 60 * 1000);
