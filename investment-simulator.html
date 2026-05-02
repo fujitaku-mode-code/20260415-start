@@ -456,7 +456,7 @@
     .coin-ico { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:900; color:#fff; flex-shrink:0; }
     .coin-sym { font-size:0.78rem; font-weight:800; color:var(--text); }
     .coin-name-jp { font-size:0.58rem; color:var(--muted); margin-bottom:4px; }
-    .coin-desc-txt { font-size:0.59rem; color:var(--text); line-height:1.55; }
+    .coin-desc-txt { font-size:0.72rem; color:var(--text); line-height:1.6; }
     /* ===== 書籍スライダードット（視認性強化） ===== */
     #book-dots { padding:6px 0 14px; }
     #book-dots .yt-dot { width:10px; height:10px; background:#adb5bd; }
@@ -836,6 +836,8 @@
     .links-content-area { flex:1; min-width:0; }
     .links-content-sec { display:none; }
     .links-content-sec.active { display:block; }
+    .qa-content-sec { display:none; }
+    .qa-content-sec.active { display:block; }
     /* ===== 資料サブタブパネル ===== */
     .docs-panel { display:none; }
     .docs-panel.active { display:block; }
@@ -1088,7 +1090,7 @@
       <div class="yt-slider">
 
         <div class="yt-slide">
-          <a href="https://www.amazon.co.jp/dp/4839980985" target="_blank" rel="noopener" style="text-decoration:none;display:block">
+          <a href="https://www.amazon.co.jp/dp/4839980985" style="text-decoration:none;display:block">
             <div class="book-slide-inner">
               <div class="book-cover-box">
                 <img src="https://images-na.ssl-images-amazon.com/images/P/4839980985.09._SCMZZZZZZZ_.jpg" alt="一歩目からのブロックチェーンとWeb3サービス入門" loading="lazy">
@@ -1100,7 +1102,7 @@
         </div>
 
         <div class="yt-slide">
-          <a href="https://www.amazon.co.jp/dp/4866674156" target="_blank" rel="noopener" style="text-decoration:none;display:block">
+          <a href="https://www.amazon.co.jp/dp/4866674156" style="text-decoration:none;display:block">
             <div class="book-slide-inner">
               <div class="book-cover-box">
                 <img src="https://images-na.ssl-images-amazon.com/images/P/4866674156.09._SCMZZZZZZZ_.jpg" alt="暗号資産をやさしく教えてくれる本" loading="lazy">
@@ -1112,7 +1114,7 @@
         </div>
 
         <div class="yt-slide">
-          <a href="https://www.amazon.co.jp/dp/B0FSJMYDJZ" target="_blank" rel="noopener" style="text-decoration:none;display:block">
+          <a href="https://www.amazon.co.jp/dp/B0FSJMYDJZ" style="text-decoration:none;display:block">
             <div class="book-slide-inner">
               <div class="book-cover-box">
                 <img src="https://images-na.ssl-images-amazon.com/images/P/B0FSJMYDJZ.09._SCMZZZZZZZ_.jpg" alt="暗号資産で100万円が消えた僕に儲かる方法を教えてください！" loading="lazy">
@@ -1124,7 +1126,7 @@
         </div>
 
         <div class="yt-slide">
-          <a href="https://www.amazon.co.jp/dp/4297128136" target="_blank" rel="noopener" style="text-decoration:none;display:block">
+          <a href="https://www.amazon.co.jp/dp/4297128136" style="text-decoration:none;display:block">
             <div class="book-slide-inner">
               <div class="book-cover-box">
                 <img src="https://images-na.ssl-images-amazon.com/images/P/4297128136.09._SCMZZZZZZZ_.jpg" alt="60分でわかる 暗号資産 超入門" loading="lazy">
@@ -1148,14 +1150,14 @@
     <!-- 左サイドバー -->
     <div class="links-sidebar" style="width:54px">
       <button class="qa-sidebar-btn active" id="qaBtn-0" onclick="switchQaTab(0)">Q&amp;A</button>
-      <button class="qa-sidebar-btn" id="qaBtn-1" onclick="switchQaTab(1)">各<br>コイン</button>
+      <button class="qa-sidebar-btn" id="qaBtn-1" onclick="switchQaTab(1)">コイン</button>
     </div>
 
     <!-- 右コンテンツ -->
     <div class="links-content-area">
 
     <!-- Q&Aセクション -->
-    <div id="qa-sec-0" class="links-content-sec active">
+    <div id="qa-sec-0" class="qa-content-sec active">
 
     <div class="card" style="padding:0;margin-bottom:6px">
       <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
@@ -1301,7 +1303,7 @@
     </div><!-- /qa-sec-0 -->
 
     <!-- コインセクション -->
-    <div id="qa-sec-1" class="links-content-sec">
+    <div id="qa-sec-1" class="qa-content-sec">
     <div class="coin-grid">
 
       <div class="coin-card">
