@@ -767,13 +767,12 @@
     }
 
     /* ===== 書籍スライダー ===== */
-    .book-cover-box { width:100%; margin:0 0 18px; overflow:hidden; display:block; line-height:0; }
-    .book-cover-box img { width:100%; height:auto; display:block; object-fit:contain; }
+    .book-cover-box { width:150px; margin:0 auto 16px; overflow:hidden; display:block; line-height:0; }
+    .book-cover-box img { width:100%; height:auto; display:block; object-fit:contain; border-radius:5px; box-shadow:0 4px 14px rgba(0,0,0,0.22); }
     .book-slide-inner {
-      padding:0 0 22px; text-align:center;
+      padding:20px 16px 22px; text-align:center;
       background:#fff; border-radius:14px; margin:4px;
       border:1.5px solid var(--border); box-shadow:0 2px 14px rgba(0,0,0,0.08);
-      overflow:hidden;
     }
     body.dark .book-slide-inner { background:var(--white); }
     .book-slide-title { font-size:1rem; font-weight:700; color:var(--text); line-height:1.65; margin-bottom:16px; padding:0 18px; }
