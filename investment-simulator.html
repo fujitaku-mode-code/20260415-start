@@ -1483,17 +1483,74 @@
 
   <!-- パネル1: 為替・株式・商品 -->
   <div id="nst-1" class="nst-panel">
-    <div class="yt-wrap">
-      <iframe src="https://www.youtube.com/embed/5GdUj0tgY-w?rel=0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen loading="lazy"></iframe>
-    </div>
-    <div class="yt-info">
-      <div class="yt-info-left">
-        <div class="yt-info-title" id="yt-title-1">読み込み中...</div>
-        <div class="yt-info-ch" id="yt-ch-1"></div>
+    <!-- YouTube横スライダー -->
+    <div class="yt-slider-wrap">
+      <div class="yt-slider">
+
+        <!-- 動画1: 5GdUj0tgY-w -->
+        <div class="yt-slide">
+          <div class="yt-wrap">
+            <a href="https://www.youtube.com/live/5GdUj0tgY-w" target="_blank" rel="noopener"
+               style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-decoration:none">
+              <img src="https://img.youtube.com/vi/5GdUj0tgY-w/hqdefault.jpg"
+                   style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:12px 12px 0 0">
+              <div style="position:relative;z-index:1;width:64px;height:64px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.4)">
+                <div style="width:0;height:0;border-style:solid;border-width:13px 0 13px 23px;border-color:transparent transparent transparent #fff;margin-left:5px"></div>
+              </div>
+            </a>
+          </div>
+          <div class="yt-info">
+            <div class="yt-info-left">
+              <div class="yt-info-title" id="yt-title-1">読み込み中...</div>
+              <div class="yt-info-ch" id="yt-ch-1"></div>
+            </div>
+            <a href="https://www.youtube.com/live/5GdUj0tgY-w" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+          </div>
+        </div>
+
+        <!-- 動画2: QNVPGu-QkhM -->
+        <div class="yt-slide">
+          <div class="yt-wrap">
+            <a href="https://youtu.be/QNVPGu-QkhM" target="_blank" rel="noopener"
+               style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-decoration:none">
+              <img src="https://img.youtube.com/vi/QNVPGu-QkhM/hqdefault.jpg"
+                   style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:12px 12px 0 0">
+              <div style="position:relative;z-index:1;width:64px;height:64px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.4)">
+                <div style="width:0;height:0;border-style:solid;border-width:13px 0 13px 23px;border-color:transparent transparent transparent #fff;margin-left:5px"></div>
+              </div>
+            </a>
+          </div>
+          <div class="yt-info">
+            <div class="yt-info-left">
+              <div class="yt-info-title" id="yt-title-6">読み込み中...</div>
+              <div class="yt-info-ch" id="yt-ch-6"></div>
+            </div>
+            <a href="https://youtu.be/QNVPGu-QkhM" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+          </div>
+        </div>
+
+        <!-- 動画3: _BuIlFNgEEk -->
+        <div class="yt-slide">
+          <div class="yt-wrap">
+            <a href="https://youtu.be/_BuIlFNgEEk" target="_blank" rel="noopener"
+               style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-decoration:none">
+              <img src="https://img.youtube.com/vi/_BuIlFNgEEk/hqdefault.jpg"
+                   style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:12px 12px 0 0">
+              <div style="position:relative;z-index:1;width:64px;height:64px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.4)">
+                <div style="width:0;height:0;border-style:solid;border-width:13px 0 13px 23px;border-color:transparent transparent transparent #fff;margin-left:5px"></div>
+              </div>
+            </a>
+          </div>
+          <div class="yt-info">
+            <div class="yt-info-left">
+              <div class="yt-info-title" id="yt-title-7">読み込み中...</div>
+              <div class="yt-info-ch" id="yt-ch-7"></div>
+            </div>
+            <a href="https://youtu.be/_BuIlFNgEEk" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+          </div>
+        </div>
+
       </div>
-      <a href="https://www.youtube.com/live/5GdUj0tgY-w" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
     </div>
     <!-- 為替・株式・商品カードスライダー -->
     <div class="mkt-slider-wrap">
@@ -2734,6 +2791,8 @@ function fetchAllYtMeta() {
   fetchYtMeta('N7oxL8EqXmM', 'yt-title-3', 'yt-ch-3');
   fetchYtMeta('isGGDcpB95I', 'yt-title-4', 'yt-ch-4');
   fetchYtMeta('f7G8qB19Drc', 'yt-title-5', 'yt-ch-5');
+  fetchYtMeta('QNVPGu-QkhM', 'yt-title-6', 'yt-ch-6');
+  fetchYtMeta('_BuIlFNgEEk', 'yt-title-7', 'yt-ch-7');
 }
 
 // ===== Bitradex フィード（Medium RSS / rss2json経由）=====
