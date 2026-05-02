@@ -3386,21 +3386,45 @@ var BOOK_DATA = [
 function fetchBookCover(img) {
   var asin = img.getAttribute('data-asin');
   if (!asin) return;
-  fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + asin + '&maxResults=1&fields=items/volumeInfo/imageLinks')
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      var links = d.items && d.items[0] && d.items[0].volumeInfo && d.items[0].volumeInfo.imageLinks;
-      if (links) {
-        var url = (links.thumbnail || links.smallThumbnail || '').replace('http://', 'https://').replace('zoom=1', 'zoom=2');
-        if (url) {
-          img.src = url;
-          img.style.display = 'block';
-          var ph = img.parentNode.querySelector('.book-cover-ph');
-          if (ph) ph.style.display = 'none';
+
+  function showCover(url) {
+    img.src = url;
+    img.style.display = 'block';
+    var ph = img.parentNode.querySelector('.book-cover-ph');
+    if (ph) ph.style.display = 'none';
+  }
+
+  // ① Open Library（ISBN直接アクセス、CORS不要）
+  var olImg = new Image();
+  olImg.onload = function() {
+    if (olImg.naturalWidth > 20) { showCover(olImg.src); } else { tryAmz(); }
+  };
+  olImg.onerror = tryAmz;
+  olImg.src = 'https://covers.openlibrary.org/b/isbn/' + asin + '-L.jpg';
+
+  // ② Amazon CDN（imgタグはCORS制限なし）
+  function tryAmz() {
+    var amzImg = new Image();
+    amzImg.onload = function() {
+      if (amzImg.naturalWidth > 20) { showCover(amzImg.src); } else { tryGoogle(); }
+    };
+    amzImg.onerror = tryGoogle;
+    amzImg.src = 'https://images-na.ssl-images-amazon.com/images/P/' + asin + '.09.LZZZZZZZ.jpg';
+  }
+
+  // ③ Google Books API
+  function tryGoogle() {
+    fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + asin + '&maxResults=1&fields=items/volumeInfo/imageLinks')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var links = d.items && d.items[0] && d.items[0].volumeInfo && d.items[0].volumeInfo.imageLinks;
+        if (links) {
+          var url = (links.thumbnail || links.smallThumbnail || '').replace('http://', 'https://').replace('zoom=1', 'zoom=2');
+          if (url) showCover(url);
         }
-      }
-    })
-    .catch(function() {});
+      })
+      .catch(function() {});
+  }
 }
 
 function makeBookSlide(book, yearColor) {
