@@ -1001,6 +1001,7 @@
       <option value="90d">bitradex AI 90D（年利109.5% / 90日）</option>
       <option value="30d">bitradex AI 30D（年利31.5% / 30日）</option>
       <option value="daily">bitradex AI Daily（年利91.25% / 365日）</option>
+      <option value="noplan">No Plan（手動で設定）</option>
     </select>
   </div>
 
@@ -2001,36 +2002,43 @@
         <div class="mkt-card">
           <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#627eea">Ξ</div><span class="mkt-card-name">ETH</span></div>
           <div class="mkt-card-price" id="mkt-p-eth">---</div>
+          <div class="mkt-card-sub" id="mkt-p-eth-usd"></div>
           <span class="mkt-chg" id="mkt-c-eth">---</span>
         </div>
         <div class="mkt-card">
           <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#00aae4">✕</div><span class="mkt-card-name">XRP</span></div>
           <div class="mkt-card-price" id="mkt-p-xrp">---</div>
+          <div class="mkt-card-sub" id="mkt-p-xrp-usd"></div>
           <span class="mkt-chg" id="mkt-c-xrp">---</span>
         </div>
         <div class="mkt-card">
           <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#9945ff">◎</div><span class="mkt-card-name">SOL</span></div>
           <div class="mkt-card-price" id="mkt-p-sol">---</div>
+          <div class="mkt-card-sub" id="mkt-p-sol-usd"></div>
           <span class="mkt-chg" id="mkt-c-sol">---</span>
         </div>
         <div class="mkt-card">
           <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#f0b90b;font-size:0.44rem;font-weight:900">BNB</div><span class="mkt-card-name">BNB</span></div>
           <div class="mkt-card-price" id="mkt-p-bnb">---</div>
+          <div class="mkt-card-sub" id="mkt-p-bnb-usd"></div>
           <span class="mkt-chg" id="mkt-c-bnb">---</span>
         </div>
         <div class="mkt-card">
           <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#ef0027;font-size:0.44rem;font-weight:900">TRX</div><span class="mkt-card-name">TRX</span></div>
           <div class="mkt-card-price" id="mkt-p-trx">---</div>
+          <div class="mkt-card-sub" id="mkt-p-trx-usd"></div>
           <span class="mkt-chg" id="mkt-c-trx">---</span>
         </div>
         <div class="mkt-card">
           <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#c2a633">Ð</div><span class="mkt-card-name">DOGE</span></div>
           <div class="mkt-card-price" id="mkt-p-doge">---</div>
+          <div class="mkt-card-sub" id="mkt-p-doge-usd"></div>
           <span class="mkt-chg" id="mkt-c-doge">---</span>
         </div>
         <div class="mkt-card">
           <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#00d4ff;font-size:0.4rem;font-weight:900">HYPE</div><span class="mkt-card-name">HYPE</span></div>
           <div class="mkt-card-price" id="mkt-p-hype">---</div>
+          <div class="mkt-card-sub" id="mkt-p-hype-usd"></div>
           <span class="mkt-chg" id="mkt-c-hype">---</span>
         </div>
       </div>
@@ -2126,6 +2134,21 @@
           <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#c62828;font-size:0.4rem">NK</div><span class="mkt-card-name">日経先物</span></div>
           <div class="mkt-card-price" id="mkt-p-nkd">---</div>
           <span class="mkt-chg" id="mkt-c-nkd">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#003399;font-size:0.4rem">€$</div><span class="mkt-card-name">EUR/USD</span></div>
+          <div class="mkt-card-price" id="mkt-p-eurusd">---</div>
+          <span class="mkt-chg" id="mkt-c-eurusd">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#003399;font-size:0.4rem">€¥</div><span class="mkt-card-name">EUR/JPY</span></div>
+          <div class="mkt-card-price" id="mkt-p-eurjpy">---</div>
+          <span class="mkt-chg" id="mkt-c-eurjpy">---</span>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-card-top"><div class="mkt-card-ico" style="background:#012169;font-size:0.4rem">£¥</div><span class="mkt-card-name">GBP/JPY</span></div>
+          <div class="mkt-card-price" id="mkt-p-gbpjpy">---</div>
+          <span class="mkt-chg" id="mkt-c-gbpjpy">---</span>
         </div>
       </div>
     </div>
@@ -2362,6 +2385,16 @@ function commaDec(n) {
 }
 function fmtUSD(v)       { return '$' + commaDec(v); }
 function fmtJPY(v, rate) { return '¥' + commaInt(v * rate); }
+function fmtCryptoUsd(v) {
+  if (!v || v <= 0) return '';
+  if (v >= 1000) return '$' + commaInt(Math.round(v));
+  if (v >= 1)    return '$' + v.toFixed(2);
+  return '$' + v.toFixed(4);
+}
+function setCryptoUsdSub(id, usdVal) {
+  var el = document.getElementById(id);
+  if (el && usdVal) el.textContent = fmtCryptoUsd(usdVal);
+}
 function fmtPct(v)       { return (v >= 0 ? '+' : '') + v.toFixed(1) + '%'; }
 
 function fmtYAxis(v) {
@@ -2458,37 +2491,44 @@ function fetchRate() {
           if (d.ethereum && d.ethereum.jpy) {
             var ec = d.ethereum.jpy_24h_change || 0;
             setMC('eth', '¥' + commaInt(Math.round(d.ethereum.jpy / 1000) * 1000), ec, true, false);
+            setCryptoUsdSub('mkt-p-eth-usd', d.ethereum.usd);
           }
           // XRP
           if (d.ripple && d.ripple.jpy) {
             var xc = d.ripple.jpy_24h_change || 0;
             var xv = d.ripple.jpy < 10 ? d.ripple.jpy.toFixed(2) : Math.round(d.ripple.jpy);
             setMC('xrp', '¥' + xv, xc, true, false);
+            setCryptoUsdSub('mkt-p-xrp-usd', d.ripple.usd);
           }
           // SOL
           if (d.solana && d.solana.jpy) {
             var sc = d.solana.jpy_24h_change || 0;
             setMC('sol', '¥' + commaInt(Math.round(d.solana.jpy)), sc, true, false);
+            setCryptoUsdSub('mkt-p-sol-usd', d.solana.usd);
           }
           // BNB
           if (d.binancecoin && d.binancecoin.jpy) {
             var nc = d.binancecoin.jpy_24h_change || 0;
             setMC('bnb', '¥' + commaInt(Math.round(d.binancecoin.jpy)), nc, true, false);
+            setCryptoUsdSub('mkt-p-bnb-usd', d.binancecoin.usd);
           }
           // TRX
           if (d.tron && d.tron.jpy) {
             var tc2 = d.tron.jpy_24h_change || 0;
             setMC('trx', '¥' + (d.tron.jpy < 10 ? d.tron.jpy.toFixed(2) : Math.round(d.tron.jpy)), tc2, true, false);
+            setCryptoUsdSub('mkt-p-trx-usd', d.tron.usd);
           }
           // DOGE
           if (d.dogecoin && d.dogecoin.jpy) {
             var dgc = d.dogecoin.jpy_24h_change || 0;
             setMC('doge', '¥' + (d.dogecoin.jpy < 10 ? d.dogecoin.jpy.toFixed(2) : Math.round(d.dogecoin.jpy)), dgc, true, false);
+            setCryptoUsdSub('mkt-p-doge-usd', d.dogecoin.usd);
           }
           // HYPE
           if (d.hyperliquid && d.hyperliquid.jpy) {
             var hyc = d.hyperliquid.jpy_24h_change || 0;
             setMC('hype', '¥' + commaInt(Math.round(d.hyperliquid.jpy)), hyc, true, false);
+            setCryptoUsdSub('mkt-p-hype-usd', d.hyperliquid.usd);
           }
           // ゴールド（$/oz）＋ ゴールド（¥/g）
           if (d['pax-gold'] && d['pax-gold'].usd) {
@@ -2561,6 +2601,12 @@ function fetchRate() {
             if (d.rates.EUR > 0) {
               gEurJpy = Math.round(rate / d.rates.EUR * 100) / 100;
               setMC('eurjpy', '¥' + gEurJpy.toFixed(2), 0, false);
+              var eurUsd = Math.round((1 / d.rates.EUR) * 10000) / 10000;
+              setMC('eurusd', '$' + eurUsd.toFixed(4), 0, false);
+            }
+            if (d.rates.GBP > 0) {
+              var gbpJpy = Math.round(rate / d.rates.GBP * 100) / 100;
+              setMC('gbpjpy', '¥' + gbpJpy.toFixed(2), 0, false);
             }
             applyRate(rate); updateTicker(); return;
           }
@@ -2673,6 +2719,12 @@ function updateAutoFee() {
 }
 
 function applyPlan(key) {
+  if (key === 'noplan') {
+    document.getElementById('annualRate').value        = '';
+    document.getElementById('days').value              = '';
+    document.getElementById('reinvestThreshold').value = '';
+    return;
+  }
   var plan = PLANS[key];
   if (!plan) return;
   document.getElementById('annualRate').value        = plan.rate;
@@ -3885,6 +3937,10 @@ function fetchMarketData() {
       if (d.rates && d.rates.EUR > 0 && d.rates.JPY > 0) {
         gEurJpy = Math.round(d.rates.JPY / d.rates.EUR * 100) / 100;
         setMC('eurjpy', '¥' + gEurJpy.toFixed(2), 0, false, false);
+        var eurUsd = Math.round((1 / d.rates.EUR) * 10000) / 10000;
+        setMC('eurusd', '$' + eurUsd.toFixed(4), 0, false, false);
+        var gbpJpy = Math.round(d.rates.JPY / d.rates.GBP * 100) / 100;
+        setMC('gbpjpy', '¥' + gbpJpy.toFixed(2), 0, false, false);
       }
     }).catch(function() {
       fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json')
