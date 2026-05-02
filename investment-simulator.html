@@ -621,7 +621,7 @@
     .ticker-body { flex:1; overflow:hidden; height:100%; position:relative; display:flex; align-items:center; }
     .ticker-items {
       display:inline-flex; align-items:center; height:100%;
-      white-space:nowrap; animation:tickerScroll 60s linear infinite;
+      white-space:nowrap; animation:tickerScroll 200s linear infinite;
       will-change:transform;
     }
     .ticker-items:hover { animation-play-state:paused; }
@@ -3384,9 +3384,9 @@ function makeBookSlide(book, yearColor) {
     ? 'https://www.amazon.co.jp/dp/' + book.asin
     : 'https://www.amazon.co.jp/s?k=' + encodeURIComponent(book.t);
   var imgHtml = book.asin
-    ? '<img src="https://m.media-amazon.com/images/P/' + book.asin + '.01.LZZZZZZZ.jpg"'
+    ? '<img src="https://images-na.ssl-images-amazon.com/images/P/' + book.asin + '.09.LZZZZZZZ.jpg"'
       + ' alt="' + book.t + '" loading="lazy"'
-      + ' onerror="this.onerror=null;this.src=\'https://images-na.ssl-images-amazon.com/images/P/' + book.asin + '.09.LZZZZZZZ.jpg\'">'
+      + ' onerror="this.onerror=null;this.src=\'https://images-na.ssl-images-amazon.com/images/P/' + book.asin + '.01.LZZZZZZZ.jpg\'">'
     : '<div style="height:160px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:#fff;padding:8px;text-align:center;background:' + yearColor + ';border-radius:5px">' + book.t + '</div>';
   var boxStyle = book.asin ? '' : '';
   var btnLabel = book.asin ? 'Amazon で見る →' : 'Amazon で探す →';
