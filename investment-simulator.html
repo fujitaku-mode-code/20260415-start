@@ -447,8 +447,10 @@
     .qa-sidebar-btn:active { opacity:0.75; }
     .qa-sidebar-btn:nth-child(1) { border-color:#2575fc; color:#2575fc; background:rgba(37,117,252,0.1); }
     .qa-sidebar-btn:nth-child(1).active { background:#2575fc; color:#fff; }
-    .qa-sidebar-btn:nth-child(2) { border-color:#059669; color:#059669; background:rgba(5,150,105,0.1); }
-    .qa-sidebar-btn:nth-child(2).active { background:#059669; color:#fff; }
+    .qa-sidebar-btn:nth-child(2) { border-color:#d97706; color:#d97706; background:rgba(217,119,6,0.1); }
+    .qa-sidebar-btn:nth-child(2).active { background:#d97706; color:#fff; }
+    .qa-sidebar-btn:nth-child(3) { border-color:#059669; color:#059669; background:rgba(5,150,105,0.1); }
+    .qa-sidebar-btn:nth-child(3).active { background:#059669; color:#fff; }
     /* ===== コインカードグリッド ===== */
     .coin-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
     .coin-card { background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:9px; }
@@ -457,6 +459,38 @@
     .coin-sym { font-size:0.78rem; font-weight:800; color:var(--text); }
     .coin-name-jp { font-size:0.58rem; color:var(--muted); margin-bottom:4px; }
     .coin-desc-txt { font-size:0.72rem; color:var(--text); line-height:1.6; }
+    /* ===== 書籍 年別サイドバー ===== */
+    .book-yr-btn {
+      width:100%; padding:8px 3px; border:2px solid; border-radius:10px;
+      font-size:0.68rem; font-weight:800; cursor:pointer; text-align:center;
+      font-family:'Noto Sans JP',sans-serif; line-height:1.3;
+      transition:background 0.15s, color 0.15s;
+    }
+    .book-yr-btn:active { opacity:0.75; }
+    .book-yr-btn:nth-child(1){border-color:#1a3a8f;color:#1a3a8f;background:rgba(26,58,143,0.1);}
+    .book-yr-btn:nth-child(1).active{background:#1a3a8f;color:#fff;}
+    .book-yr-btn:nth-child(2){border-color:#7b2ff7;color:#7b2ff7;background:rgba(123,47,247,0.1);}
+    .book-yr-btn:nth-child(2).active{background:#7b2ff7;color:#fff;}
+    .book-yr-btn:nth-child(3){border-color:#d97706;color:#d97706;background:rgba(217,119,6,0.1);}
+    .book-yr-btn:nth-child(3).active{background:#d97706;color:#fff;}
+    .book-yr-btn:nth-child(4){border-color:#059669;color:#059669;background:rgba(5,150,105,0.1);}
+    .book-yr-btn:nth-child(4).active{background:#059669;color:#fff;}
+    .book-yr-btn:nth-child(5){border-color:#0891b2;color:#0891b2;background:rgba(8,145,178,0.1);}
+    .book-yr-btn:nth-child(5).active{background:#0891b2;color:#fff;}
+    .book-yr-btn:nth-child(6){border-color:#7c3aed;color:#7c3aed;background:rgba(124,58,237,0.1);}
+    .book-yr-btn:nth-child(6).active{background:#7c3aed;color:#fff;}
+    .book-yr-btn:nth-child(7){border-color:#dc2626;color:#dc2626;background:rgba(220,38,38,0.1);}
+    .book-yr-btn:nth-child(7).active{background:#dc2626;color:#fff;}
+    .book-yr-btn:nth-child(8){border-color:#475569;color:#475569;background:rgba(71,85,105,0.1);}
+    .book-yr-btn:nth-child(8).active{background:#475569;color:#fff;}
+    .book-yr-sec { display:none; }
+    .book-yr-sec.active { display:block; }
+    .book-cover-text {
+      background:var(--border); border-radius:8px; line-height:1.6 !important;
+      min-height:180px; display:flex !important; align-items:center;
+      justify-content:center; padding:16px; box-sizing:border-box;
+    }
+    .book-cover-text span { color:#fff; font-size:0.78rem; font-weight:700; text-align:center; }
     /* ===== 書籍スライダードット（視認性強化） ===== */
     #book-dots { padding:6px 0 14px; }
     #book-dots .yt-dot { width:10px; height:10px; background:#adb5bd; }
@@ -1086,61 +1120,28 @@
 
   <!-- ===== パネル0: 書籍 ===== -->
   <div id="docs-panel-0" class="docs-panel active">
-    <div class="yt-slider-wrap" id="book-swrap">
-      <div class="yt-slider">
-
-        <div class="yt-slide">
-          <a href="https://www.amazon.co.jp/dp/4839980985" style="text-decoration:none;display:block">
-            <div class="book-slide-inner">
-              <div class="book-cover-box">
-                <img src="https://images-na.ssl-images-amazon.com/images/P/4839980985.09._SCMZZZZZZZ_.jpg" alt="一歩目からのブロックチェーンとWeb3サービス入門" loading="lazy">
-              </div>
-              <div class="book-slide-title">一歩目からの ブロックチェーンとWeb3サービス入門<br><span style="font-size:0.72rem;font-weight:400;color:var(--muted)">松村 雄太 著</span></div>
-              <span class="book-amz-btn">Amazon で見る →</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="yt-slide">
-          <a href="https://www.amazon.co.jp/dp/4866674156" style="text-decoration:none;display:block">
-            <div class="book-slide-inner">
-              <div class="book-cover-box">
-                <img src="https://images-na.ssl-images-amazon.com/images/P/4866674156.09._SCMZZZZZZZ_.jpg" alt="暗号資産をやさしく教えてくれる本" loading="lazy">
-              </div>
-              <div class="book-slide-title">暗号資産をやさしく教えてくれる本<br><span style="font-size:0.72rem;font-weight:400;color:var(--muted)">松嶋 真倫 著</span></div>
-              <span class="book-amz-btn">Amazon で見る →</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="yt-slide">
-          <a href="https://www.amazon.co.jp/dp/B0FSJMYDJZ" style="text-decoration:none;display:block">
-            <div class="book-slide-inner">
-              <div class="book-cover-box">
-                <img src="https://images-na.ssl-images-amazon.com/images/P/B0FSJMYDJZ.09._SCMZZZZZZZ_.jpg" alt="暗号資産で100万円が消えた僕に儲かる方法を教えてください！" loading="lazy">
-              </div>
-              <div class="book-slide-title">暗号資産で100万円が消えた僕に儲かる方法を教えてください！<br><span style="font-size:0.72rem;font-weight:400;color:var(--muted)">松田 康生 著</span></div>
-              <span class="book-amz-btn">Amazon で見る →</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="yt-slide">
-          <a href="https://www.amazon.co.jp/dp/4297128136" style="text-decoration:none;display:block">
-            <div class="book-slide-inner">
-              <div class="book-cover-box">
-                <img src="https://images-na.ssl-images-amazon.com/images/P/4297128136.09._SCMZZZZZZZ_.jpg" alt="60分でわかる 暗号資産 超入門" loading="lazy">
-              </div>
-              <div class="book-slide-title">60分でわかる！ 暗号資産 超入門<br><span style="font-size:0.72rem;font-weight:400;color:var(--muted)">開米 瑞浩 著</span></div>
-              <span class="book-amz-btn">Amazon で見る →</span>
-            </div>
-          </a>
-        </div>
-
-      </div>
+  <div class="links-sidebar-layout">
+    <div class="links-sidebar" style="width:50px">
+      <button class="book-yr-btn active" onclick="switchBookYear(0)">2026</button>
+      <button class="book-yr-btn" onclick="switchBookYear(1)">2025</button>
+      <button class="book-yr-btn" onclick="switchBookYear(2)">2024</button>
+      <button class="book-yr-btn" onclick="switchBookYear(3)">2023</button>
+      <button class="book-yr-btn" onclick="switchBookYear(4)">2022</button>
+      <button class="book-yr-btn" onclick="switchBookYear(5)">2021</button>
+      <button class="book-yr-btn" onclick="switchBookYear(6)">2020</button>
+      <button class="book-yr-btn" onclick="switchBookYear(7)">2019</button>
     </div>
-    <div style="text-align:center;font-size:0.65rem;color:var(--muted);padding-top:8px;letter-spacing:0.05em">← スワイプで切替 →</div>
-    <div class="yt-dots" id="book-dots"></div>
+    <div class="links-content-area">
+      <div id="book-yr-0" class="book-yr-sec active"><div class="yt-slider-wrap" id="book-swrap-0"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-0"></div></div>
+      <div id="book-yr-1" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-1"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-1"></div></div>
+      <div id="book-yr-2" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-2"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-2"></div></div>
+      <div id="book-yr-3" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-3"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-3"></div></div>
+      <div id="book-yr-4" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-4"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-4"></div></div>
+      <div id="book-yr-5" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-5"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-5"></div></div>
+      <div id="book-yr-6" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-6"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-6"></div></div>
+      <div id="book-yr-7" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-7"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-7"></div></div>
+    </div>
+  </div>
   </div>
 
   <!-- ===== パネル1: Q&A ===== -->
@@ -1150,7 +1151,8 @@
     <!-- 左サイドバー -->
     <div class="links-sidebar" style="width:54px">
       <button class="qa-sidebar-btn active" id="qaBtn-0" onclick="switchQaTab(0)">Q&amp;A</button>
-      <button class="qa-sidebar-btn" id="qaBtn-1" onclick="switchQaTab(1)">コイン</button>
+      <button class="qa-sidebar-btn" id="qaBtn-1" onclick="switchQaTab(1)">初心者<br>解説</button>
+      <button class="qa-sidebar-btn" id="qaBtn-2" onclick="switchQaTab(2)">コイン</button>
     </div>
 
     <!-- 右コンテンツ -->
@@ -1302,8 +1304,113 @@
 
     </div><!-- /qa-sec-0 -->
 
-    <!-- コインセクション -->
+    <!-- 初心者向け解説セクション -->
     <div id="qa-sec-1" class="qa-content-sec">
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">1. 価格暴落・詐欺への恐怖</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a">「買った瞬間に価格が暴落してゼロになったらどうしよう」という恐怖や、「怪しいプロジェクトに騙されて持ち逃げされないか」という安全性への懸念は初心者に最も多い不安です。<br><br>
+        <strong>対策：</strong>①余剰資金のみで運用 ②実績ある主要コイン（BTC・ETH）から始める ③「絶対儲かる」という案件は即NG</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">2. セキュリティとハッキング</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a">取引所がハッキングされたニュースの影響で、「自分のコインが盗まれないか」と心配される方が多いです。<br><br>
+        <strong>対策：</strong>①二段階認証（2FA）を必ず設定 ②大金は取引所に置かず、Bitget Wallet（ホット）や Tangem（コールド）へ移す ③フィッシングリンクを踏まない</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">3. 税金と確定申告</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a">「利益が出たらどう計算するか」「会社にバレるか」「税率が高いと聞いたが手元にいくら残るか」など、出口戦略での税金ハードルは高いです。<br><br>
+        <strong>ポイント：</strong>暗号資産の利益は<strong>雑所得</strong>（最大55%課税）。年間20万円超で確定申告が必要。クリプタクトなどの損益計算ツールの活用がおすすめです。</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">4. 買い時・売り時（FOMO）</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a">「今が最高値ではないか」「いつ売れば正解か」という判断基準がわからず、FOMO（取り残される恐怖）で焦ってしまいがちです。<br><br>
+        <strong>考え方：</strong>①一括購入より<strong>積立（DCA）</strong>で平均取得コストを下げる ②目標価格を事前に決めておく ③感情的な判断を避け、ルールに従う</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">5. 銘柄選び（何を買えばいいか）</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a">数千種類のコインがある中で「どれが上がるか」「ゴミコインを掴まされないか」という情報の取捨選択に悩みます。<br><br>
+        <strong>基準：</strong>①時価総額上位（BTC・ETH）は比較的安全 ②プロジェクトの実態・チームを確認 ③SNSで急に盛り上がるコインは要注意（Pump&amp;Dump）</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">6. 送金ミス（セルフGOX）</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a">送金アドレスを一文字でも間違えると資産が<strong>永久に失われる</strong>という「やり直しのきかない操作」に強い恐怖を感じます。<br><br>
+        <strong>対策：</strong>①送金前にアドレスをコピペで確認（絶対に手入力しない） ②ネットワーク（TRC-20/ERC-20等）を必ず一致させる ③初回は少額でテスト送金してから本番</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">7. 取引所の選び方</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a">「どこが安全か」「手数料はどこが安いか」など最初の窓口選びに悩みます。<br><br>
+        <strong>目安：</strong>①国内取引所（bitFlyer・Coincheck等）→ 金融庁登録済みで安心 ②海外取引所（Bitget・MEXC・BingX）→ 取扱コイン豊富・手数料安い ③目的に合わせて使い分けが理想</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">8. 専門用語の理解</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a">「ブロックチェーン」「ステーキング」「NFT」「Web3」「分散型」など概念が難解で、本質を理解しないまま投資することへの抵抗感があります。<br><br>
+        <strong>アドバイス：</strong>全てを理解する必要はありません。まず「送金・受取・保管」の基本操作を覚えるだけで十分。Q&amp;Aやコインの説明ページで少しずつ学びましょう。</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">9. 法規制と将来性</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a">「国が禁止したら価値がなくなるのでは？」「ただのブームで終わるのでは？」という持続可能性への懸念です。<br><br>
+        <strong>現状：</strong>日本は世界でも<strong>早期に暗号資産を法整備</strong>した国の一つ。米国・EU・アジア各国でも制度化が進んでおり、完全禁止よりも規制の枠組み整備が主流です。</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">10. 余剰資金の考え方</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a">暗号資産投資の大前提は「<strong>失っても生活に支障がないお金</strong>」で行うことです。<br><br>
+        <strong>目安：</strong>①生活費3〜6ヶ月分は現金で確保 ②投資に回すのは収入の<strong>20〜30%以内</strong>が目安 ③価格が90%下落しても精神的に耐えられる金額のみ投資する。「投資は余剰資金で」という原則を守ることが長期運用の鍵です。</div>
+      </div>
+    </div>
+
+    </div><!-- /qa-sec-1 -->
+
+    <!-- コインセクション -->
+    <div id="qa-sec-2" class="qa-content-sec">
     <div class="coin-grid">
 
       <div class="coin-card">
@@ -1433,7 +1540,7 @@
       </div>
 
     </div><!-- /coin-grid -->
-    </div><!-- /qa-sec-1 -->
+    </div><!-- /qa-sec-2 -->
 
     </div><!-- /links-content-area -->
   </div><!-- /links-sidebar-layout -->
@@ -2065,6 +2172,22 @@
               <div class="yt-info-ch" id="yt-ch-3"></div>
             </div>
             <a href="https://youtu.be/N7oxL8EqXmM" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+          </div>
+        </div>
+
+        <!-- 動画3: 46J3YB2z3Us -->
+        <div class="yt-slide">
+          <div class="yt-wrap">
+            <iframe src="https://www.youtube.com/embed/46J3YB2z3Us?rel=0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="yt-info">
+            <div class="yt-info-left">
+              <div class="yt-info-title" id="yt-title-8">読み込み中...</div>
+              <div class="yt-info-ch" id="yt-ch-8"></div>
+            </div>
+            <a href="https://youtu.be/46J3YB2z3Us" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
           </div>
         </div>
 
@@ -3129,11 +3252,94 @@ function downloadSelected(btn) {
 
 // ===== Q&Aサイドバータブ =====
 function switchQaTab(idx) {
-  for (var i = 0; i < 2; i++) {
+  for (var i = 0; i < 3; i++) {
     var b = document.getElementById('qaBtn-' + i);
     var s = document.getElementById('qa-sec-' + i);
     if (b) b.classList.toggle('active', i === idx);
     if (s) s.classList.toggle('active', i === idx);
+  }
+}
+
+// ===== 書籍 年別データ =====
+var BOOK_DATA = [
+  { year:'2026', color:'linear-gradient(135deg,#1a3a8f,#4f6ef7)', books:[
+    { t:'ザイが作った「暗号資産」入門', a:'ザイ編集部', asin:'4478120612' }
+  ]},
+  { year:'2025', color:'linear-gradient(135deg,#7b2ff7,#f107a3)', books:[
+    { t:'ビットコイン持ってますか?', a:'川合林太郎' },
+    { t:'マスタリング・ビットコイン 第3版', a:'A.M.Antonopoulos' },
+    { t:'暗号資産投資', a:'松田康生、桝本誠二' },
+    { t:'図解即戦力 ブロックチェーンのしくみと開発 改訂2版', a:'コンセンサス・ベイス' },
+    { t:'サトシ・ナカモトはだれだ？', a:'B.ウォレス' },
+    { t:'いまさら聞けないビットコインとブロックチェーン 最新改訂版', a:'大塚雄介', asin:'4799332031' },
+    { t:'Web3・暗号資産 13人の未来予測', a:'神本侑季(編)', asin:'4022520744' },
+    { t:'世界一やさしい 暗号資産・ビットコインの教科書1年生', a:'松田康生' },
+    { t:'世界一わかりやすい暗号資産ガイド 2025-26最新版', a:'COINCATS', asin:'B0FMY42FD4' },
+    { t:'デジタル資産とWeb3', a:'小田玄紀' },
+    { t:'暗号資産投資大全2025', a:'大洋図書', asin:'4813085959' }
+  ]},
+  { year:'2024', color:'linear-gradient(135deg,#d97706,#f59e0b)', books:[
+    { t:'イーサリアム創世記', a:'ローラ・シン' },
+    { t:'新NFTの教科書', a:'天野清之' },
+    { t:'ビットコインかんたんスタートガイド', a:'晋遊舎' },
+    { t:'ビットコイン&仮想通貨 2024 BURST', a:'大洋図書' },
+    { t:'世界一わかりやすいビットコインの教科書', a:'-' }
+  ]},
+  { year:'2023', color:'linear-gradient(135deg,#059669,#10b981)', books:[
+    { t:'イーサリアム 若き天才が示す暗号資産の真実と未来', a:'Vitalik Buterin' },
+    { t:'Web3.0の教科書', a:'のぶめい' }
+  ]},
+  { year:'2022', color:'linear-gradient(135deg,#0891b2,#06b6d4)', books:[
+    { t:'図解ポケット 次世代プラットフォーム イーサリアム', a:'廣田章' }
+  ]},
+  { year:'2021', color:'linear-gradient(135deg,#7c3aed,#8b5cf6)', books:[
+    { t:'最新 いまさら聞けないビットコインとブロックチェーン', a:'大塚雄介' },
+    { t:'ビットコイン・スタンダード', a:'S・アモウズ', asin:'462309212X' },
+    { t:'仮想通貨投資を始めてみたい方にオススメの一冊', a:'新星出版社' }
+  ]},
+  { year:'2020', color:'linear-gradient(135deg,#dc2626,#ef4444)', books:[
+    { t:'アフター・ビットコイン2', a:'中島真志' },
+    { t:'詳解ビットコイン', a:'A.M.Antonopoulos' }
+  ]},
+  { year:'2019', color:'linear-gradient(135deg,#475569,#64748b)', books:[
+    { t:'マスタリング・イーサリアム', a:'A.M.Antonopoulos' },
+    { t:'未来力 10年後の世界を読み解く51の思考法', a:'三木谷浩史' },
+    { t:'マンガでわかるブロックチェーンのトリセツ', a:'-' },
+    { t:'1万円から始められる ビットコインFX', a:'-' }
+  ]}
+];
+
+function makeBookSlide(book, yearColor) {
+  var amzUrl = book.asin
+    ? 'https://www.amazon.co.jp/dp/' + book.asin
+    : 'https://www.amazon.co.jp/s?k=' + encodeURIComponent(book.t);
+  var imgHtml = book.asin
+    ? '<img src="https://images-na.ssl-images-amazon.com/images/P/' + book.asin + '.09._SCMZZZZZZZ_.jpg" alt="' + book.t + '" loading="lazy">'
+    : '<span>' + book.t + '</span>';
+  var boxStyle = book.asin ? '' : ' class="book-cover-text" style="background:' + yearColor + '"';
+  var btnLabel = book.asin ? 'Amazon で見る →' : 'Amazon で探す →';
+  return '<div class="yt-slide"><a href="' + amzUrl + '" style="text-decoration:none;display:block">'
+    + '<div class="book-slide-inner"><div class="book-cover-box"' + boxStyle + '>' + imgHtml + '</div>'
+    + '<div class="book-slide-title">' + book.t + '<br><span style="font-size:0.72rem;font-weight:400;color:var(--muted)">' + book.a + ' 著</span></div>'
+    + '<span class="book-amz-btn">' + btnLabel + '</span>'
+    + '</div></a></div>';
+}
+
+var bookYrInited = {};
+function switchBookYear(idx) {
+  var btns = document.querySelectorAll('.book-yr-btn');
+  var secs = document.querySelectorAll('.book-yr-sec');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.toggle('active', i === idx);
+  for (var i = 0; i < secs.length; i++) secs[i].classList.toggle('active', i === idx);
+  if (!bookYrInited[idx]) {
+    bookYrInited[idx] = true;
+    var bd = BOOK_DATA[idx];
+    if (!bd) return;
+    var swrap = document.getElementById('book-swrap-' + idx);
+    if (!swrap) return;
+    var slider = swrap.querySelector('.yt-slider');
+    if (slider) slider.innerHTML = bd.books.map(function(b) { return makeBookSlide(b, bd.color); }).join('');
+    initYtDots('book-swrap-' + idx, 'book-dots-' + idx, bd.books.length);
   }
 }
 
@@ -3276,6 +3482,7 @@ function fetchAllYtMeta() {
   fetchYtMeta('f7G8qB19Drc', 'yt-title-5', 'yt-ch-5');
   fetchYtMeta('QNVPGu-QkhM', 'yt-title-6', 'yt-ch-6');
   fetchYtMeta('_BuIlFNgEEk', 'yt-title-7', 'yt-ch-7');
+  fetchYtMeta('46J3YB2z3Us', 'yt-title-8', 'yt-ch-8');
 }
 
 // ===== Bitradex フィード（Medium RSS / rss2json経由）=====
@@ -3869,8 +4076,8 @@ window.onload = function() {
   fetchAllYtMeta();
   initYtDots('yt-swrap-0', 'yt-dots-0', 3);
   initYtDots('yt-swrap-1', 'yt-dots-1', 3);
-  initYtDots('yt-swrap-2', 'yt-dots-2', 2);
-  initYtDots('book-swrap', 'book-dots', 4);
+  initYtDots('yt-swrap-2', 'yt-dots-2', 3);
+  switchBookYear(0);
   // 5分毎にレート＆指標を自動更新、30分毎にニュースを更新
   setInterval(function() { fetchRate(); fetchMarketData(); }, 5 * 60 * 1000);
   setInterval(fetchNewsHeadlines, 30 * 60 * 1000);
