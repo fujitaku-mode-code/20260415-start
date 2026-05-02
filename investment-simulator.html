@@ -767,11 +767,16 @@
     }
 
     /* ===== 書籍スライダー ===== */
-    .book-cover-box { width:160px; height:220px; margin:0 auto 12px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
-    .book-cover-box img { max-width:100%; max-height:220px; object-fit:contain; border-radius:6px; box-shadow:0 4px 16px rgba(0,0,0,0.22); }
-    .book-slide-inner { padding:12px 8px 4px; text-align:center; }
-    .book-slide-title { font-size:0.82rem; font-weight:700; color:var(--text); line-height:1.55; margin-bottom:10px; }
-    .book-amz-btn { display:inline-block; padding:7px 18px; background:#FF9900; color:#fff; border-radius:8px; font-size:0.75rem; font-weight:700; text-decoration:none; }
+    .book-cover-box { width:220px; height:300px; margin:0 auto 18px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    .book-cover-box img { max-width:100%; max-height:300px; object-fit:contain; border-radius:8px; box-shadow:0 6px 22px rgba(0,0,0,0.28); }
+    .book-slide-inner {
+      padding:22px 18px 20px; text-align:center;
+      background:#fff; border-radius:14px; margin:4px;
+      border:1.5px solid var(--border); box-shadow:0 2px 14px rgba(0,0,0,0.08);
+    }
+    body.dark .book-slide-inner { background:var(--white); }
+    .book-slide-title { font-size:0.95rem; font-weight:700; color:var(--text); line-height:1.65; margin-bottom:14px; }
+    .book-amz-btn { display:inline-block; padding:10px 26px; background:#FF9900; color:#fff; border-radius:8px; font-size:0.82rem; font-weight:700; text-decoration:none; }
     /* ===== 雑学Q&A ===== */
     .qa-q { font-size:0.85rem; font-weight:800; color:var(--accent); flex:1; }
     .qa-a { padding:12px 14px 14px; font-size:0.82rem; line-height:1.75; color:var(--text); border-top:1px solid var(--border); }
@@ -1017,7 +1022,7 @@
   <!-- サブタブバー -->
   <div class="news-sub-bar" style="margin-bottom:14px">
     <button class="news-sub-btn active" id="docsBtn-0" onclick="switchDocsTab(0)">📚 書籍</button>
-    <button class="news-sub-btn" id="docsBtn-1" onclick="switchDocsTab(1)">💡 雑学</button>
+    <button class="news-sub-btn" id="docsBtn-1" onclick="switchDocsTab(1)">❓ Q&amp;A</button>
     <button class="news-sub-btn" id="docsBtn-2" onclick="switchDocsTab(2)">📋 マニュアル</button>
     <button class="news-sub-btn" id="docsBtn-3" onclick="switchDocsTab(3)">🔗 リンク先</button>
   </div>
@@ -1134,6 +1139,37 @@
       </div>
       <div class="acc-body">
         <div class="qa-a"><strong>A.</strong> ①「<strong>絶対に儲かる・元本保証</strong>」はほぼ詐欺　②SNS DM での突然の投資勧誘に注意　③運営会社の所在地・登録状況を確認　④<strong>出金できない・遅延が続く</strong>場合は即座に対応を。正規サービスは元本保証を約束しません。</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">Q. Bitget Wallet とは？</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a"><strong>A.</strong> Bitget Walletは、<strong>マルチチェーン対応の自己管理型ウォレット</strong>（非カストディアル）です。BTC・ETH・TRX・SOLなど100以上のブロックチェーンに対応しており、DeFiやNFT取引にも使えます。<br><br>
+        主な特徴：<br>
+        ① <strong>秘密鍵を自分で管理</strong>するため、取引所ハッキングのリスクから資産を守れる<br>
+        ② bitradex AI から出金した USDT の受け取り先として活用<br>
+        ③ スワップ機能で主要コインを手軽に交換可能<br>
+        ④ TRIA カードへの入金経路としても対応
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">Q. Tangem（コールドウォレット）はなぜ必要？</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a"><strong>A.</strong> Tangem はカード型の<strong>ハードウェア（コールド）ウォレット</strong>です。秘密鍵がオフラインのチップ内に保存されるため、インターネットに接続されず、<strong>ハッキングやウイルスの影響を受けません</strong>。<br><br>
+        コールドウォレットが必要な理由：<br>
+        ① ホットウォレット（スマホ・PC接続）は常時オンラインでリスクが高い<br>
+        ② 取引所に資産を置き続けると、取引所破綻・凍結リスクがある<br>
+        ③ <strong>「Not your keys, not your coins」</strong> — 自分の秘密鍵を持たなければ、本当の意味で資産を保有していない<br>
+        ④ Tangem はスマホにかざすだけで使え、操作が簡単<br><br>
+        <strong>資産が大きくなるほど、コールドウォレットへの移動を推奨します。</strong>
+        </div>
       </div>
     </div>
 
