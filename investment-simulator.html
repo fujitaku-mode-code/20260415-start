@@ -741,6 +741,12 @@
     /* ===== YouTube埋め込みラッパー ===== */
     .yt-wrap { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:12px 12px 0 0; margin-bottom:0; box-shadow:0 4px 18px rgba(0,0,0,0.18); }
     .yt-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:12px 12px 0 0; }
+    /* ===== YouTube横スライダー ===== */
+    .yt-slider-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; margin-bottom:14px; }
+    .yt-slider-wrap::-webkit-scrollbar { display:none; }
+    .yt-slider { display:flex; gap:12px; padding:2px 1px; }
+    .yt-slide { flex-shrink:0; width:88%; }
+    .yt-slide .yt-info { box-shadow:0 4px 18px rgba(0,0,0,0.18); }
     .yt-info {
       background:var(--white); border:1.5px solid var(--border); border-top:none;
       border-radius:0 0 12px 12px; padding:8px 12px; margin-bottom:14px;
@@ -1472,17 +1478,48 @@
   <!-- パネル2: bitradeX公式 -->
   <div id="nst-2" class="nst-panel">
 
-    <div class="yt-wrap">
-      <iframe src="https://www.youtube.com/embed/M6gd3l3LuWw?rel=0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen loading="lazy"></iframe>
-    </div>
-    <div class="yt-info">
-      <div class="yt-info-left">
-        <div class="yt-info-title" id="yt-title-2">読み込み中...</div>
-        <div class="yt-info-ch" id="yt-ch-2"></div>
+    <!-- YouTube横スライダー -->
+    <div class="yt-slider-wrap">
+      <div class="yt-slider">
+
+        <!-- 動画1: M6gd3l3LuWw（埋め込み禁止のためサムネイル） -->
+        <div class="yt-slide">
+          <div class="yt-wrap">
+            <a href="https://www.youtube.com/watch?v=M6gd3l3LuWw" target="_blank" rel="noopener"
+               style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-decoration:none">
+              <img src="https://img.youtube.com/vi/M6gd3l3LuWw/hqdefault.jpg"
+                   style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:12px 12px 0 0">
+              <div style="position:relative;z-index:1;width:64px;height:64px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.4)">
+                <div style="width:0;height:0;border-style:solid;border-width:13px 0 13px 23px;border-color:transparent transparent transparent #fff;margin-left:5px"></div>
+              </div>
+            </a>
+          </div>
+          <div class="yt-info">
+            <div class="yt-info-left">
+              <div class="yt-info-title" id="yt-title-2">読み込み中...</div>
+              <div class="yt-info-ch" id="yt-ch-2"></div>
+            </div>
+            <a href="https://www.youtube.com/watch?v=M6gd3l3LuWw" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+          </div>
+        </div>
+
+        <!-- 動画2: N7oxL8EqXmM -->
+        <div class="yt-slide">
+          <div class="yt-wrap">
+            <iframe src="https://www.youtube.com/embed/N7oxL8EqXmM?rel=0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="yt-info">
+            <div class="yt-info-left">
+              <div class="yt-info-title" id="yt-title-3">読み込み中...</div>
+              <div class="yt-info-ch" id="yt-ch-3"></div>
+            </div>
+            <a href="https://youtu.be/N7oxL8EqXmM" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+          </div>
+        </div>
+
       </div>
-      <a href="https://www.youtube.com/watch?v=M6gd3l3LuWw" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
     </div>
 
     <!-- bitradeX 最新情報 -->
@@ -2632,6 +2669,7 @@ function fetchAllYtMeta() {
   fetchYtMeta('T0stmsQF1bs', 'yt-title-0', 'yt-ch-0');
   fetchYtMeta('5GdUj0tgY-w', 'yt-title-1', 'yt-ch-1');
   fetchYtMeta('M6gd3l3LuWw', 'yt-title-2', 'yt-ch-2');
+  fetchYtMeta('N7oxL8EqXmM', 'yt-title-3', 'yt-ch-3');
 }
 
 // ===== Bitradex フィード（Medium RSS / rss2json経由）=====
