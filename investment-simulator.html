@@ -786,14 +786,26 @@
     .links-sidebar-layout { display:flex; gap:10px; align-items:flex-start; }
     .links-sidebar { display:flex; flex-direction:column; gap:5px; flex-shrink:0; width:64px; }
     .links-sidebar-btn {
-      width:100%; padding:10px 3px; border:1.5px solid var(--border);
-      border-radius:10px; background:var(--bg); color:var(--muted);
-      font-size:0.58rem; font-weight:700; cursor:pointer; text-align:center;
+      width:100%; padding:10px 3px; border:2px solid;
+      border-radius:10px; font-size:0.58rem; font-weight:700; cursor:pointer; text-align:center;
       font-family:'Noto Sans JP',sans-serif; line-height:1.5;
-      transition:background 0.15s, color 0.15s, border-color 0.15s;
+      transition:background 0.15s, color 0.15s, opacity 0.15s;
     }
-    .links-sidebar-btn.active { background:var(--btn-grad); color:#fff; border-color:transparent; }
-    .links-sidebar-btn:active { opacity:0.75; }
+    .links-sidebar-btn:active { opacity:0.7; }
+    /* 各ボタンの個別カラー（非選択: 薄背景+テキスト色 / 選択: 塗り） */
+    .links-sidebar-btn:nth-child(1) { border-color:#2575fc; color:#2575fc; background:rgba(37,117,252,0.1); }
+    .links-sidebar-btn:nth-child(1).active { background:#2575fc; color:#fff; }
+    .links-sidebar-btn:nth-child(2) { border-color:#1a1a1a; color:#1a1a1a; background:rgba(0,0,0,0.06); }
+    .links-sidebar-btn:nth-child(2).active { background:#1a1a1a; color:#fff; }
+    .links-sidebar-btn:nth-child(3) { border-color:#0891b2; color:#0891b2; background:rgba(8,145,178,0.1); }
+    .links-sidebar-btn:nth-child(3).active { background:#0891b2; color:#fff; }
+    .links-sidebar-btn:nth-child(4) { border-color:#d97706; color:#d97706; background:rgba(217,119,6,0.1); }
+    .links-sidebar-btn:nth-child(4).active { background:#d97706; color:#fff; }
+    .links-sidebar-btn:nth-child(5) { border-color:#dc2626; color:#dc2626; background:rgba(220,38,38,0.1); }
+    .links-sidebar-btn:nth-child(5).active { background:#dc2626; color:#fff; }
+    /* ダークモード */
+    body.dark .links-sidebar-btn:nth-child(2) { border-color:#94a3b8; color:#94a3b8; background:rgba(148,163,184,0.12); }
+    body.dark .links-sidebar-btn:nth-child(2).active { background:#475569; color:#fff; }
     .links-content-area { flex:1; min-width:0; }
     .links-content-sec { display:none; }
     .links-content-sec.active { display:block; }
