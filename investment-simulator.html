@@ -739,8 +739,22 @@
     .mkt-slider .mkt-chg.down { background: #e05050 !important; color: #fff !important; }
     body.dark .mkt-slider .mkt-chg:not(.up):not(.down) { background: rgba(255,255,255,0.1); }
     /* ===== YouTube埋め込みラッパー ===== */
-    .yt-wrap { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:12px; margin-bottom:14px; box-shadow:0 4px 18px rgba(0,0,0,0.18); }
-    .yt-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:12px; }
+    .yt-wrap { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:12px 12px 0 0; margin-bottom:0; box-shadow:0 4px 18px rgba(0,0,0,0.18); }
+    .yt-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:12px 12px 0 0; }
+    .yt-info {
+      background:var(--white); border:1.5px solid var(--border); border-top:none;
+      border-radius:0 0 12px 12px; padding:8px 12px; margin-bottom:14px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:8px;
+      box-shadow:0 4px 18px rgba(0,0,0,0.18);
+    }
+    .yt-info-left { flex:1; min-width:0; }
+    .yt-info-title { font-size:0.75rem; font-weight:700; color:var(--text); line-height:1.4; margin-bottom:2px; }
+    .yt-info-ch { font-size:0.62rem; color:var(--muted); font-weight:600; }
+    .yt-info-link {
+      flex-shrink:0; display:inline-flex; align-items:center; gap:3px;
+      font-size:0.65rem; font-weight:700; color:#fff; background:#ff0000;
+      padding:3px 8px; border-radius:5px; text-decoration:none; white-space:nowrap;
+    }
 
     /* ===== ニュースサブタブ ===== */
     .news-sub-bar {
@@ -1344,6 +1358,13 @@
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen loading="lazy"></iframe>
     </div>
+    <div class="yt-info">
+      <div class="yt-info-left">
+        <div class="yt-info-title" id="yt-title-0">読み込み中...</div>
+        <div class="yt-info-ch" id="yt-ch-0"></div>
+      </div>
+      <a href="https://youtu.be/T0stmsQF1bs" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+    </div>
     <!-- 仮想通貨カードスライダー -->
     <div class="mkt-slider-wrap">
       <div class="mkt-slider">
@@ -1404,6 +1425,13 @@
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen loading="lazy"></iframe>
     </div>
+    <div class="yt-info">
+      <div class="yt-info-left">
+        <div class="yt-info-title" id="yt-title-1">読み込み中...</div>
+        <div class="yt-info-ch" id="yt-ch-1"></div>
+      </div>
+      <a href="https://www.youtube.com/live/5GdUj0tgY-w" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+    </div>
     <!-- 為替・株式・商品カードスライダー -->
     <div class="mkt-slider-wrap">
       <div class="mkt-slider">
@@ -1448,6 +1476,13 @@
       <iframe src="https://www.youtube.com/embed/M6gd3l3LuWw?rel=0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="yt-info">
+      <div class="yt-info-left">
+        <div class="yt-info-title" id="yt-title-2">読み込み中...</div>
+        <div class="yt-info-ch" id="yt-ch-2"></div>
+      </div>
+      <a href="https://www.youtube.com/watch?v=M6gd3l3LuWw" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
     </div>
 
     <!-- bitradeX 最新情報 -->
@@ -2579,6 +2614,26 @@ function renderFxNewsCards(items) {
   }).join('');
 }
 
+// ===== YouTube 動画情報（oEmbed）=====
+function fetchYtMeta(videoId, titleId, chId) {
+  fetch('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + videoId + '&format=json')
+    .then(function(r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function(d) {
+      var t = document.getElementById(titleId);
+      var c = document.getElementById(chId);
+      if (t) t.textContent = d.title || '---';
+      if (c) c.textContent = d.author_name || '';
+    }).catch(function() {
+      var t = document.getElementById(titleId);
+      if (t) t.textContent = '---';
+    });
+}
+function fetchAllYtMeta() {
+  fetchYtMeta('T0stmsQF1bs', 'yt-title-0', 'yt-ch-0');
+  fetchYtMeta('5GdUj0tgY-w', 'yt-title-1', 'yt-ch-1');
+  fetchYtMeta('M6gd3l3LuWw', 'yt-title-2', 'yt-ch-2');
+}
+
 // ===== Bitradex フィード（Medium RSS / rss2json経由）=====
 function fetchBitradexFeed() {
   var el = document.getElementById('bitradexFeedList');
@@ -3167,6 +3222,7 @@ window.onload = function() {
   fetchNewsHeadlines();
   fetchFxNewsHeadlines();
   fetchBitradexFeed();
+  fetchAllYtMeta();
   // 5分毎にレート＆指標を自動更新、30分毎にニュースを更新
   setInterval(function() { fetchRate(); fetchMarketData(); }, 5 * 60 * 1000);
   setInterval(fetchNewsHeadlines, 30 * 60 * 1000);
