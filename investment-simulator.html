@@ -738,12 +738,9 @@
     .mkt-slider .mkt-chg.up   { background: #0a9e6d !important; color: #fff !important; }
     .mkt-slider .mkt-chg.down { background: #e05050 !important; color: #fff !important; }
     body.dark .mkt-slider .mkt-chg:not(.up):not(.down) { background: rgba(255,255,255,0.1); }
-    /* ===== YouTubeレスポンシブ（PCはiframe、モバイルはサムネイル） ===== */
-    .yt-thumb { display: none; }
-    @media (max-width: 639px) {
-      .yt-embed { display: none; }
-      .yt-thumb { display: block; }
-    }
+    /* ===== YouTube埋め込みラッパー ===== */
+    .yt-wrap { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:12px; margin-bottom:14px; box-shadow:0 4px 18px rgba(0,0,0,0.18); }
+    .yt-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:12px; }
 
     /* ===== ニュースサブタブ ===== */
     .news-sub-bar {
@@ -1342,22 +1339,11 @@
 
   <!-- パネル0: 暗号資産 -->
   <div id="nst-0" class="nst-panel active">
-    <!-- YouTube: PC=iframe / モバイル=サムネイル -->
-    <div class="yt-embed" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18)">
+    <div class="yt-wrap">
       <iframe src="https://www.youtube.com/embed/T0stmsQF1bs?rel=0"
-        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen loading="lazy"></iframe>
     </div>
-    <a class="yt-thumb" href="https://youtu.be/T0stmsQF1bs" target="_blank" rel="noopener"
-       style="position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18);text-decoration:none">
-      <img src="https://img.youtube.com/vi/T0stmsQF1bs/hqdefault.jpg" alt="暗号資産 YouTube" style="width:100%;display:block;border-radius:12px">
-      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25)">
-        <div style="width:56px;height:56px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center">
-          <div style="width:0;height:0;border-style:solid;border-width:11px 0 11px 20px;border-color:transparent transparent transparent #fff;margin-left:4px"></div>
-        </div>
-      </div>
-    </a>
     <!-- 仮想通貨カードスライダー -->
     <div class="mkt-slider-wrap">
       <div class="mkt-slider">
@@ -1413,22 +1399,11 @@
 
   <!-- パネル1: 為替・株式・商品 -->
   <div id="nst-1" class="nst-panel">
-    <!-- YouTube: PC=iframe / モバイル=サムネイル -->
-    <div class="yt-embed" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18)">
+    <div class="yt-wrap">
       <iframe src="https://www.youtube.com/embed/5GdUj0tgY-w?rel=0"
-        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen loading="lazy"></iframe>
     </div>
-    <a class="yt-thumb" href="https://www.youtube.com/live/5GdUj0tgY-w" target="_blank" rel="noopener"
-       style="position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18);text-decoration:none">
-      <img src="https://img.youtube.com/vi/5GdUj0tgY-w/hqdefault.jpg" alt="為替・株式 YouTube" style="width:100%;display:block;border-radius:12px">
-      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25)">
-        <div style="width:56px;height:56px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center">
-          <div style="width:0;height:0;border-style:solid;border-width:11px 0 11px 20px;border-color:transparent transparent transparent #fff;margin-left:4px"></div>
-        </div>
-      </div>
-    </a>
     <!-- 為替・株式・商品カードスライダー -->
     <div class="mkt-slider-wrap">
       <div class="mkt-slider">
@@ -1469,18 +1444,11 @@
   <!-- パネル2: bitradeX公式 -->
   <div id="nst-2" class="nst-panel">
 
-    <!-- YouTube サムネイルリンク（埋め込み無効のため外部リンク） -->
-    <a href="https://www.youtube.com/watch?v=M6gd3l3LuWw" target="_blank" rel="noopener"
-       style="display:block;position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18);text-decoration:none">
-      <img src="https://img.youtube.com/vi/M6gd3l3LuWw/hqdefault.jpg"
-           alt="bitradeX 公式YouTube"
-           style="width:100%;display:block;border-radius:12px">
-      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25)">
-        <div style="width:56px;height:56px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center">
-          <div style="width:0;height:0;border-style:solid;border-width:11px 0 11px 20px;border-color:transparent transparent transparent #fff;margin-left:4px"></div>
-        </div>
-      </div>
-    </a>
+    <div class="yt-wrap">
+      <iframe src="https://www.youtube.com/embed/M6gd3l3LuWw?rel=0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen loading="lazy"></iframe>
+    </div>
 
     <!-- bitradeX 最新情報 -->
     <div class="card">
@@ -1794,8 +1762,43 @@ function fetchRate() {
     }
     if (!done) tryApi2();
   };
-  xg.onerror = xg.ontimeout = function() { if (!done) tryApi2(); };
+  xg.onerror = xg.ontimeout = function() { if (!done) { tryApi2(); tryCryptoFallback(); } };
   xg.send();
+
+  // CoinGecko失敗時の暗号資産価格フォールバック（CryptoCompare）
+  var cryptoDone = false;
+  function tryCryptoFallback() {
+    if (cryptoDone) return;
+    fetch('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,XRP,SOL,BNB,TRX,DOGE&tsyms=JPY,USD')
+      .then(function(r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function(data) {
+        if (cryptoDone) return;
+        cryptoDone = true;
+        var rd = data.RAW;
+        if (!rd) return;
+        function setCrypto(sym, key) {
+          var info = rd[sym] && rd[sym].JPY;
+          if (!info || !info.PRICE) return;
+          var p = info.PRICE, chg = info.CHANGEPCT24HOUR || 0;
+          var disp = p < 10 ? p.toFixed(2) : commaInt(Math.round(p));
+          setMC(key, '¥' + disp, chg, true, false);
+        }
+        setCrypto('BTC', 'btc');
+        setCrypto('ETH', 'eth');
+        setCrypto('XRP', 'xrp');
+        setCrypto('SOL', 'sol');
+        setCrypto('BNB', 'bnb');
+        setCrypto('TRX', 'trx');
+        setCrypto('DOGE', 'doge');
+        // BTCのUSD表示
+        var btcUsd = rd.BTC && rd.BTC.USD;
+        if (btcUsd && btcUsd.PRICE) {
+          var el = document.getElementById('mkt-p-btc-usd');
+          if (el) el.textContent = '$' + commaInt(Math.round(btcUsd.PRICE));
+        }
+        updateTicker();
+      }).catch(function() {});
+  }
 
   // API 2: open.er-api.com（日次更新）
   function tryApi2() {
@@ -2264,7 +2267,7 @@ function drawChartBase(ctx, W, activeIdx) {
     var yVal = maxVal * (1 - t / 3);
     ctx.strokeStyle = tc.grid; ctx.lineWidth = t === 3 ? 1.2 : 0.7;
     ctx.beginPath(); ctx.moveTo(PAD_L, gy); ctx.lineTo(PAD_L + gW, gy); ctx.stroke();
-    ctx.fillStyle = axisColor; ctx.font = '10px Arial';
+    ctx.fillStyle = axisColor; ctx.font = '12px Arial';
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     var yLabel = (gChart.mode === 'jpy' && gChart.jpyRate > 0)
       ? fmtYAxisJPY(yVal * gChart.jpyRate) : fmtYAxis(yVal);
@@ -2272,7 +2275,7 @@ function drawChartBase(ctx, W, activeIdx) {
   }
 
   // X軸ラベル
-  ctx.fillStyle = axisColor; ctx.font = '10px Arial';
+  ctx.fillStyle = axisColor; ctx.font = '12px Arial';
   ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
   var xIdxs = [0, Math.floor(pts.length / 2), pts.length - 1];
   for (var xi = 0; xi < xIdxs.length; xi++) {
