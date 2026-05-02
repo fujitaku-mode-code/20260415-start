@@ -437,6 +437,26 @@
     .manual-sm-btn:disabled { opacity:0.45; cursor:not-allowed; }
     .manual-sm-print { background:var(--bg); color:var(--text); border:1.5px solid var(--border); }
     .manual-sm-dl    { background:var(--btn-grad); color:#fff; }
+    /* ===== Q&Aサイドバー ===== */
+    .qa-sidebar-btn {
+      width:100%; padding:10px 4px; border:2px solid; border-radius:10px;
+      font-size:0.58rem; font-weight:700; cursor:pointer; text-align:center;
+      font-family:'Noto Sans JP',sans-serif; line-height:1.5;
+      transition:background 0.15s, color 0.15s;
+    }
+    .qa-sidebar-btn:active { opacity:0.75; }
+    .qa-sidebar-btn:nth-child(1) { border-color:#2575fc; color:#2575fc; background:rgba(37,117,252,0.1); }
+    .qa-sidebar-btn:nth-child(1).active { background:#2575fc; color:#fff; }
+    .qa-sidebar-btn:nth-child(2) { border-color:#059669; color:#059669; background:rgba(5,150,105,0.1); }
+    .qa-sidebar-btn:nth-child(2).active { background:#059669; color:#fff; }
+    /* ===== コインカードグリッド ===== */
+    .coin-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+    .coin-card { background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:9px; }
+    .coin-card-top { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+    .coin-ico { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:900; color:#fff; flex-shrink:0; }
+    .coin-sym { font-size:0.78rem; font-weight:800; color:var(--text); }
+    .coin-name-jp { font-size:0.58rem; color:var(--muted); margin-bottom:4px; }
+    .coin-desc-txt { font-size:0.59rem; color:var(--text); line-height:1.55; }
     /* ===== 書籍スライダードット（視認性強化） ===== */
     #book-dots { padding:6px 0 14px; }
     #book-dots .yt-dot { width:10px; height:10px; background:#adb5bd; }
@@ -1121,8 +1141,21 @@
     <div class="yt-dots" id="book-dots"></div>
   </div>
 
-  <!-- ===== パネル1: 雑学Q&A ===== -->
+  <!-- ===== パネル1: Q&A ===== -->
   <div id="docs-panel-1" class="docs-panel">
+  <div class="links-sidebar-layout">
+
+    <!-- 左サイドバー -->
+    <div class="links-sidebar" style="width:54px">
+      <button class="qa-sidebar-btn active" id="qaBtn-0" onclick="switchQaTab(0)">Q&amp;A</button>
+      <button class="qa-sidebar-btn" id="qaBtn-1" onclick="switchQaTab(1)">各<br>コイン</button>
+    </div>
+
+    <!-- 右コンテンツ -->
+    <div class="links-content-area">
+
+    <!-- Q&Aセクション -->
+    <div id="qa-sec-0" class="links-content-sec active">
 
     <div class="card" style="padding:0;margin-bottom:6px">
       <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
@@ -1249,7 +1282,160 @@
       </div>
     </div>
 
-  </div>
+    <div class="card" style="padding:0;margin-bottom:6px">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">Q. NEXO（ネクソ）とは？</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a"><strong>A.</strong> NEXOは、<strong>海外の暗号資産レンディング（貸し出し）サービス</strong>を提供するプラットフォームです。保有する暗号資産を預けるだけで利息を受け取れる仕組みが特徴です。<br><br>
+        💰 <strong>主な機能</strong><br>
+        ① <strong>レンディング（預けて利息を得る）</strong> — USDT・BTC・ETHなどを預けるだけで年利最大10〜16%の利息を受け取れる<br>
+        ② <strong>ローン（借り入れ）</strong> — 保有コインを担保に、売却せずに法定通貨や暗号資産を借り入れできる<br>
+        ③ <strong>NEXOカード</strong> — 保有資産を担保に日常の買い物ができるクレジットカード<br>
+        ④ <strong>NEXOトークン</strong> — プラットフォーム独自トークン。保有量に応じて利率がアップ<br><br>
+        🔒 <strong>信頼性</strong><br>
+        150カ国以上で600万人超が利用。資産保護のため保険・監査を定期実施。ただし海外サービスのため、利用は<strong>自己責任</strong>が前提です。</div>
+      </div>
+    </div>
+
+    </div><!-- /qa-sec-0 -->
+
+    <!-- コインセクション -->
+    <div id="qa-sec-1" class="links-content-sec">
+    <div class="coin-grid">
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#f7931a">₿</div><span class="coin-sym">BTC</span></div>
+        <div class="coin-name-jp">ビットコイン</div>
+        <div class="coin-desc-txt">世界初の暗号資産。総発行2,100万枚の希少性。デジタルゴールドとも呼ばれる。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#627eea">Ξ</div><span class="coin-sym">ETH</span></div>
+        <div class="coin-name-jp">イーサリアム</div>
+        <div class="coin-desc-txt">スマートコントラクト基盤。DeFi・NFTのプラットフォームとして不可欠。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#26a17b;font-size:0.52rem">USDT</div><span class="coin-sym">USDT</span></div>
+        <div class="coin-name-jp">テザー</div>
+        <div class="coin-desc-txt">米ドル連動ステーブルコイン。1USDT≒1USD。送金・運用の基軸通貨。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#f0b90b;font-size:0.52rem">BNB</div><span class="coin-sym">BNB</span></div>
+        <div class="coin-name-jp">バイナンスコイン</div>
+        <div class="coin-desc-txt">Binance発行。取引手数料割引に使える。BNBチェーンのネイティブトークン。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#9945ff">◎</div><span class="coin-sym">SOL</span></div>
+        <div class="coin-name-jp">ソラナ</div>
+        <div class="coin-desc-txt">高速・低コストのブロックチェーン。NFT・DeFi分野で急成長中。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#00aae4">✕</div><span class="coin-sym">XRP</span></div>
+        <div class="coin-name-jp">リップル</div>
+        <div class="coin-desc-txt">国際送金特化。速度が速く手数料が低い。金融機関との連携実績多数。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#2775ca;font-size:0.52rem">USDC</div><span class="coin-sym">USDC</span></div>
+        <div class="coin-name-jp">USDコイン</div>
+        <div class="coin-desc-txt">Circle発行の米ドル連動ステーブルコイン。規制準拠で信頼性が高い。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#0033ad;font-size:0.52rem">ADA</div><span class="coin-sym">ADA</span></div>
+        <div class="coin-name-jp">カルダノ</div>
+        <div class="coin-desc-txt">学術研究を基盤にした次世代チェーン。エネルギー効率が高くPoS採用。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#c2a633">Ð</div><span class="coin-sym">DOGE</span></div>
+        <div class="coin-name-jp">ドージコイン</div>
+        <div class="coin-desc-txt">柴犬がシンボルのミームコイン。イーロン・マスクの支持で世界的に話題に。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#ef0027;font-size:0.52rem">TRX</div><span class="coin-sym">TRX</span></div>
+        <div class="coin-name-jp">トロン</div>
+        <div class="coin-desc-txt">低コスト送金に特化。USDTのTRC-20送金でよく利用されるブロックチェーン。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#0098ea;font-size:0.52rem">TON</div><span class="coin-sym">TON</span></div>
+        <div class="coin-name-jp">トンコイン</div>
+        <div class="coin-desc-txt">Telegram発のブロックチェーン。9億人のTelegramユーザーと連携した独自エコシステム。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#e84142;font-size:0.52rem">AVAX</div><span class="coin-sym">AVAX</span></div>
+        <div class="coin-name-jp">アバランチ</div>
+        <div class="coin-desc-txt">高速・低コスト・環境に優しいチェーン。サブネット機能でカスタムチェーン構築可能。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#e01a2d;font-size:0.45rem">SHIB</div><span class="coin-sym">SHIB</span></div>
+        <div class="coin-name-jp">シバイヌ</div>
+        <div class="coin-desc-txt">DOGEに触発されたミームコイン。独自DEX（ShibaSwap）などエコシステムを構築中。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#375bd2;font-size:0.45rem">LINK</div><span class="coin-sym">LINK</span></div>
+        <div class="coin-name-jp">チェーンリンク</div>
+        <div class="coin-desc-txt">現実データをブロックチェーンに接続するオラクルサービス。DeFiの基盤インフラ。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#e6007a">●</div><span class="coin-sym">DOT</span></div>
+        <div class="coin-name-jp">ポルカドット</div>
+        <div class="coin-desc-txt">複数チェーンを接続するマルチチェーンプラットフォーム。パラチェーン機能が特徴。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#8247e5;font-size:0.45rem">POL</div><span class="coin-sym">MATIC</span></div>
+        <div class="coin-name-jp">ポリゴン</div>
+        <div class="coin-desc-txt">イーサリアムのスケーリング技術。ガス代を大幅に削減。Web3開発者に人気。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#2e3148;font-size:0.45rem">ATOM</div><span class="coin-sym">ATOM</span></div>
+        <div class="coin-name-jp">コスモス</div>
+        <div class="coin-desc-txt">異なるブロックチェーン同士を接続する「インターネット・オブ・ブロックチェーン」構想の中核。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#345d9d;font-size:0.52rem">LTC</div><span class="coin-sym">LTC</span></div>
+        <div class="coin-name-jp">ライトコイン</div>
+        <div class="coin-desc-txt">ビットコインを改良した「デジタルシルバー」。送金速度が速く手数料が安い。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#ff007a;font-size:0.52rem">UNI</div><span class="coin-sym">UNI</span></div>
+        <div class="coin-name-jp">ユニスワップ</div>
+        <div class="coin-desc-txt">最大手DEX（分散型取引所）のガバナンストークン。流動性プールで手数料収益を得られる。</div>
+      </div>
+
+      <div class="coin-card">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#00d4ff;font-size:0.45rem">HYPE</div><span class="coin-sym">HYPE</span></div>
+        <div class="coin-name-jp">ハイパーリキッド</div>
+        <div class="coin-desc-txt">高性能な分散型デリバティブ取引所のネイティブトークン。独自L1チェーンを持つ。</div>
+      </div>
+
+      <div class="coin-card" style="grid-column:1/-1">
+        <div class="coin-card-top"><div class="coin-ico" style="background:#0033a0;font-size:0.45rem">JPYC</div><span class="coin-sym">JPYC</span></div>
+        <div class="coin-name-jp">JPYコイン</div>
+        <div class="coin-desc-txt">日本円に連動した国内発のステーブルコイン（1JPYC≒1円）。ERC-20準拠。日本のWeb3普及を目指す JPYC株式会社が発行。国内取引所でも取り扱いが増えている注目の円建てコイン。</div>
+      </div>
+
+    </div><!-- /coin-grid -->
+    </div><!-- /qa-sec-1 -->
+
+    </div><!-- /links-content-area -->
+  </div><!-- /links-sidebar-layout -->
+  </div><!-- /docs-panel-1 end -->
 
   <!-- ===== パネル2: マニュアル ===== -->
   <div id="docs-panel-2" class="docs-panel">
@@ -2937,6 +3123,16 @@ function downloadSelected(btn) {
     im.onerror = function() { images[i] = null; if (++loaded === srcs.length) done(); };
     im.src = base + src;
   });
+}
+
+// ===== Q&Aサイドバータブ =====
+function switchQaTab(idx) {
+  for (var i = 0; i < 2; i++) {
+    var b = document.getElementById('qaBtn-' + i);
+    var s = document.getElementById('qa-sec-' + i);
+    if (b) b.classList.toggle('active', i === idx);
+    if (s) s.classList.toggle('active', i === idx);
+  }
 }
 
 // ===== リンク先サイドバータブ =====
