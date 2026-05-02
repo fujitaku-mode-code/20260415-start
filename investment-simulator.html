@@ -1335,15 +1335,16 @@
 
   <!-- パネル0: 暗号資産 -->
   <div id="nst-0" class="nst-panel active">
-    <!-- YouTube 埋め込み -->
-    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18)">
-      <iframe
-        src="https://www.youtube.com/embed/T0stmsQF1bs?rel=0"
-        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen loading="lazy">
-      </iframe>
-    </div>
+    <!-- YouTube サムネイルリンク -->
+    <a href="https://youtu.be/T0stmsQF1bs" target="_blank" rel="noopener"
+       style="display:block;position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18);text-decoration:none">
+      <img src="https://img.youtube.com/vi/T0stmsQF1bs/hqdefault.jpg" alt="暗号資産 YouTube" style="width:100%;display:block;border-radius:12px">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25)">
+        <div style="width:56px;height:56px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center">
+          <div style="width:0;height:0;border-style:solid;border-width:11px 0 11px 20px;border-color:transparent transparent transparent #fff;margin-left:4px"></div>
+        </div>
+      </div>
+    </a>
     <!-- 仮想通貨カードスライダー -->
     <div class="mkt-slider-wrap">
       <div class="mkt-slider">
@@ -1399,15 +1400,16 @@
 
   <!-- パネル1: 為替・株式・商品 -->
   <div id="nst-1" class="nst-panel">
-    <!-- YouTube 埋め込み -->
-    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18)">
-      <iframe
-        src="https://www.youtube.com/embed/5GdUj0tgY-w?rel=0"
-        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen loading="lazy">
-      </iframe>
-    </div>
+    <!-- YouTube サムネイルリンク -->
+    <a href="https://www.youtube.com/live/5GdUj0tgY-w" target="_blank" rel="noopener"
+       style="display:block;position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 18px rgba(0,0,0,0.18);text-decoration:none">
+      <img src="https://img.youtube.com/vi/5GdUj0tgY-w/hqdefault.jpg" alt="為替・株式 YouTube" style="width:100%;display:block;border-radius:12px">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25)">
+        <div style="width:56px;height:56px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center">
+          <div style="width:0;height:0;border-style:solid;border-width:11px 0 11px 20px;border-color:transparent transparent transparent #fff;margin-left:4px"></div>
+        </div>
+      </div>
+    </a>
     <!-- 為替・株式・商品カードスライダー -->
     <div class="mkt-slider-wrap">
       <div class="mkt-slider">
@@ -2028,11 +2030,11 @@ function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startD
     html +=
       '<div style="border-radius:14px;border:1.5px solid var(--border);border-left:4px solid ' + mc + ';background:var(--white);overflow:hidden;margin-bottom:10px">' +
         '<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px 9px;border-bottom:1px solid ' + div + '">' +
-          '<div>' +
-            '<div style="font-size:1.3rem;font-weight:900;color:' + mc + ';letter-spacing:-0.03em;line-height:1">' + m.label + '</div>' +
-            '<div style="font-size:0.68rem;color:var(--muted);margin-top:3px">' + fmtDate(m.date) + '</div>' +
+          '<div style="font-size:1.35rem;font-weight:900;color:' + mc + ';letter-spacing:-0.03em;line-height:1.2">' +
+            m.label +
+            '<span style="font-size:0.9rem;font-weight:700;color:var(--muted);margin-left:7px">（' + fmtDate(m.date) + '）</span>' +
           '</div>' +
-          '<div style="font-size:0.72rem;font-weight:700;background:' + mc + ';color:#fff;padding:4px 12px;border-radius:20px">' + days + '日</div>' +
+          '<div style="font-size:0.78rem;font-weight:700;background:' + mc + ';color:#fff;padding:4px 12px;border-radius:20px">' + days + '日後</div>' +
         '</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr">' +
           msCell('単利',      simpV, (simpV/principal-1)*100, jpyRate, mc, div, true,  false) +
@@ -2052,10 +2054,10 @@ function msCell(label, value, pct, jpyRate, color, divColor, hasBorder, useAccen
   var border  = hasBorder ? ('border-right:1px solid ' + divColor + ';') : '';
   var arrow   = pct >= 0 ? '▲ ' : '▼ ';
   return '<div style="padding:13px 15px;' + border + '">' +
-    '<div style="font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px">' + label + '</div>' +
-    '<div style="font-size:1.5rem;font-weight:900;color:' + vColor + ';letter-spacing:-0.03em;line-height:1.1">' + primary + '</div>' +
-    '<div style="font-size:0.68rem;color:var(--muted);margin-top:3px">' + sub + '</div>' +
-    '<div style="display:inline-block;font-size:0.72rem;font-weight:700;padding:2px 9px;border-radius:20px;margin-top:6px;background:' + pBg + ';color:' + color + '">' + arrow + fmtPct(pct) + '</div>' +
+    '<div style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;color:var(--muted);margin-bottom:5px">' + label + '</div>' +
+    '<div style="font-size:1.7rem;font-weight:900;color:' + vColor + ';letter-spacing:-0.03em;line-height:1.1">' + primary + '</div>' +
+    '<div style="font-size:0.78rem;color:var(--muted);margin-top:3px">' + sub + '</div>' +
+    '<div style="display:inline-block;font-size:0.76rem;font-weight:700;padding:2px 9px;border-radius:20px;margin-top:6px;background:' + pBg + ';color:' + color + '">' + arrow + fmtPct(pct) + '</div>' +
   '</div>';
 }
 
