@@ -837,6 +837,7 @@
     }
     body.dark .book-slide-inner { background:var(--white); }
     .book-slide-title { font-size:1rem; font-weight:700; color:var(--text); line-height:1.65; margin-bottom:16px; padding:0 18px; }
+    .book-slide-desc { font-size:0.78rem; color:var(--muted); line-height:1.6; margin:10px 0 14px; padding:0 10px; }
     .book-amz-btn { display:inline-block; padding:11px 28px; background:#FF9900; color:#fff; border-radius:8px; font-size:0.85rem; font-weight:700; text-decoration:none; }
     /* ===== Q&A ===== */
     .qa-q { font-size:0.85rem; font-weight:800; color:#4b5563; flex:1; }
@@ -2661,7 +2662,23 @@ function updateTicker() {
     '📈 BitradeX AI BOT 24時間自動運用稼働中',
     '🌏 グローバル仮想通貨市場 24h/365d 対応',
     '💹 USDT残高をいつでもUSD/JPY換算で確認',
-    '🔒 操作ガイドは「3資料」から',
+    '🔒 操作ガイドは「3資料」タブから',
+    '💰 複利運用で資産を最大化 — BitradeX AI',
+    '🚀 BTC・ETHをリアルタイム価格で監視',
+    '📊 運用成績を日別グラフで見える化',
+    '🔑 出金閾値を設定して利益を自動確保',
+    '💎 長期複利が最大のリターンをもたらす',
+    '🌐 世界の相場をワンクリックでチェック',
+    '📅 日別明細テーブルで運用を丸ごと把握',
+    '⚡ USD/JPY レートを自動取得・即時反映',
+    '🏆 再投資タイミングの最適化が安定の鍵',
+    '💡 出金手数料は投資額に応じて自動最適化',
+    '🔥 ビットコインは24時間365日取引可能',
+    '🌍 DeFi・CEXで世界中の資産にアクセス',
+    '📱 スマホでもリアルタイムに運用確認',
+    '🪙 USDT建て運用でドル資産を効率的に増やす',
+    '📉 相場下落時こそ複利効果が威力を発揮',
+    '🔐 分散管理でリスクを低減、安全な資産運用を',
   ];
   news.forEach(function(n) { items.push({ t: n, c: '' }); });
   // seamlessループのため2倍複製
@@ -2723,6 +2740,7 @@ function applyPlan(key) {
     document.getElementById('annualRate').value        = '';
     document.getElementById('days').value              = '';
     document.getElementById('reinvestThreshold').value = '';
+    document.getElementById('fee').value               = '';
     return;
   }
   var plan = PLANS[key];
@@ -3315,49 +3333,49 @@ function switchQaTab(idx) {
 // ===== 書籍 年別データ =====
 var BOOK_DATA = [
   { year:'2026', color:'linear-gradient(135deg,#1a3a8f,#4f6ef7)', books:[
-    { t:'ザイが作った「暗号資産」入門', a:'ザイ編集部', asin:'4478120612' }
+    { t:'ザイが作った「暗号資産」入門', a:'ザイ編集部', asin:'4478120612', desc:'仮想通貨の基本から投資手法まで、ザイ編集部が丁寧に解説する定番入門書。初心者にも読みやすい構成。' }
   ]},
   { year:'2025', color:'linear-gradient(135deg,#7b2ff7,#f107a3)', books:[
-    { t:'ビットコイン持ってますか?', a:'川合林太郎' },
-    { t:'マスタリング・ビットコイン 第3版', a:'A.M.Antonopoulos' },
-    { t:'暗号資産投資', a:'松田康生、桝本誠二' },
-    { t:'図解即戦力 ブロックチェーンのしくみと開発 改訂2版', a:'コンセンサス・ベイス' },
-    { t:'サトシ・ナカモトはだれだ？', a:'B.ウォレス' },
-    { t:'いまさら聞けないビットコインとブロックチェーン 最新改訂版', a:'大塚雄介', asin:'4799332031' },
-    { t:'Web3・暗号資産 13人の未来予測', a:'神本侑季(編)', asin:'4022520744' },
-    { t:'世界一やさしい 暗号資産・ビットコインの教科書1年生', a:'松田康生' },
-    { t:'世界一わかりやすい暗号資産ガイド 2025-26最新版', a:'COINCATS', asin:'B0FMY42FD4' },
-    { t:'デジタル資産とWeb3', a:'小田玄紀' },
-    { t:'暗号資産投資大全2025', a:'大洋図書', asin:'4813085959' }
+    { t:'ビットコイン持ってますか?', a:'川合林太郎', desc:'BTCを持つことの意味と将来性を、語りかけるスタイルでわかりやすく解説した一冊。' },
+    { t:'マスタリング・ビットコイン 第3版', a:'A.M.Antonopoulos', desc:'ビットコインの技術的仕組みを網羅した世界標準のバイブル。開発者から投資家まで必読の名著。' },
+    { t:'暗号資産投資', a:'松田康生、桝本誠二', desc:'国内トレーダーが実践する投資術と市場分析の手法を具体的に解説した実践書。' },
+    { t:'図解即戦力 ブロックチェーンのしくみと開発 改訂2版', a:'コンセンサス・ベイス', desc:'ブロックチェーン開発の基礎から応用まで図解でわかりやすくまとめた即戦力テキスト。' },
+    { t:'サトシ・ナカモトはだれだ？', a:'B.ウォレス', desc:'ビットコイン創始者の謎を追うノンフィクション。知られざるBTC誕生の裏側に迫る調査録。' },
+    { t:'いまさら聞けないビットコインとブロックチェーン 最新改訂版', a:'大塚雄介', asin:'4799332031', desc:'基礎知識ゼロから理解できる累計ベストセラーの最新版。図解と事例で丁寧に解説。' },
+    { t:'Web3・暗号資産 13人の未来予測', a:'神本侑季(編)', asin:'4022520744', desc:'業界のキーパーソン13人が語るWeb3と暗号資産の未来像。多様な視点で最新潮流を把握。' },
+    { t:'世界一やさしい 暗号資産・ビットコインの教科書1年生', a:'松田康生', desc:'イラスト豊富でわかりやすい超入門書。まったくの初心者が最初に手にとる一冊として最適。' },
+    { t:'世界一わかりやすい暗号資産ガイド 2025-26最新版', a:'COINCATS', asin:'B0FMY42FD4', desc:'2025〜26年の最新情報を反映した総合ガイド。主要コインの特徴と投資判断のポイントを網羅。' },
+    { t:'デジタル資産とWeb3', a:'小田玄紀', desc:'デジタル資産の本質とWeb3時代の投資戦略を実務経験豊富な著者が詳細に解説。' },
+    { t:'暗号資産投資大全2025', a:'大洋図書', asin:'4813085959', desc:'2025年版の最新データで暗号資産投資を徹底解説するムック形式の決定版ガイド。' }
   ]},
   { year:'2024', color:'linear-gradient(135deg,#d97706,#f59e0b)', books:[
-    { t:'イーサリアム創世記', a:'ローラ・シン' },
-    { t:'新NFTの教科書', a:'天野清之' },
-    { t:'ビットコインかんたんスタートガイド', a:'晋遊舎' },
-    { t:'ビットコイン&仮想通貨 2024 BURST', a:'大洋図書' },
-    { t:'世界一わかりやすいビットコインの教科書', a:'-' }
+    { t:'イーサリアム創世記', a:'ローラ・シン', desc:'イーサリアム誕生の秘話と創業者たちの知られざる物語。暗号資産の歴史を理解する必読書。' },
+    { t:'新NFTの教科書', a:'天野清之', desc:'NFTの基礎から活用事例、将来展望まで徹底網羅。クリエイターと投資家に向けた実践的教科書。' },
+    { t:'ビットコインかんたんスタートガイド', a:'晋遊舎', desc:'初めてのビットコイン購入から安全な管理まで、手順をやさしく丁寧に解説した入門ガイド。' },
+    { t:'ビットコイン&仮想通貨 2024 BURST', a:'大洋図書', desc:'2024年の相場動向と注目コインを網羅した最新ムック本。旬の情報を一冊で確認できる。' },
+    { t:'世界一わかりやすいビットコインの教科書', a:'-', desc:'ビットコインの概念から取引の始め方まで、初心者向けにとことんやさしく解説した教科書。' }
   ]},
   { year:'2023', color:'linear-gradient(135deg,#059669,#10b981)', books:[
-    { t:'イーサリアム 若き天才が示す暗号資産の真実と未来', a:'Vitalik Buterin' },
-    { t:'Web3.0の教科書', a:'のぶめい' }
+    { t:'イーサリアム 若き天才が示す暗号資産の真実と未来', a:'Vitalik Buterin', desc:'イーサリアム創始者Vitalikが語る暗号資産の哲学と未来ビジョン。業界必読の思想書。' },
+    { t:'Web3.0の教科書', a:'のぶめい', desc:'Web3の基礎概念から分散型インターネットの仕組みまで、初心者向けにわかりやすく解説。' }
   ]},
   { year:'2022', color:'linear-gradient(135deg,#0891b2,#06b6d4)', books:[
-    { t:'図解ポケット 次世代プラットフォーム イーサリアム', a:'廣田章' }
+    { t:'図解ポケット 次世代プラットフォーム イーサリアム', a:'廣田章', desc:'イーサリアムの仕組みからDeFi・NFTまで、コンパクトな図解でわかりやすくまとめた一冊。' }
   ]},
   { year:'2021', color:'linear-gradient(135deg,#7c3aed,#8b5cf6)', books:[
-    { t:'最新 いまさら聞けないビットコインとブロックチェーン', a:'大塚雄介' },
-    { t:'ビットコイン・スタンダード', a:'S・アモウズ', asin:'462309212X' },
-    { t:'仮想通貨投資を始めてみたい方にオススメの一冊', a:'新星出版社' }
+    { t:'最新 いまさら聞けないビットコインとブロックチェーン', a:'大塚雄介', desc:'改訂された定番入門書。最新事例を加えてブロックチェーンの基礎から応用まで丁寧に解説。' },
+    { t:'ビットコイン・スタンダード', a:'S・アモウズ', asin:'462309212X', desc:'ビットコインが健全な貨幣である理由を経済学的視点から論じた世界的ベストセラーの名著。' },
+    { t:'仮想通貨投資を始めてみたい方にオススメの一冊', a:'新星出版社', desc:'投資初心者向けに仮想通貨の始め方・リスク管理・注意点をわかりやすく解説した入門書。' }
   ]},
   { year:'2020', color:'linear-gradient(135deg,#dc2626,#ef4444)', books:[
-    { t:'アフター・ビットコイン2', a:'中島真志' },
-    { t:'詳解ビットコイン', a:'A.M.Antonopoulos' }
+    { t:'アフター・ビットコイン2', a:'中島真志', desc:'暗号資産第2世代の動向と中央銀行デジタル通貨（CBDC）の台頭を詳細に解説。' },
+    { t:'詳解ビットコイン', a:'A.M.Antonopoulos', desc:'ビットコインの技術的詳細を深く掘り下げた開発者向けテキスト。プログラマー必携の一冊。' }
   ]},
   { year:'2019', color:'linear-gradient(135deg,#475569,#64748b)', books:[
-    { t:'マスタリング・イーサリアム', a:'A.M.Antonopoulos' },
-    { t:'未来力 10年後の世界を読み解く51の思考法', a:'三木谷浩史' },
-    { t:'マンガでわかるブロックチェーンのトリセツ', a:'-' },
-    { t:'1万円から始められる ビットコインFX', a:'-' }
+    { t:'マスタリング・イーサリアム', a:'A.M.Antonopoulos', desc:'イーサリアムの技術的仕組みをゼロから理解できる技術書の決定版。スマートコントラクト開発者必読。' },
+    { t:'未来力 10年後の世界を読み解く51の思考法', a:'三木谷浩史', desc:'テクノロジーと経済の未来を読む三木谷浩史の思考術。ブロックチェーン含む未来予測を解説。' },
+    { t:'マンガでわかるブロックチェーンのトリセツ', a:'-', desc:'マンガ形式でブロックチェーンの仕組みを楽しく学べる入門書。難解な概念を視覚的に理解。' },
+    { t:'1万円から始められる ビットコインFX', a:'-', desc:'少額から始めるビットコインFXの実践手法を解説。初心者がトレードを学ぶ最初の一冊。' }
   ]}
 ];
 
@@ -3366,13 +3384,18 @@ function makeBookSlide(book, yearColor) {
     ? 'https://www.amazon.co.jp/dp/' + book.asin
     : 'https://www.amazon.co.jp/s?k=' + encodeURIComponent(book.t);
   var imgHtml = book.asin
-    ? '<img src="https://images-na.ssl-images-amazon.com/images/P/' + book.asin + '.09._SCMZZZZZZZ_.jpg" alt="' + book.t + '" loading="lazy">'
-    : '<span>' + book.t + '</span>';
-  var boxStyle = book.asin ? '' : ' class="book-cover-text" style="background:' + yearColor + '"';
+    ? '<img src="https://m.media-amazon.com/images/P/' + book.asin + '.01.LZZZZZZZ.jpg"'
+      + ' alt="' + book.t + '" loading="lazy"'
+      + ' onerror="this.onerror=null;this.src=\'https://images-na.ssl-images-amazon.com/images/P/' + book.asin + '.09.LZZZZZZZ.jpg\'">'
+    : '<div style="height:160px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:#fff;padding:8px;text-align:center;background:' + yearColor + ';border-radius:5px">' + book.t + '</div>';
+  var boxStyle = book.asin ? '' : '';
   var btnLabel = book.asin ? 'Amazon で見る →' : 'Amazon で探す →';
+  var descHtml = book.desc ? '<div class="book-slide-desc">' + book.desc + '</div>' : '';
   return '<div class="yt-slide"><a href="' + amzUrl + '" style="text-decoration:none;display:block">'
-    + '<div class="book-slide-inner"><div class="book-cover-box"' + boxStyle + '>' + imgHtml + '</div>'
+    + '<div class="book-slide-inner">'
     + '<div class="book-slide-title">' + book.t + '<br><span style="font-size:0.72rem;font-weight:400;color:var(--muted)">' + book.a + ' 著</span></div>'
+    + '<div class="book-cover-box">' + imgHtml + '</div>'
+    + descHtml
     + '<span class="book-amz-btn">' + btnLabel + '</span>'
     + '</div></a></div>';
 }
