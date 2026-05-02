@@ -838,6 +838,7 @@
     body.dark .book-slide-inner { background:var(--white); }
     .book-slide-title { font-size:1rem; font-weight:700; color:var(--text); line-height:1.65; margin-bottom:16px; padding:0 18px; }
     .book-slide-desc { font-size:0.78rem; color:var(--muted); line-height:1.6; margin:10px 0 14px; padding:0 10px; }
+    .book-cover-ph { height:160px; display:flex; align-items:center; justify-content:center; border-radius:5px; font-size:1.6rem; color:rgba(255,255,255,0.85); font-weight:900; padding:8px; text-align:center; }
     .book-amz-btn { display:inline-block; padding:11px 28px; background:#FF9900; color:#fff; border-radius:8px; font-size:0.85rem; font-weight:700; text-decoration:none; }
     /* ===== Q&A ===== */
     .qa-q { font-size:0.85rem; font-weight:800; color:#4b5563; flex:1; }
@@ -3382,16 +3383,34 @@ var BOOK_DATA = [
   ]}
 ];
 
+function fetchBookCover(img) {
+  var asin = img.getAttribute('data-asin');
+  if (!asin) return;
+  fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + asin + '&maxResults=1&fields=items/volumeInfo/imageLinks')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var links = d.items && d.items[0] && d.items[0].volumeInfo && d.items[0].volumeInfo.imageLinks;
+      if (links) {
+        var url = (links.thumbnail || links.smallThumbnail || '').replace('http://', 'https://').replace('zoom=1', 'zoom=2');
+        if (url) {
+          img.src = url;
+          img.style.display = 'block';
+          var ph = img.parentNode.querySelector('.book-cover-ph');
+          if (ph) ph.style.display = 'none';
+        }
+      }
+    })
+    .catch(function() {});
+}
+
 function makeBookSlide(book, yearColor) {
   var amzUrl = book.asin
     ? 'https://www.amazon.co.jp/dp/' + book.asin
     : 'https://www.amazon.co.jp/s?k=' + encodeURIComponent(book.t);
   var imgHtml = book.asin
-    ? '<img src="https://images-na.ssl-images-amazon.com/images/P/' + book.asin + '.09.LZZZZZZZ.jpg"'
-      + ' alt="' + book.t + '" loading="lazy"'
-      + ' onerror="this.onerror=null;this.src=\'https://images-na.ssl-images-amazon.com/images/P/' + book.asin + '.01.LZZZZZZZ.jpg\'">'
-    : '<div style="height:160px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:#fff;padding:8px;text-align:center;background:' + yearColor + ';border-radius:5px">' + book.t + '</div>';
-  var boxStyle = book.asin ? '' : '';
+    ? '<img data-asin="' + book.asin + '" src="" alt="' + book.t + '" style="display:none;width:100%;height:auto;border-radius:5px;box-shadow:0 4px 14px rgba(0,0,0,0.22)">'
+      + '<div class="book-cover-ph" style="background:' + yearColor + '">' + book.t.charAt(0) + '</div>'
+    : '<div class="book-cover-ph" style="background:' + yearColor + '">' + book.t.charAt(0) + '</div>';
   var btnLabel = book.asin ? 'Amazon で見る →' : 'Amazon で探す →';
   var descHtml = book.desc ? '<div class="book-slide-desc">' + book.desc + '</div>' : '';
   return '<div class="yt-slide"><a href="' + amzUrl + '" style="text-decoration:none;display:block">'
@@ -3416,7 +3435,10 @@ function switchBookYear(idx) {
     var swrap = document.getElementById('book-swrap-' + idx);
     if (!swrap) return;
     var slider = swrap.querySelector('.yt-slider');
-    if (slider) slider.innerHTML = bd.books.map(function(b) { return makeBookSlide(b, bd.color); }).join('');
+    if (slider) {
+      slider.innerHTML = bd.books.map(function(b) { return makeBookSlide(b, bd.color); }).join('');
+      slider.querySelectorAll('img[data-asin]').forEach(function(img) { fetchBookCover(img); });
+    }
     initYtDots('book-swrap-' + idx, 'book-dots-' + idx, bd.books.length);
   }
 }
