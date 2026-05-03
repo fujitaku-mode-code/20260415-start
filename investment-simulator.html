@@ -185,6 +185,31 @@
       font-size: 0.85rem; padding: 12px; margin-bottom: 14px; display: none;
     }
 
+    /* ===== シミュレーション結果セクション ===== */
+    .sim-results-section {
+      border: 2px solid var(--accent);
+      border-radius: 18px;
+      padding: 0 12px 8px;
+      background: var(--bg);
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .sim-results-header {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.68rem; font-weight: 900;
+      color: var(--accent);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 10px 4px 8px;
+      border-bottom: 1.5px solid rgba(0,0,0,0.07);
+      margin-bottom: 10px;
+    }
+    body.dark .sim-results-header { border-bottom-color: rgba(255,255,255,0.08); }
+    .sim-results-header .sim-results-icon {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; flex-shrink: 0;
+    }
     /* ===== マイルストーン ===== */
     .milestone-grid { display: block; }
     .milestone-row { border-radius: 12px; border: 1.5px solid var(--border); overflow: hidden; }
@@ -1080,52 +1105,61 @@
   <div style="height:4px;background:linear-gradient(90deg,var(--accent),transparent);margin-top:8px;opacity:0.35"></div>
 </div>
 
-<!-- 期間別シミュレーション -->
-<div class="card hidden" id="milestoneCard">
-  <div class="card-title">
-    <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
-    期間別シミュレーション
+<!-- シミュレーション結果セクション -->
+<div id="simResultsSection" class="sim-results-section hidden">
+  <div class="sim-results-header">
+    <span class="sim-results-icon">📊</span>
+    シミュレーション結果
   </div>
-  <div class="milestone-grid" id="milestoneGrid"></div>
-</div>
 
-<!-- グラフ -->
-<div class="card hidden" id="chartCard">
-  <div class="card-title">
-    <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📉</span>
-    残高推移グラフ
-    <span style="font-size:0.72rem;font-weight:400;color:var(--muted);margin-left:4px">（グラフに触れると金額表示）</span>
+  <!-- 期間別シミュレーション -->
+  <div class="card" id="milestoneCard">
+    <div class="card-title">
+      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
+      期間別シミュレーション
+    </div>
+    <div class="milestone-grid" id="milestoneGrid"></div>
   </div>
-  <div class="chart-wrap">
-    <canvas id="chart" height="230"></canvas>
-    <div class="chart-tooltip" id="chartTooltip"></div>
-  </div>
-  <div class="chart-legend" id="chartLegend"></div>
-</div>
 
-<!-- 日別明細 -->
-<div class="card hidden" id="tableCard">
-  <div class="card-title">
-    <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📋</span>
-    日別明細
-    <span class="badge badge-sub">再投資日は緑色</span>
+  <!-- グラフ -->
+  <div class="card" id="chartCard">
+    <div class="card-title">
+      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📉</span>
+      残高推移グラフ
+      <span style="font-size:0.72rem;font-weight:400;color:var(--muted);margin-left:4px">（グラフに触れると金額表示）</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="chart" height="230"></canvas>
+      <div class="chart-tooltip" id="chartTooltip"></div>
+    </div>
+    <div class="chart-legend" id="chartLegend"></div>
   </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>日</th>
-          <th id="thDate" class="hidden">日付</th>
-          <th id="th-principal">元本($)<br><span style="font-weight:400">(円)</span></th>
-          <th id="th-daily">日利($)<br><span style="font-weight:400">(円)</span></th>
-          <th id="th-pending">累積利益($)<br><span style="font-weight:400">(円)</span></th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+
+  <!-- 日別明細 -->
+  <div class="card" id="tableCard">
+    <div class="card-title">
+      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📋</span>
+      日別明細
+      <span class="badge badge-sub">再投資日は緑色</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>日</th>
+            <th id="thDate" class="hidden">日付</th>
+            <th id="th-principal">元本($)<br><span style="font-weight:400">(円)</span></th>
+            <th id="th-daily">日利($)<br><span style="font-weight:400">(円)</span></th>
+            <th id="th-pending">累積利益($)<br><span style="font-weight:400">(円)</span></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <button class="show-more-btn hidden" id="showMoreBtn" onclick="toggleFullTable()"></button>
   </div>
-  <button class="show-more-btn hidden" id="showMoreBtn" onclick="toggleFullTable()"></button>
-</div>
+
+</div><!-- /simResultsSection -->
 
 </div><!-- /tab-sim -->
 
@@ -3102,18 +3136,19 @@ function simulate() {
       box.classList.remove('hidden');
     })();
 
+    // シミュレーション結果セクションを表示
+    document.getElementById('simResultsSection').classList.remove('hidden');
+
     // マイルストーン
     var startDate = lastStartDate || new Date();
     renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate);
 
     // グラフ
-    document.getElementById('chartCard').classList.remove('hidden');
     drawChart(principal, annualRate, fee, days, jpyRate);
 
     // テーブル
     var sim = runSimulation(principal, days, annualRate, fee, threshold);
     lastRows = sim.rows;
-    document.getElementById('tableCard').classList.remove('hidden');
     renderTable(sim.rows, false, jpyRate);
 
     // 履歴保存
@@ -3166,7 +3201,6 @@ var milestoneParams = null;
 var milestoneList = [];
 
 function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
-  document.getElementById('milestoneCard').classList.remove('hidden');
   milestoneList = [
     { label:'1ヶ月後', date:addMonths(startDate,1),  color:'#f59e0b', dColor:'#fcd34d' },
     { label:'3ヶ月後', date:addMonths(startDate,3),  color:'#0fb981', dColor:'#34d399' },
@@ -3445,7 +3479,7 @@ function drawChartBase(ctx, W, activeIdx) {
   }
 
   // グリッド & Y軸ラベル（3本のみ、薄く）
-  var axisColor = isDark ? 'rgba(160,144,112,0.7)' : 'rgba(110,95,70,0.65)';
+  var axisColor = isDark ? '#d4d4d4' : '#222222';
   for (var t = 0; t <= 3; t++) {
     var gy   = PAD_T + gH * t / 3;
     var yVal = maxVal * (1 - t / 3);
