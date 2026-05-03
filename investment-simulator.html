@@ -3185,8 +3185,7 @@ function addMonths(date, months) {
   var d = new Date(date.getTime()); d.setMonth(d.getMonth() + months); return d;
 }
 function fmtDate(d) {
-  var w = ['日','月','火','水','木','金','土'];
-  return d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate() + '（' + w[d.getDay()] + '）';
+  return d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate();
 }
 
 var milestoneIdx = 0;
