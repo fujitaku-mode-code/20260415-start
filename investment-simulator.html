@@ -1015,6 +1015,7 @@
     <label id="principalLabel"><span class="step-badge">②黄色の枠内へ金額を入力</span></label>
     <div style="display:flex;align-items:center;gap:8px">
       <input type="number" id="principal" value="1000" min="1" step="100"
+             oninput="updateLiveCalc()"
              style="flex:1;min-width:0"
              oninput="updatePrincipalYen()" />
       <span id="principalYen" style="display:inline-block;background:var(--bg);border:1.5px solid var(--border);border-radius:20px;padding:2px 10px;font-size:0.78rem;font-weight:700;color:var(--muted);white-space:nowrap;flex-shrink:0"></span>
@@ -1048,7 +1049,7 @@
       </div>
       <div class="input-group">
         <label><span class="tt" ontouchstart="ttTap(this)">年利（%）<span class="tt-pop">年間の利回り（利率）。180%なら、日利換算で約0.49%/日。</span></span></label>
-        <input type="number" id="annualRate" value="182.5" min="0.1" step="0.1" />
+        <input type="number" id="annualRate" value="182.5" min="0.1" step="0.1" oninput="updateLiveCalc()" />
       </div>
       <div class="input-group">
         <label><span class="tt" ontouchstart="ttTap(this)">出金手数料（%）<span class="tt-pop">投資額により自動設定：$30,000未満→5%、$30,000〜→3%、$50,000〜→1.5%、$100,000〜→0%</span></span><span style="font-size:0.6rem;background:rgba(10,158,109,0.12);color:#0a9e6d;font-weight:700;padding:2px 6px;border-radius:6px;margin-left:5px">自動</span></label>
@@ -1063,6 +1064,38 @@
 
   <button class="btn" onclick="simulate()">④ シミュレーション実行</button>
   <div style="font-size:0.65rem;color:var(--muted);margin-top:5px;text-align:left">※設定額以上で累積利益を全額元本へ追加</div>
+</div>
+
+<!-- ライブ計算プレビュー -->
+<div id="liveCalcBox" style="display:none;border-radius:12px;border:1.5px solid var(--border);border-left:4px solid var(--accent);background:var(--white);padding:10px 14px;margin-bottom:10px">
+  <div style="font-size:0.62rem;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-bottom:8px">⚡ 入力中プレビュー（概算）</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <div style="text-align:center;padding:6px 4px;background:rgba(10,158,109,0.07);border-radius:8px">
+      <div style="font-size:0.58rem;color:var(--muted);margin-bottom:2px">日利</div>
+      <div id="liveDaily" style="font-size:1rem;font-weight:900;color:var(--accent)">---</div>
+    </div>
+    <div style="text-align:center;padding:6px 4px;background:rgba(79,110,247,0.07);border-radius:8px">
+      <div style="font-size:0.58rem;color:var(--muted);margin-bottom:2px">月利（概算）</div>
+      <div id="liveMonthly" style="font-size:1rem;font-weight:900;color:#4f6ef7">---</div>
+    </div>
+    <div style="text-align:center;padding:6px 4px;background:rgba(155,92,246,0.07);border-radius:8px">
+      <div style="font-size:0.58rem;color:var(--muted);margin-bottom:2px">年間利益（複利）</div>
+      <div id="liveYearly" style="font-size:1rem;font-weight:900;color:#9b5cf6">---</div>
+    </div>
+  </div>
+</div>
+
+<!-- シミュレーション履歴 -->
+<div id="simHistoryCard" class="card hidden" style="margin-bottom:10px">
+  <div class="card-title" style="cursor:pointer" onclick="toggleHistoryCard()">
+    <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">🕘</span>
+    シミュレーション履歴
+    <span id="historyToggleArrow" style="margin-left:auto;font-size:0.8rem;color:var(--muted)">▼</span>
+  </div>
+  <div id="simHistoryBody" style="padding:0 2px 4px">
+    <div id="simHistoryList"></div>
+    <button onclick="clearSimHistory()" style="font-size:0.65rem;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px 8px;margin-top:2px">🗑 履歴を消去</button>
+  </div>
 </div>
 
 <!-- 投資条件サマリー枠 -->
@@ -1163,14 +1196,14 @@
       <button class="book-yr-btn" onclick="switchBookYear(7)">2019</button>
     </div>
     <div class="links-content-area">
-      <div id="book-yr-0" class="book-yr-sec active"><div class="yt-slider-wrap" id="book-swrap-0"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-0"></div></div>
-      <div id="book-yr-1" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-1"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-1"></div></div>
-      <div id="book-yr-2" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-2"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-2"></div></div>
-      <div id="book-yr-3" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-3"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-3"></div></div>
-      <div id="book-yr-4" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-4"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-4"></div></div>
-      <div id="book-yr-5" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-5"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-5"></div></div>
-      <div id="book-yr-6" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-6"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-6"></div></div>
-      <div id="book-yr-7" class="book-yr-sec"><div class="yt-slider-wrap" id="book-swrap-7"><div class="yt-slider"></div></div><div class="yt-dots" id="book-dots-7"></div></div>
+      <div id="book-yr-0" class="book-yr-sec active"><div class="yt-dots" id="book-dots-0"></div><div class="yt-slider-wrap" id="book-swrap-0"><div class="yt-slider"></div></div></div>
+      <div id="book-yr-1" class="book-yr-sec"><div class="yt-dots" id="book-dots-1"></div><div class="yt-slider-wrap" id="book-swrap-1"><div class="yt-slider"></div></div></div>
+      <div id="book-yr-2" class="book-yr-sec"><div class="yt-dots" id="book-dots-2"></div><div class="yt-slider-wrap" id="book-swrap-2"><div class="yt-slider"></div></div></div>
+      <div id="book-yr-3" class="book-yr-sec"><div class="yt-dots" id="book-dots-3"></div><div class="yt-slider-wrap" id="book-swrap-3"><div class="yt-slider"></div></div></div>
+      <div id="book-yr-4" class="book-yr-sec"><div class="yt-dots" id="book-dots-4"></div><div class="yt-slider-wrap" id="book-swrap-4"><div class="yt-slider"></div></div></div>
+      <div id="book-yr-5" class="book-yr-sec"><div class="yt-dots" id="book-dots-5"></div><div class="yt-slider-wrap" id="book-swrap-5"><div class="yt-slider"></div></div></div>
+      <div id="book-yr-6" class="book-yr-sec"><div class="yt-dots" id="book-dots-6"></div><div class="yt-slider-wrap" id="book-swrap-6"><div class="yt-slider"></div></div></div>
+      <div id="book-yr-7" class="book-yr-sec"><div class="yt-dots" id="book-dots-7"></div><div class="yt-slider-wrap" id="book-swrap-7"><div class="yt-slider"></div></div></div>
     </div>
   </div>
   </div>
@@ -3262,6 +3295,92 @@ function calcAutoFee(usdAmount) {
   return 5;
 }
 
+// ===== ライブ計算プレビュー =====
+function updateLiveCalc() {
+  var p_raw = parseFloat(document.getElementById('principal').value);
+  var rate  = parseFloat(document.getElementById('annualRate').value);
+  var box   = document.getElementById('liveCalcBox');
+  if (!box) return;
+  if (!p_raw || p_raw <= 0 || !rate || rate <= 0) { box.style.display = 'none'; return; }
+  var useRate = (simMode === 'jpy' && gJpyRate > 0) ? gJpyRate : 150;
+  var p = (simMode === 'jpy') ? p_raw / useRate : p_raw;
+  var daily   = p * rate / 100 / 365;
+  var monthly = p * (Math.pow(1 + rate / 100 / 365, 30) - 1);
+  var yearly  = p * (Math.pow(1 + rate / 100 / 365, 365) - 1);
+  var isJpy = (simMode === 'jpy' && gJpyRate > 0);
+  function fmt(v) { return isJpy ? '+¥' + commaInt(Math.round(v * gJpyRate)) : '+' + fmtUSD(v); }
+  document.getElementById('liveDaily').textContent   = fmt(daily);
+  document.getElementById('liveMonthly').textContent = fmt(monthly);
+  document.getElementById('liveYearly').textContent  = fmt(yearly);
+  box.style.display = 'block';
+}
+
+// ===== シミュレーション履歴 =====
+var gSimHistory = (function() {
+  try { return JSON.parse(localStorage.getItem('sim_history') || '[]'); } catch(e) { return []; }
+})();
+
+function saveSimHistory(params, results) {
+  var now = new Date();
+  var label = (params.simMode === 'jpy' && params.jpyRate > 0)
+    ? '¥' + commaInt(Math.round(params.principal * params.jpyRate))
+    : fmtUSD(params.principal);
+  var entry = {
+    ts: now.getMonth()+1 + '/' + now.getDate() + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0'),
+    label: label,
+    rate: params.annualRate,
+    days: params.days,
+    profit1m: results.profit1m,
+    profit1y: results.profit1y,
+    mode: params.simMode
+  };
+  gSimHistory.unshift(entry);
+  if (gSimHistory.length > 8) gSimHistory.length = 8;
+  try { localStorage.setItem('sim_history', JSON.stringify(gSimHistory)); } catch(e) {}
+  renderSimHistory();
+}
+
+function renderSimHistory() {
+  var card = document.getElementById('simHistoryCard');
+  var list = document.getElementById('simHistoryList');
+  if (!card || !list || gSimHistory.length === 0) { if(card) card.classList.add('hidden'); return; }
+  card.classList.remove('hidden');
+  list.innerHTML = gSimHistory.map(function(e, i) {
+    var profitStr = e.profit1y != null ? (e.mode === 'jpy' ? '+¥' + commaInt(e.profit1y) : '+' + fmtUSD(e.profit1y / 150)) : '';
+    return '<div style="display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;margin-bottom:3px;background:' +
+      (i===0 ? 'rgba(10,158,109,0.07)' : 'rgba(128,128,128,0.04)') + ';cursor:pointer" onclick="restoreSimHistory(' + i + ')">' +
+      '<span style="font-size:0.6rem;color:var(--muted);white-space:nowrap">' + e.ts + '</span>' +
+      '<span style="font-size:0.72rem;font-weight:700;color:var(--text)">' + e.label + '</span>' +
+      '<span style="font-size:0.62rem;color:var(--muted)">年利' + e.rate + '%/' + e.days + '日</span>' +
+      '<span style="font-size:0.72rem;font-weight:800;color:var(--accent);margin-left:auto">' + profitStr + '</span>' +
+      '</div>';
+  }).join('');
+}
+
+function restoreSimHistory(idx) {
+  var e = gSimHistory[idx];
+  if (!e) return;
+  document.getElementById('annualRate').value = e.rate;
+  document.getElementById('days').value = e.days;
+  simulate();
+}
+
+function clearSimHistory() {
+  gSimHistory = [];
+  try { localStorage.removeItem('sim_history'); } catch(e) {}
+  var card = document.getElementById('simHistoryCard');
+  if (card) card.classList.add('hidden');
+}
+
+function toggleHistoryCard() {
+  var body  = document.getElementById('simHistoryBody');
+  var arrow = document.getElementById('historyToggleArrow');
+  if (!body) return;
+  var hidden = body.style.display === 'none';
+  body.style.display  = hidden ? '' : 'none';
+  arrow.textContent   = hidden ? '▼' : '▶';
+}
+
 function updateAutoFee() {
   var p = parseFloat(document.getElementById('principal').value);
   if (isNaN(p) || p <= 0) return;
@@ -3343,6 +3462,15 @@ function simulate() {
     lastRows = sim.rows;
     document.getElementById('tableCard').classList.remove('hidden');
     renderTable(sim.rows, false, jpyRate);
+
+    // 履歴保存
+    var profit1m = principal * (Math.pow(1 + annualRate / 100 / 365, 30) - 1) * (1 - fee / 100);
+    var profit1y = principal * (Math.pow(1 + annualRate / 100 / 365, 365) - 1) * (1 - fee / 100);
+    saveSimHistory(
+      { principal: principal, annualRate: annualRate, days: days, fee: fee, jpyRate: jpyRate, simMode: simMode },
+      { profit1m: simMode === 'jpy' && jpyRate > 0 ? Math.round(profit1m * jpyRate) : profit1m,
+        profit1y: simMode === 'jpy' && jpyRate > 0 ? Math.round(profit1y * jpyRate) : profit1y }
+    );
 
   } catch(e) {
     var eb = document.getElementById('errorBox');
@@ -4762,6 +4890,8 @@ window.onload = function() {
   initYtDots('yt-swrap-1', 'yt-dots-1', 3);
   initYtDots('yt-swrap-2', 'yt-dots-2', 3);
   switchBookYear(0);
+  renderSimHistory();
+  updateLiveCalc();
   // 5分毎にレート＆指標を自動更新、30分毎にニュースを更新
   setInterval(function() { fetchRate(); fetchMarketData(); }, 5 * 60 * 1000);
   setInterval(fetchNewsHeadlines, 30 * 60 * 1000);
