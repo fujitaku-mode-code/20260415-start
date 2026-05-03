@@ -1189,7 +1189,7 @@
 
     <!-- 左サイドバー -->
     <div class="links-sidebar" style="width:54px">
-      <button class="qa-sidebar-btn active" id="qaBtn-0" onclick="switchQaTab(0)">Q&amp;A</button>
+      <button class="qa-sidebar-btn active" id="qaBtn-0" onclick="switchQaTab(0)">雑学</button>
       <button class="qa-sidebar-btn" id="qaBtn-1" onclick="switchQaTab(1)">初心者<br>解説</button>
       <button class="qa-sidebar-btn" id="qaBtn-2" onclick="switchQaTab(2)">トークン</button>
       <button class="qa-sidebar-btn" id="qaBtn-3" onclick="switchQaTab(3)">規制・<br>世界</button>
@@ -2147,7 +2147,39 @@
           </div>
         </div>
 
-        <!-- 動画2: isGGDcpB95I -->
+        <!-- 動画2: qIrDHawpnb8 -->
+        <div class="yt-slide">
+          <div class="yt-wrap">
+            <iframe src="https://www.youtube.com/embed/qIrDHawpnb8?rel=0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="yt-info">
+            <div class="yt-info-left">
+              <div class="yt-info-title" id="yt-title-9">読み込み中...</div>
+              <div class="yt-info-ch" id="yt-ch-9"></div>
+            </div>
+            <a href="https://youtu.be/qIrDHawpnb8" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+          </div>
+        </div>
+
+        <!-- 動画3: hmb6pIlqh70 -->
+        <div class="yt-slide">
+          <div class="yt-wrap">
+            <iframe src="https://www.youtube.com/embed/hmb6pIlqh70?rel=0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="yt-info">
+            <div class="yt-info-left">
+              <div class="yt-info-title" id="yt-title-10">読み込み中...</div>
+              <div class="yt-info-ch" id="yt-ch-10"></div>
+            </div>
+            <a href="https://www.youtube.com/watch?v=hmb6pIlqh70" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+          </div>
+        </div>
+
+        <!-- 動画4: isGGDcpB95I -->
         <div class="yt-slide">
           <div class="yt-wrap">
             <iframe src="https://www.youtube.com/embed/isGGDcpB95I?rel=0"
@@ -4025,6 +4057,8 @@ function fetchYtMeta(videoId, titleId, chId) {
 }
 function fetchAllYtMeta() {
   fetchYtMeta('T0stmsQF1bs', 'yt-title-0', 'yt-ch-0');
+  fetchYtMeta('qIrDHawpnb8', 'yt-title-9', 'yt-ch-9');
+  fetchYtMeta('hmb6pIlqh70', 'yt-title-10', 'yt-ch-10');
   fetchYtMeta('5GdUj0tgY-w', 'yt-title-1', 'yt-ch-1');
   fetchYtMeta('M6gd3l3LuWw', 'yt-title-2', 'yt-ch-2');
   fetchYtMeta('N7oxL8EqXmM', 'yt-title-3', 'yt-ch-3');
@@ -4676,7 +4710,7 @@ window.onload = function() {
   fetchFxNewsHeadlines();
   fetchBitradexFeed();
   fetchAllYtMeta();
-  initYtDots('yt-swrap-0', 'yt-dots-0', 3);
+  initYtDots('yt-swrap-0', 'yt-dots-0', 5);
   initYtDots('yt-swrap-1', 'yt-dots-1', 3);
   initYtDots('yt-swrap-2', 'yt-dots-2', 3);
   switchBookYear(0);
