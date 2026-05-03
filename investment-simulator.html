@@ -1027,11 +1027,12 @@
       </div>
       <div style="padding-left:1em;margin-top:4px;font-size:0.68rem;color:var(--muted);font-weight:600">※リアルタイム更新</div>
     </div>
+    <button class="rate-btn" onclick="fetchRate()" style="padding:15px 18px;font-size:0.88rem;font-weight:700;flex-shrink:0;line-height:1">更新</button>
   </div>
 
   <!-- 投資額 -->
   <div class="input-group required-field" style="margin-bottom:12px">
-    <label id="principalLabel"><span class="step-badge">②黄色の枠内へ金額を入力</span></label>
+    <label id="principalLabel"><span class="step-badge">①黄色の枠内へ金額を入力</span></label>
     <div style="display:flex;align-items:center;gap:8px">
       <input type="number" id="principal" value="1000" min="1" step="100"
              oninput="updateLiveCalc()"
@@ -1044,7 +1045,7 @@
 
   <!-- プランセレクター（詳細設定の直上） -->
   <div style="margin-top:12px;margin-bottom:8px;padding-left:1em">
-    <label style="display:block;margin-bottom:6px"><span class="step-badge">③プラン選択</span></label>
+    <label style="display:block;margin-bottom:6px"><span class="step-badge">②プラン選択</span></label>
     <select id="planSelect" class="plan-select" onchange="applyPlan(this.value)">
       <option value="360d" selected>bitradex AI 360D（年利182.5% / 365日）</option>
       <option value="180d">bitradex AI 180D（年利127.75% / 180日）</option>
@@ -1081,7 +1082,7 @@
     </div>
   </div>
 
-  <button class="btn" onclick="simulate()">④ シミュレーション実行</button>
+  <button class="btn" onclick="simulate()">③ シミュレーション実行</button>
   <div style="font-size:0.65rem;color:var(--muted);margin-top:5px;text-align:left">※設定額以上で累積利益を全額元本へ追加</div>
 </div>
 
@@ -2519,7 +2520,7 @@ function setSimMode(mode) {
     document.getElementById('principal').step = '10000';
     document.getElementById('principal').min  = '1000';
   }
-  document.getElementById('principalLabel').innerHTML = '<span class="step-badge">②黄色の枠内へ金額を入力</span>';
+  document.getElementById('principalLabel').innerHTML = '<span class="step-badge">①黄色の枠内へ金額を入力</span>';
   updatePresetLabels();
   updatePrincipalYen();
   try { localStorage.setItem('sim_mode', mode); } catch(e) {}
@@ -4742,7 +4743,7 @@ window.onload = function() {
       simMode = 'jpy';
       document.getElementById('simModeBtn-usd').classList.remove('active');
       document.getElementById('simModeBtn-jpy').classList.add('active');
-      document.getElementById('principalLabel').innerHTML = '<span class="step-badge">②黄色の枠内へ金額を入力</span>';
+      document.getElementById('principalLabel').innerHTML = '<span class="step-badge">①黄色の枠内へ金額を入力</span>';
       document.getElementById('principal').value = 150000;
       document.getElementById('principal').step  = '10000';
       document.getElementById('principal').min   = '1000';
