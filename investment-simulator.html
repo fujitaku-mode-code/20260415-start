@@ -3312,25 +3312,26 @@ function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startD
 
 function msCell(label, value, pct, jpyRate, color, divColor, hasBorder, useAccent, principal) {
   var isJpy   = (simMode === 'jpy' && jpyRate > 0);
-  var primary = isJpy ? ('¥' + commaInt(value * jpyRate)) : fmtUSD(value);
-  var sub     = isJpy ? fmtUSD(value) : fmtJPY(value, jpyRate);
-  var vColor  = useAccent ? color : 'var(--text)';
-  var pBg     = color + '1e';
+  var total   = isJpy ? ('¥' + commaInt(value * jpyRate)) : fmtUSD(value);
+  var totalSub = isJpy ? fmtUSD(value) : fmtJPY(value, jpyRate);
+  var pBg     = color + '22';
   var border  = hasBorder ? ('border-right:1px solid ' + divColor + ';') : '';
   var arrow   = pct >= 0 ? '▲ ' : '▼ ';
   var profit  = (principal != null) ? (value - principal) : 0;
   var profitSign = profit >= 0 ? '+' : '';
-  var profitStr = isJpy
+  var profitMain = isJpy
     ? profitSign + '¥' + commaInt(profit * jpyRate)
     : profitSign + fmtUSD(profit);
   var profitSub = isJpy ? (profitSign + fmtUSD(profit)) : (profitSign + fmtJPY(profit, jpyRate));
-  return '<div style="padding:13px 15px;' + border + '">' +
-    '<div style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;color:var(--muted);margin-bottom:5px">' + label + '</div>' +
-    '<div style="font-size:1.7rem;font-weight:900;color:' + vColor + ';letter-spacing:-0.03em;line-height:1.1">' + primary + '</div>' +
-    '<div style="font-size:0.78rem;color:var(--muted);margin-top:3px">' + sub + '</div>' +
-    '<div style="font-size:0.88rem;font-weight:800;color:' + color + ';margin-top:6px;letter-spacing:-0.01em">💰 ' + profitStr + ' 利益</div>' +
-    '<div style="font-size:0.7rem;color:var(--muted);margin-top:1px">' + profitSub + '</div>' +
-    '<div style="display:inline-block;font-size:0.76rem;font-weight:700;padding:2px 9px;border-radius:20px;margin-top:5px;background:' + pBg + ';color:' + color + '">' + arrow + fmtPct(pct) + '</div>' +
+  return '<div style="padding:12px 14px;' + border + '">' +
+    '<div style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;color:var(--muted);margin-bottom:6px">' + label + '</div>' +
+    '<div style="font-size:0.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">💰 利益額</div>' +
+    '<div style="font-size:1.75rem;font-weight:900;color:' + color + ';letter-spacing:-0.03em;line-height:1.1">' + profitMain + '</div>' +
+    '<div style="font-size:0.72rem;color:var(--muted);margin-top:2px;margin-bottom:8px">' + profitSub + '</div>' +
+    '<div style="font-size:0.68rem;color:var(--muted);margin-bottom:1px">最終残高</div>' +
+    '<div style="font-size:0.95rem;font-weight:800;color:var(--text)">' + total + '</div>' +
+    '<div style="font-size:0.68rem;color:var(--muted);margin-top:1px;margin-bottom:6px">' + totalSub + '</div>' +
+    '<div style="display:inline-block;font-size:0.76rem;font-weight:700;padding:2px 9px;border-radius:20px;background:' + pBg + ';color:' + color + '">' + arrow + fmtPct(pct) + '</div>' +
   '</div>';
 }
 
