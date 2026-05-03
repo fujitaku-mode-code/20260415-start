@@ -76,21 +76,16 @@
 
     /* ===== ダークモードトグル ===== */
     .dark-btn {
-      height: 34px;
-      padding: 0 14px;
-      border-radius: 20px;
+      height: 34px; width: 34px; padding: 0;
+      border-radius: 50%;
       border: 1.5px solid var(--border);
-      cursor: pointer;
-      outline: none;
-      font-family: 'Noto Sans JP', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 700;
+      cursor: pointer; outline: none;
+      font-size: 1rem;
       background: var(--white);
       color: var(--text);
       transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
-      display: flex; align-items: center; gap: 5px;
-      white-space: nowrap;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); flex-shrink: 0;
     }
     .dark-btn:hover { box-shadow: 0 3px 12px rgba(184,134,11,0.25); border-color: var(--accent); }
     .dark-btn:active { transform: scale(0.95); }
@@ -962,7 +957,7 @@
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       </button>
       <button class="calc-open-btn" type="button" onclick="openCalc()" title="計算機">🧮</button>
-      <button class="dark-btn" id="darkBtn" onclick="toggleDark()">🌙 ダーク</button>
+      <button class="dark-btn" id="darkBtn" onclick="toggleDark()">🌙</button>
     </div>
   </div>
 </div>
@@ -2517,7 +2512,7 @@ function fmtYAxisJPY(v) {
 function toggleDark() {
   isDark = !isDark;
   document.body.classList.toggle('dark', isDark);
-  document.getElementById('darkBtn').textContent = isDark ? '☀️ ライト' : '🌙 ダーク';
+  document.getElementById('darkBtn').textContent = isDark ? '☀️' : '🌙';
   try { localStorage.setItem('sim_dark', isDark ? '1' : '0'); } catch(e) {}
   var chartCard = document.getElementById('chartCard');
   if (!chartCard.classList.contains('hidden') && gChart.pts && gChart.pts.length > 0) {
@@ -3166,43 +3161,87 @@ function fmtDate(d) {
   return d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate() + '（' + w[d.getDay()] + '）';
 }
 
+var milestoneIdx = 0;
+var milestoneParams = null;
+var milestoneList = [];
+
 function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
   document.getElementById('milestoneCard').classList.remove('hidden');
-  var ms = [
-    { label:'1ヶ月後',  date:addMonths(startDate,1),  color:'#f59e0b', dColor:'#fcd34d' },
-    { label:'3ヶ月後',  date:addMonths(startDate,3),  color:'#0fb981', dColor:'#34d399' },
-    { label:'6ヶ月後',  date:addMonths(startDate,6),  color:'#4f6ef7', dColor:'#60a5fa' },
-    { label:'12ヶ月後', date:addMonths(startDate,12), color:'#9b5cf6', dColor:'#a78bfa' },
-    { label:'2年後',    date:addMonths(startDate,24), color:'#c9902a', dColor:'#e8b84b' }
+  milestoneList = [
+    { label:'1ヶ月後', date:addMonths(startDate,1),  color:'#f59e0b', dColor:'#fcd34d' },
+    { label:'3ヶ月後', date:addMonths(startDate,3),  color:'#0fb981', dColor:'#34d399' },
+    { label:'6ヶ月後', date:addMonths(startDate,6),  color:'#4f6ef7', dColor:'#60a5fa' },
+    { label:'1年後',   date:addMonths(startDate,12), color:'#9b5cf6', dColor:'#a78bfa' },
+    { label:'2年後',   date:addMonths(startDate,24), color:'#c9902a', dColor:'#e8b84b' },
+    { label:'3年後',   date:addMonths(startDate,36), color:'#e53e3e', dColor:'#fc8181' }
   ];
-  var html = '';
-  for (var i = 0; i < ms.length; i++) {
-    var m    = ms[i];
-    var mc   = isDark ? m.dColor : m.color;
-    var div  = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
-    var days = Math.max(1, Math.round((m.date - startDate) / 86400000));
-    var effD = Math.max(0, days - 1);
-    var compRaw = compoundValue(principal, annualRate, effD);
-    var compV = principal + (compRaw - principal) * (1 - fee / 100);
-    var simpRaw = principal * (1 + annualRate / 100 * effD / 365);
-    var simpV = principal + (simpRaw - principal) * (1 - fee / 100);
-    html +=
-      '<div style="border-radius:14px;border:1.5px solid var(--border);border-left:4px solid ' + mc + ';background:var(--white);overflow:hidden;margin-bottom:10px">' +
-        '<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px 9px;border-bottom:1px solid ' + div + '">' +
-          '<div style="font-size:1.35rem;font-weight:900;color:' + mc + ';letter-spacing:-0.03em;line-height:1.2">' +
-            m.label +
-            '<span style="font-size:0.9rem;font-weight:700;color:var(--muted);margin-left:7px">（' + fmtDate(m.date) + '）</span>' +
-          '</div>' +
-          '<div style="font-size:0.78rem;font-weight:700;background:' + mc + ';color:#fff;padding:4px 12px;border-radius:20px">' + days + '日後</div>' +
-        '</div>' +
-        '<div style="display:grid;grid-template-columns:1fr 1fr">' +
-          msCell('単利',      simpV, (simpV/principal-1)*100, jpyRate, mc, div, true,  false, principal) +
-          msCell('複利（日次）', compV, (compV/principal-1)*100, jpyRate, mc, div, false, true,  principal) +
-        '</div>' +
-      '</div>';
+  milestoneParams = { principal:principal, annualRate:annualRate, fee:fee, jpyRate:jpyRate, startDate:startDate };
+  milestoneIdx = 0;
+  renderMilestonePage();
+  // タッチスワイプ
+  var grid = document.getElementById('milestoneGrid');
+  grid._tsX = null;
+  grid.ontouchstart = function(e) { grid._tsX = e.touches[0].clientX; };
+  grid.ontouchend = function(e) {
+    if (grid._tsX === null) return;
+    var dx = e.changedTouches[0].clientX - grid._tsX;
+    if (dx < -40) nextMilestone();
+    else if (dx > 40) prevMilestone();
+    grid._tsX = null;
+  };
+}
+
+function renderMilestonePage() {
+  var p = milestoneParams;
+  var m = milestoneList[milestoneIdx];
+  var total = milestoneList.length;
+  var mc  = isDark ? m.dColor : m.color;
+  var div = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+  var days = Math.max(1, Math.round((m.date - p.startDate) / 86400000));
+  var effD = Math.max(0, days - 1);
+  var compRaw = compoundValue(p.principal, p.annualRate, effD);
+  var compV = p.principal + (compRaw - p.principal) * (1 - p.fee / 100);
+  var simpRaw = p.principal * (1 + p.annualRate / 100 * effD / 365);
+  var simpV = p.principal + (simpRaw - p.principal) * (1 - p.fee / 100);
+
+  var dots = '';
+  for (var i = 0; i < total; i++) {
+    var dc = i === milestoneIdx ? mc : 'var(--border)';
+    var sc = i === milestoneIdx ? 'transform:scale(1.35);' : '';
+    dots += '<button onclick="goMilestone(' + i + ')" style="width:8px;height:8px;border-radius:50%;border:none;padding:0;cursor:pointer;background:' + dc + ';' + sc + 'transition:all 0.2s;flex-shrink:0"></button>';
   }
+
+  var btnBase = 'border:1.5px solid var(--border);border-radius:8px;padding:5px 16px;font-size:0.82rem;font-weight:700;cursor:pointer;background:none;color:var(--text);';
+  var prevBtn = '<button onclick="prevMilestone()" style="' + btnBase + (milestoneIdx === 0 ? 'opacity:0.25;cursor:not-allowed' : '') + '" ' + (milestoneIdx === 0 ? 'disabled' : '') + '>◀</button>';
+  var nextBtn = '<button onclick="nextMilestone()" style="' + btnBase + (milestoneIdx === total-1 ? 'opacity:0.25;cursor:not-allowed' : '') + '" ' + (milestoneIdx === total-1 ? 'disabled' : '') + '>▶</button>';
+
+  var html =
+    '<div style="display:flex;justify-content:center;align-items:center;gap:7px;padding:6px 0 10px">' + dots + '</div>' +
+    '<div style="border-radius:14px;border:1.5px solid var(--border);border-left:4px solid ' + mc + ';background:var(--white);overflow:hidden">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px 9px;border-bottom:1px solid ' + div + '">' +
+        '<div style="font-size:1.35rem;font-weight:900;color:' + mc + ';letter-spacing:-0.03em;line-height:1.2">' +
+          m.label +
+          '<span style="font-size:0.82rem;font-weight:700;color:var(--muted);margin-left:7px">（' + fmtDate(m.date) + '）</span>' +
+        '</div>' +
+        '<div style="font-size:0.78rem;font-weight:700;background:' + mc + ';color:#fff;padding:4px 12px;border-radius:20px">' + days + '日後</div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr">' +
+        msCell('単利', simpV, (simpV/p.principal-1)*100, p.jpyRate, mc, div, true, false, p.principal) +
+        msCell('複利（日次）', compV, (compV/p.principal-1)*100, p.jpyRate, mc, div, false, true, p.principal) +
+      '</div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-top:1px solid ' + div + '">' +
+        prevBtn +
+        '<span style="font-size:0.7rem;color:var(--muted);font-weight:600">' + (milestoneIdx+1) + ' / ' + total + '</span>' +
+        nextBtn +
+      '</div>' +
+    '</div>';
+
   document.getElementById('milestoneGrid').innerHTML = html;
 }
+
+function prevMilestone() { if (milestoneIdx > 0) { milestoneIdx--; renderMilestonePage(); } }
+function nextMilestone() { if (milestoneIdx < milestoneList.length-1) { milestoneIdx++; renderMilestonePage(); } }
+function goMilestone(i) { milestoneIdx = i; renderMilestonePage(); }
 
 function msCell(label, value, pct, jpyRate, color, divColor, hasBorder, useAccent, principal) {
   var isJpy   = (simMode === 'jpy' && jpyRate > 0);
@@ -4667,7 +4706,7 @@ window.onload = function() {
   try {
     if (localStorage.getItem('sim_dark') === '1') {
       isDark = true;
-      document.getElementById('darkBtn').textContent = '☀️ ライト';
+      document.getElementById('darkBtn').textContent = '☀️';
     }
   } catch(e) {}
 
