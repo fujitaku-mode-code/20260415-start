@@ -1014,11 +1014,13 @@
   <!-- 為替レートバナー -->
   <div class="rate-banner">
     <div style="flex:1;min-width:0">
+      <div style="padding-left:1em;margin-bottom:2px">
+        <span class="rate-date" id="rateDate" style="font-size:0.72rem">取得中...</span>
+        <span class="rate-date" id="rateTime" style="font-size:0.72rem;margin-left:2px"></span>
+      </div>
       <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;padding-left:1em">
         <span class="rate-num" id="rateNum">---</span>
         <span class="rate-unit">円 / ドル</span>
-        <span class="rate-date" id="rateDate" style="font-size:0.72rem;margin-left:4px">取得中...</span>
-        <span class="rate-date" id="rateTime" style="font-size:0.72rem"></span>
       </div>
       <div style="padding-left:1em;margin-top:4px;font-size:0.68rem;color:var(--muted);font-weight:600">※リアルタイム更新</div>
     </div>
