@@ -451,6 +451,19 @@
     .qa-sidebar-btn:nth-child(2).active { background:#d97706; color:#fff; }
     .qa-sidebar-btn:nth-child(3) { border-color:#059669; color:#059669; background:rgba(5,150,105,0.1); }
     .qa-sidebar-btn:nth-child(3).active { background:#059669; color:#fff; }
+    /* ===== マニュアルカテゴリサイドバー ===== */
+    .manual-cat-btn {
+      width:100%; padding:8px 3px; border:2px solid; border-radius:10px;
+      font-size:0.62rem; font-weight:800; cursor:pointer; text-align:center;
+      font-family:'Noto Sans JP',sans-serif; line-height:1.35;
+      transition:background 0.15s, color 0.15s;
+    }
+    .manual-cat-btn:nth-child(1){ border-color:#0f6bc4;color:#0f6bc4;background:rgba(15,107,196,0.1); }
+    .manual-cat-btn:nth-child(1).active{ background:#0f6bc4;color:#fff; }
+    .manual-cat-btn:nth-child(2){ border-color:#059669;color:#059669;background:rgba(5,150,105,0.1); }
+    .manual-cat-btn:nth-child(2).active{ background:#059669;color:#fff; }
+    .manual-cat-sec { display:none; }
+    .manual-cat-sec.active { display:block; }
     /* ===== コインカードグリッド ===== */
     .coin-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
     .coin-card { background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:9px; }
@@ -1773,6 +1786,15 @@
     <button class="manual-sm-btn manual-sm-print" onclick="printSelected()">🖨 印刷</button>
     <button class="manual-sm-btn manual-sm-dl" id="docDlBtn" onclick="downloadSelected(this)">⬇ DL</button>
   </div>
+  <div class="links-sidebar-layout">
+    <div class="links-sidebar" style="width:54px">
+      <button class="manual-cat-btn active" id="manualBtn-0" onclick="switchManualCat(0)">bitradex<br>操作</button>
+      <button class="manual-cat-btn" id="manualBtn-1" onclick="switchManualCat(1)">送金<br>方法</button>
+    </div>
+    <div class="links-content-area">
+
+    <!-- カテゴリ0: bitradex内の操作方法 -->
+    <div id="manual-sec-0" class="manual-cat-sec active">
 
   <!-- 投資への流れ -->
   <div class="card" style="padding:0;margin-bottom:6px">
@@ -1826,6 +1848,11 @@
       <div class="guide-done">✅ USDTに金額が表示されていれば作業完了！</div>
     </div>
   </div>
+
+    </div><!-- /manual-sec-0 -->
+
+    <!-- カテゴリ1: 送金方法 -->
+    <div id="manual-sec-1" class="manual-cat-sec">
 
   <!-- bitget wallet → カードへ入金 -->
   <div class="card" style="padding:0;margin-bottom:6px">
@@ -1889,6 +1916,9 @@
     </div>
   </div>
 
+    </div><!-- /manual-sec-1 -->
+    </div><!-- /links-content-area -->
+  </div><!-- /links-sidebar-layout -->
   </div><!-- /docs-panel-2 -->
 
   <!-- ===== パネル3: リンク先 ===== -->
@@ -3070,6 +3100,7 @@ function fmtDate(d) {
 function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
   document.getElementById('milestoneCard').classList.remove('hidden');
   var ms = [
+    { label:'1ヶ月後',  date:addMonths(startDate,1),  color:'#f59e0b', dColor:'#fcd34d' },
     { label:'3ヶ月後',  date:addMonths(startDate,3),  color:'#0fb981', dColor:'#34d399' },
     { label:'6ヶ月後',  date:addMonths(startDate,6),  color:'#4f6ef7', dColor:'#60a5fa' },
     { label:'12ヶ月後', date:addMonths(startDate,12), color:'#9b5cf6', dColor:'#a78bfa' },
@@ -3096,15 +3127,15 @@ function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startD
           '<div style="font-size:0.78rem;font-weight:700;background:' + mc + ';color:#fff;padding:4px 12px;border-radius:20px">' + days + '日後</div>' +
         '</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr">' +
-          msCell('単利',      simpV, (simpV/principal-1)*100, jpyRate, mc, div, true,  false) +
-          msCell('複利（日次）', compV, (compV/principal-1)*100, jpyRate, mc, div, false, true) +
+          msCell('単利',      simpV, (simpV/principal-1)*100, jpyRate, mc, div, true,  false, principal) +
+          msCell('複利（日次）', compV, (compV/principal-1)*100, jpyRate, mc, div, false, true,  principal) +
         '</div>' +
       '</div>';
   }
   document.getElementById('milestoneGrid').innerHTML = html;
 }
 
-function msCell(label, value, pct, jpyRate, color, divColor, hasBorder, useAccent) {
+function msCell(label, value, pct, jpyRate, color, divColor, hasBorder, useAccent, principal) {
   var isJpy   = (simMode === 'jpy' && jpyRate > 0);
   var primary = isJpy ? ('¥' + commaInt(value * jpyRate)) : fmtUSD(value);
   var sub     = isJpy ? fmtUSD(value) : fmtJPY(value, jpyRate);
@@ -3112,11 +3143,19 @@ function msCell(label, value, pct, jpyRate, color, divColor, hasBorder, useAccen
   var pBg     = color + '1e';
   var border  = hasBorder ? ('border-right:1px solid ' + divColor + ';') : '';
   var arrow   = pct >= 0 ? '▲ ' : '▼ ';
+  var profit  = (principal != null) ? (value - principal) : 0;
+  var profitSign = profit >= 0 ? '+' : '';
+  var profitStr = isJpy
+    ? profitSign + '¥' + commaInt(profit * jpyRate)
+    : profitSign + fmtUSD(profit);
+  var profitSub = isJpy ? (profitSign + fmtUSD(profit)) : (profitSign + fmtJPY(profit, jpyRate));
   return '<div style="padding:13px 15px;' + border + '">' +
     '<div style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;color:var(--muted);margin-bottom:5px">' + label + '</div>' +
     '<div style="font-size:1.7rem;font-weight:900;color:' + vColor + ';letter-spacing:-0.03em;line-height:1.1">' + primary + '</div>' +
     '<div style="font-size:0.78rem;color:var(--muted);margin-top:3px">' + sub + '</div>' +
-    '<div style="display:inline-block;font-size:0.76rem;font-weight:700;padding:2px 9px;border-radius:20px;margin-top:6px;background:' + pBg + ';color:' + color + '">' + arrow + fmtPct(pct) + '</div>' +
+    '<div style="font-size:0.88rem;font-weight:800;color:' + color + ';margin-top:6px;letter-spacing:-0.01em">💰 ' + profitStr + ' 利益</div>' +
+    '<div style="font-size:0.7rem;color:var(--muted);margin-top:1px">' + profitSub + '</div>' +
+    '<div style="display:inline-block;font-size:0.76rem;font-weight:700;padding:2px 9px;border-radius:20px;margin-top:5px;background:' + pBg + ';color:' + color + '">' + arrow + fmtPct(pct) + '</div>' +
   '</div>';
 }
 
@@ -3696,6 +3735,16 @@ function switchLinksTab(idx) {
   var secs = document.querySelectorAll('.links-content-sec');
   for (var i = 0; i < btns.length; i++) btns[i].classList.toggle('active', i === idx);
   for (var i = 0; i < secs.length; i++) secs[i].classList.toggle('active', i === idx);
+}
+
+// ===== マニュアルカテゴリ =====
+function switchManualCat(idx) {
+  for (var i = 0; i < 2; i++) {
+    var b = document.getElementById('manualBtn-' + i);
+    var s = document.getElementById('manual-sec-' + i);
+    if (b) b.classList.toggle('active', i === idx);
+    if (s) s.classList.toggle('active', i === idx);
+  }
 }
 
 // ===== 資料サブタブ =====
