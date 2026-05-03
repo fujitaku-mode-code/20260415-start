@@ -1123,13 +1123,11 @@
 
   <!-- グラフ -->
   <div class="card" id="chartCard">
-    <div class="card-title" style="align-items:flex-start">
-      <span class="card-title-icon" style="background:rgba(128,128,128,0.1);flex-shrink:0">📉</span>
-      <div>
-        残高推移グラフ<br>
-        <span style="font-size:0.72rem;font-weight:400;color:var(--muted)">（グラフに触れると<br>金額表示）</span>
-      </div>
+    <div class="card-title">
+      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📉</span>
+      残高推移グラフ
     </div>
+    <div style="font-size:0.7rem;color:var(--muted);margin:-8px 0 10px 6px">（グラフに触れると金額表示）</div>
     <div class="chart-wrap">
       <canvas id="chart" height="230"></canvas>
       <div class="chart-tooltip" id="chartTooltip"></div>
