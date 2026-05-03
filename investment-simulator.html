@@ -471,22 +471,22 @@
     .manual-cat-sec { display:none; }
     .manual-cat-sec.active { display:block; }
     /* ===== コインカードグリッド ===== */
-    .coin-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
-    .coin-card { background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:9px; }
-    .coin-card-top { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
-    .coin-ico { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:900; color:#fff; flex-shrink:0; }
+    /* ===== トークンリスト（縦1列） ===== */
+    .token-list { display:flex; flex-direction:column; gap:5px; }
+    .token-row { display:flex; align-items:flex-start; gap:8px; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:9px 10px; }
+    .token-rank { font-size:0.75rem; font-weight:900; color:var(--accent); min-width:22px; text-align:right; flex-shrink:0; padding-top:4px; }
+    .token-rank-top3 { color:#c9902a; }
+    .coin-ico { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:900; color:#fff; flex-shrink:0; margin-top:2px; }
+    .token-body { flex:1; min-width:0; }
+    .token-header { display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-bottom:3px; }
     .coin-sym { font-size:0.78rem; font-weight:800; color:var(--text); }
-    .coin-name-row { display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-bottom:3px; }
-    .coin-name-jp { font-size:0.62rem; font-weight:700; color:var(--text); }
+    .coin-name-jp { font-size:0.68rem; font-weight:700; color:var(--text); }
     .coin-cap { font-size:0.58rem; font-weight:900; color:var(--accent); background:rgba(10,158,109,0.12); padding:1px 6px; border-radius:10px; white-space:nowrap; }
-    .coin-cat { font-size:0.56rem; font-weight:700; padding:1px 5px; border-radius:8px; display:inline-block; margin-bottom:3px; }
+    .coin-cat { font-size:0.56rem; font-weight:700; padding:1px 5px; border-radius:8px; display:inline-block; }
     .coin-cat-stable { color:#dc2626; background:rgba(220,38,38,0.1); }
     .coin-cat-l1 { color:#2563eb; background:rgba(37,99,235,0.1); }
     .coin-cat-green { color:#059669; background:rgba(5,150,105,0.1); }
-    .coin-desc-txt { font-size:0.69rem; line-height:1.55; }
-    .coin-desc-stable { color:#dc2626; }
-    .coin-desc-l1 { color:#2563eb; }
-    .coin-desc-green { color:#059669; }
+    .coin-desc-txt { font-size:0.69rem; color:var(--text); line-height:1.55; }
     /* ===== 書籍 年別サイドバー ===== */
     .book-yr-btn {
       width:100%; padding:8px 3px; border:2px solid; border-radius:10px;
@@ -1517,365 +1517,16 @@
 
     <!-- トークンセクション -->
     <div id="qa-sec-2" class="qa-content-sec">
-    <div style="font-size:0.62rem;color:var(--muted);margin-bottom:6px;display:flex;gap:8px;flex-wrap:wrap">
-      <span style="color:#dc2626;font-weight:700">■ ステーブルコイン</span>
-      <span style="color:#2563eb;font-weight:700">■ PoW・PoS（基盤通貨）</span>
-      <span style="color:#059669;font-weight:700">■ DeFi・ミーム・L2</span>
-      <span style="float:right;margin-left:auto;font-size:0.58rem">※時価総額は概算</span>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;margin-bottom:8px">
+      <div style="font-size:0.62rem;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap">
+        <span style="color:#dc2626;font-weight:700">■ ステーブル</span>
+        <span style="color:#2563eb;font-weight:700">■ PoW・PoS</span>
+        <span style="color:#059669;font-weight:700">■ DeFi・ミーム・L2</span>
+      </div>
+      <div id="tokenRankDate" style="font-size:0.6rem;color:var(--muted)">読み込み中...</div>
     </div>
-    <div class="coin-grid">
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#f7931a">₿</div><span class="coin-sym">BTC</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ビットコイン</span><span class="coin-cap">約220兆円</span></div>
-        <span class="coin-cat coin-cat-l1">PoW（採掘型）</span>
-        <div class="coin-desc-txt coin-desc-l1">2009年に誕生した世界初の暗号資産。総発行2,100万枚の希少性でデジタルゴールドと呼ばれ、半減期ごとに供給量が減少。ETF承認以降、機関投資家の流入が急拡大している。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#627eea">Ξ</div><span class="coin-sym">ETH</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">イーサリアム</span><span class="coin-cap">約37兆円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">スマートコントラクトの基盤チェーン。DeFi・NFT・Web3アプリの大半がイーサリアム上で動く。2022年にPoWからPoSへ移行しエネルギー消費を約99%削減。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#26a17b;font-size:0.52rem">USDT</div><span class="coin-sym">USDT</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">テザー</span><span class="coin-cap">約21兆円</span></div>
-        <span class="coin-cat coin-cat-stable">ステーブルコイン</span>
-        <div class="coin-desc-txt coin-desc-stable">米ドル連動（1USDT≒1USD）。送金・取引・運用の基軸通貨として世界最大の流通量。TRC-20送金は手数料1ドル以下と格安で、bitradex入出金にも使用される。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#00aae4">✕</div><span class="coin-sym">XRP</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">リップル</span><span class="coin-cap">約16兆円</span></div>
-        <span class="coin-cat coin-cat-l1">L1 基盤通貨</span>
-        <div class="coin-desc-txt coin-desc-l1">国際送金に特化。送金完結まで数秒・手数料は極めて低く銀行・金融機関との提携実績多数。SECとの訴訟が決着し法的透明性が向上、再評価が急進行中。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#f0b90b;font-size:0.52rem">BNB</div><span class="coin-sym">BNB</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">バイナンスコイン</span><span class="coin-cap">約12兆円</span></div>
-        <span class="coin-cat coin-cat-l1">L1 基盤通貨</span>
-        <div class="coin-desc-txt coin-desc-l1">世界最大取引所Binanceのネイティブトークン。取引手数料割引・BNBチェーンのガス代に使用。定期バーン（焼却）で供給量が継続的に減少し希少性が高まる。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#9945ff">◎</div><span class="coin-sym">SOL</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ソラナ</span><span class="coin-cap">約10兆円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">1秒あたり数万件を処理できる高速チェーン。手数料が極めて低くNFT・DeFi・ミームコイン発行で急成長。2024年以降、機関投資家からの注目が急増している。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#2775ca;font-size:0.52rem">USDC</div><span class="coin-sym">USDC</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">USDコイン</span><span class="coin-cap">約6.8兆円</span></div>
-        <span class="coin-cat coin-cat-stable">ステーブルコイン</span>
-        <div class="coin-desc-txt coin-desc-stable">Circle社が発行する米ドル連動ステーブルコイン。毎月の準備金監査を公表し規制準拠が徹底。機関投資家・企業決済での利用が多く、USDTに次ぐ流通量を誇る。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#c2a633">Ð</div><span class="coin-sym">DOGE</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ドージコイン</span><span class="coin-cap">約3.8兆円</span></div>
-        <span class="coin-cat coin-cat-green">ミームコイン</span>
-        <div class="coin-desc-txt coin-desc-green">柴犬がシンボルのミームコイン。2013年にジョークとして誕生したが、イーロン・マスクの言及と米国政府効率化省（DOGE）との関連で世界的な知名度を獲得。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#0033ad;font-size:0.52rem">ADA</div><span class="coin-sym">ADA</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">カルダノ</span><span class="coin-cap">約3兆円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">学術研究・査読論文を基盤に設計された次世代ブロックチェーン。エネルギー効率の高いPoS採用。スマートコントラクト（Plutus）でDeFi・NFTエコシステムが拡大中。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#ef0027;font-size:0.52rem">TRX</div><span class="coin-sym">TRX</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">トロン</span><span class="coin-cap">約3兆円</span></div>
-        <span class="coin-cat coin-cat-l1">L1 基盤通貨</span>
-        <div class="coin-desc-txt coin-desc-l1">低コスト・高速送金特化チェーン。USDTのTRC-20送金は手数料1ドル以下と格安で、世界中の暗号資産取引で送金経路として多用されている。Justin Sun氏が主導。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#0098ea;font-size:0.52rem">TON</div><span class="coin-sym">TON</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">トンコイン</span><span class="coin-cap">約2.1兆円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">Telegram主導のブロックチェーン。月間9億人超のTelegramユーザーと連携しアプリ内決済・ゲーム・ウォレット機能を統合。ユーザー獲得速度が他チェーンを圧倒する。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#e84142;font-size:0.45rem">AVAX</div><span class="coin-sym">AVAX</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">アバランチ</span><span class="coin-cap">約1.5兆円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">1秒未満で決済が完了する超高速チェーン。企業・政府向けにカスタムチェーン（サブネット）を構築できる機能が特徴。金融機関・ゲーム会社との提携が相次いでいる。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#375bd2;font-size:0.45rem">LINK</div><span class="coin-sym">LINK</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">チェーンリンク</span><span class="coin-cap">約1.5兆円</span></div>
-        <span class="coin-cat coin-cat-green">ユーティリティ</span>
-        <div class="coin-desc-txt coin-desc-green">現実世界のデータ（価格・天候など）をブロックチェーンに接続するオラクルサービス。DeFiプロトコルの大半がChainlinkの価格フィードに依存しており、業界インフラとして不可欠。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#e01a2d;font-size:0.45rem">SHIB</div><span class="coin-sym">SHIB</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">シバイヌ</span><span class="coin-cap">約1.2兆円</span></div>
-        <span class="coin-cat coin-cat-green">ミームコイン</span>
-        <div class="coin-desc-txt coin-desc-green">DOGEに触発されたミームコイン。独自DEX「ShibaSwap」・L2「Shibarium」など独自エコシステムを構築中。大規模なコミュニティ「SHIB Army」が特徴で継続的な開発が続く。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#00d4ff;font-size:0.45rem">HYPE</div><span class="coin-sym">HYPE</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ハイパーリキッド</span><span class="coin-cap">約1兆円</span></div>
-        <span class="coin-cat coin-cat-green">分散型取引所</span>
-        <div class="coin-desc-txt coin-desc-green">独自L1チェーン上で動く高性能分散型デリバティブ取引所のトークン。完全オンチェーンのオーダーブック方式で中央集権型並みの速度を実現。2024年エアドロップで急成長。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#8DC351;font-size:0.45rem">BCH</div><span class="coin-sym">BCH</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ビットコインキャッシュ</span><span class="coin-cap">約9,000億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoW（採掘型）</span>
-        <div class="coin-desc-txt coin-desc-l1">2017年にBTCからハードフォークして誕生。ブロックサイズを拡大し送金速度と手数料効率を改善。日常決済での利用を目指す「電子キャッシュ」としての用途に特化している。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#4DA2FF;font-size:0.52rem">SUI</div><span class="coin-sym">SUI</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">スイ</span><span class="coin-cap">約9,000億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">Meta出身エンジニアが開発した次世代L1チェーン。並列処理技術で高速・低コストを実現。Move言語採用でスマートコントラクトのセキュリティが高く、2024年に急成長した。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#e6007a">●</div><span class="coin-sym">DOT</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ポルカドット</span><span class="coin-cap">約8,000億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">複数チェーン（パラチェーン）を接続するマルチチェーンプラットフォーム。イーサリアム共同創設者Gavin Wood氏が開発。異なるチェーン間の資産・データやり取りを可能にする。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#345d9d;font-size:0.52rem">LTC</div><span class="coin-sym">LTC</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ライトコイン</span><span class="coin-cap">約7,500億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoW（採掘型）</span>
-        <div class="coin-desc-txt coin-desc-l1">2011年にBTCを改良した「デジタルシルバー」。ブロック生成速度がBTCの4倍で送金が速く手数料も安い。SegWit・Lightning Networkを先行実装し技術的信頼性が高い。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#00C08B;font-size:0.45rem">NEAR</div><span class="coin-sym">NEAR</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">NEAR Protocol</span><span class="coin-cap">約6,000億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">開発者・ユーザーに優しい高性能L1チェーン。シャーディング技術で処理能力を拡張。Web2ライクなUI/UXを実現するアカウントシステムが特徴でDApp開発者に人気が高い。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#2D9CDB;font-size:0.52rem">APT</div><span class="coin-sym">APT</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">アプトス</span><span class="coin-cap">約6,000億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">Meta（旧Facebook）のDiemプロジェクト出身エンジニアが開発。Move言語採用の高速L1チェーン。セキュリティと並列処理能力を重視した設計で機関投資家から注目を集める。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#0073BD;font-size:0.52rem">XLM</div><span class="coin-sym">XLM</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ステラ</span><span class="coin-cap">約5,000億円</span></div>
-        <span class="coin-cat coin-cat-l1">L1 基盤通貨</span>
-        <div class="coin-desc-txt coin-desc-l1">低コスト・高速の国際送金・決済特化チェーン。リップル元共同創設者が設立した非営利財団が運営。新興国の金融インフラ整備・ステーブルコイン発行基盤として政府・企業と連携。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#ff007a;font-size:0.52rem">UNI</div><span class="coin-sym">UNI</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ユニスワップ</span><span class="coin-cap">約5,000億円</span></div>
-        <span class="coin-cat coin-cat-green">DeFi（分散型金融）</span>
-        <div class="coin-desc-txt coin-desc-green">最大手DEXのガバナンストークン。AMM方式で仲介者なしにトークン交換が可能。DeFi取引量の大部分を占め業界の基盤インフラとして確立。ガバナンス参加権も持つ。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#00B140;font-size:0.52rem">PEPE</div><span class="coin-sym">PEPE</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ペペ</span><span class="coin-cap">約4,500億円</span></div>
-        <span class="coin-cat coin-cat-green">ミームコイン</span>
-        <div class="coin-desc-txt coin-desc-green">「Pepe the Frog」をモチーフにしたミームコイン。2023年誕生で短期間に時価総額上位へ急浮上。実用性はないが旺盛な投機需要とSNSコミュニティで価値を維持している。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#328432;font-size:0.52rem">ETC</div><span class="coin-sym">ETC</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">イーサリアムクラシック</span><span class="coin-cap">約4,500億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoW（採掘型）</span>
-        <div class="coin-desc-txt coin-desc-l1">2016年DAOハック後のハードフォークで分岐したチェーン。「コードは法律」原則を守る保守派が支持。マイニング（PoW）継続を保ちながら独自エコシステムを運営し続けている。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#2e3148;font-size:0.45rem">ATOM</div><span class="coin-sym">ATOM</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">コスモス</span><span class="coin-cap">約4,500億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">「ブロックチェーンのインターネット」を目指すエコシステムの中核トークン。IBCプロトコルで異なるチェーン間のデータ・資産移転を可能にし、相互運用性の基盤を構築する。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#FF6600;font-size:0.52rem">XMR</div><span class="coin-sym">XMR</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">モネロ</span><span class="coin-cap">約3,800億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoW（採掘型）</span>
-        <div class="coin-desc-txt coin-desc-l1">高いプライバシー保護が特徴。送受金者・金額がすべて暗号化され第三者からは追跡不可能。金融プライバシーを重視するユーザーに強く支持される一方、規制当局の注目度も高い。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#9945FF;font-size:0.52rem">WIF</div><span class="coin-sym">WIF</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ドッグウィファハット</span><span class="coin-cap">約3,800億円</span></div>
-        <span class="coin-cat coin-cat-green">ミームコイン</span>
-        <div class="coin-desc-txt coin-desc-green">帽子をかぶった柴犬のミームをモチーフにしたソラナ基盤のコイン。2023年末に誕生し急騰、ミームコインブームを牽引。短期間で時価総額上位に定着した人気銘柄。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#3B00B9;font-size:0.52rem">ICP</div><span class="coin-sym">ICP</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">インターネットコンピューター</span><span class="coin-cap">約3,800億円</span></div>
-        <span class="coin-cat coin-cat-l1">L1 基盤通貨</span>
-        <div class="coin-desc-txt coin-desc-l1">DFINITY財団が開発した分散型クラウドコンピューティング基盤。スマートコントラクトがWeb2レベルの速度で動作し、完全分散型のWebアプリ（dApp）を構築できる。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#8247e5;font-size:0.45rem">POL</div><span class="coin-sym">POL</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ポリゴン</span><span class="coin-cap">約3,800億円</span></div>
-        <span class="coin-cat coin-cat-green">Layer 2</span>
-        <div class="coin-desc-txt coin-desc-green">イーサリアムのスケーリングソリューション。ガス代を大幅に削減しつつETHのセキュリティを活用。MATIC→POLへリブランド後、zk-Rollup搭載の次世代L2へと進化中。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#B6509E;font-size:0.45rem">AAVE</div><span class="coin-sym">AAVE</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">アーベ</span><span class="coin-cap">約3,800億円</span></div>
-        <span class="coin-cat coin-cat-green">DeFi（分散型金融）</span>
-        <div class="coin-desc-txt coin-desc-green">DeFi最大手の分散型レンディングプロトコルのガバナンストークン。暗号資産を担保に借り入れ、または預け入れで利息収入が得られる。フラッシュローンを世界で初めて実装した。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#FF0420;font-size:0.52rem">OP</div><span class="coin-sym">OP</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">オプティミズム</span><span class="coin-cap">約3,000億円</span></div>
-        <span class="coin-cat coin-cat-green">Layer 2</span>
-        <div class="coin-desc-txt coin-desc-green">イーサリアムL2「Optimism」のガバナンストークン。Optimistic Rollup技術でETHの手数料を大幅削減。Coinbase・Worldcoinなど多くの大型プロジェクトが採用している。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#2D374B;font-size:0.52rem">ARB</div><span class="coin-sym">ARB</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">アービトラム</span><span class="coin-cap">約3,000億円</span></div>
-        <span class="coin-cat coin-cat-green">Layer 2</span>
-        <div class="coin-desc-txt coin-desc-green">イーサリアムL2の中でDeFi取引量トップのArbitrumのガバナンストークン。Optimistic Rollupでセキュリティを維持しながら低コストを実現。DeFiプロトコルの主要展開先。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#C73635;font-size:0.45rem">RNDR</div><span class="coin-sym">RENDER</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">レンダーネットワーク</span><span class="coin-cap">約3,000億円</span></div>
-        <span class="coin-cat coin-cat-green">AI・GPU ユーティリティ</span>
-        <div class="coin-desc-txt coin-desc-green">GPU算力を分散して3D・AI・映像レンダリングを提供するプラットフォームのトークン。余剰GPUを提供し報酬を得る仕組み。AI需要拡大とともに注目度が急上昇中。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#0082F8;font-size:0.52rem">INJ</div><span class="coin-sym">INJ</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">インジェクティブ</span><span class="coin-cap">約3,000億円</span></div>
-        <span class="coin-cat coin-cat-green">DeFi（分散型金融）</span>
-        <div class="coin-desc-txt coin-desc-green">DeFi特化L1チェーンのネイティブトークン。オーダーブック型DEX・先物・デリバティブをゼロガス料金で高速提供。週次バーンで供給量を継続的に削減する設計。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#1AAB9B;font-size:0.52rem">MKR</div><span class="coin-sym">MKR</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">メーカー</span><span class="coin-cap">約3,000億円</span></div>
-        <span class="coin-cat coin-cat-green">DeFi（分散型金融）</span>
-        <div class="coin-desc-txt coin-desc-green">分散型ステーブルコインDAIを発行するMakerDAOのガバナンストークン。ETH等を担保にDAIを鋳造できる仕組みがDeFiの礎を築いた歴史的プロトコル。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#1A4B8C;font-size:0.52rem">FET</div><span class="coin-sym">FET</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">フェッチ.ai（ASI）</span><span class="coin-cap">約3,000億円</span></div>
-        <span class="coin-cat coin-cat-green">AI ユーティリティ</span>
-        <div class="coin-desc-txt coin-desc-green">AIエージェントが自律的にタスクを実行する分散型AIプラットフォームのトークン。Fetch.ai・SingularityNET・Ocean Protocolが合併しASI Allianceを形成。AI×Web3の次世代インフラ。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#5546FF;font-size:0.52rem">STX</div><span class="coin-sym">STX</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">スタックス</span><span class="coin-cap">約2,700億円</span></div>
-        <span class="coin-cat coin-cat-green">Layer 2（Bitcoin）</span>
-        <div class="coin-desc-txt coin-desc-green">ビットコインのセキュリティを活用しながらスマートコントラクトを実現するBitcoin L2のトークン。Clarity言語でBitcoin DeFiを構築可能で、BTC普及とともに需要が高まる先駆け。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#F8971C;font-size:0.45rem">FLOKI</div><span class="coin-sym">FLOKI</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">フロキ</span><span class="coin-cap">約2,200億円</span></div>
-        <span class="coin-cat coin-cat-green">ミームコイン</span>
-        <div class="coin-desc-txt coin-desc-green">イーロン・マスクの愛犬「Floki」にちなんだミームコイン。ゲームプラットフォーム「Valhalla」やDeFi機能を備えた独自エコシステムを構築中。高いマーケティング力で知名度を拡大。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#15BDFF;font-size:0.52rem">VET</div><span class="coin-sym">VET</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ヴィチェーン</span><span class="coin-cap">約2,200億円</span></div>
-        <span class="coin-cat coin-cat-green">サプライチェーン</span>
-        <div class="coin-desc-txt coin-desc-green">サプライチェーン管理・トレーサビリティ特化のエンタープライズチェーン。食品・医薬品・高級品の真贋証明に活用。VET保有者がVTHO（ガス代）を得るDualトークンモデルが特徴。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#0090FF;font-size:0.52rem">FIL</div><span class="coin-sym">FIL</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ファイルコイン</span><span class="coin-cap">約2,200億円</span></div>
-        <span class="coin-cat coin-cat-green">ストレージ ユーティリティ</span>
-        <div class="coin-desc-txt coin-desc-green">分散型ストレージネットワークのトークン。余剰ストレージを提供してFILを報酬として受け取る仕組み。IPFSと連携し検閲耐性の高い分散型ウェブストレージとして注目される。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#6F4CBA;font-size:0.52rem">GRT</div><span class="coin-sym">GRT</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ザ・グラフ</span><span class="coin-cap">約2,200億円</span></div>
-        <span class="coin-cat coin-cat-green">データ ユーティリティ</span>
-        <div class="coin-desc-txt coin-desc-green">ブロックチェーンデータのインデックス化・クエリを行う「Web3のGoogle」とも呼ばれるプロトコル。DeFi・NFTアプリが必要とするオンチェーンデータを効率的に取得するインフラ。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#17B5E8;font-size:0.52rem">IMX</div><span class="coin-sym">IMX</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">イミュータブルX</span><span class="coin-cap">約2,200億円</span></div>
-        <span class="coin-cat coin-cat-green">NFT Layer 2</span>
-        <div class="coin-desc-txt coin-desc-green">NFTゲーム特化のイーサリアムL2のトークン。ゲーム内NFTの発行・売買でガス料金ゼロを実現。Gods Unchained・Illuviumなど大型ゲームが採用し、ゲームチェーンの主流へ。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#1F3244;font-size:0.45rem">EGLD</div><span class="coin-sym">EGLD</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">マルチバースX</span><span class="coin-cap">約2,200億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">高速・低コストのL1チェーン「MultiversX（旧Elrond）」のトークン。シャーディング技術で毎秒15,000件超を処理。DeFi・NFT・メタバース・ゲームの総合エコシステムを構築中。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#555555;font-size:0.45rem">ALGO</div><span class="coin-sym">ALGO</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">アルゴランド</span><span class="coin-cap">約1,800億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoS（保有型）</span>
-        <div class="coin-desc-txt coin-desc-l1">MITチューリング賞受賞者Silvio Micali氏が設計した高性能チェーン。Pure PoSで高速・低コスト・省エネを実現。国連・政府機関との連携実績を持つ学術的信頼性の高いチェーン。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#04ADEF;font-size:0.45rem">SAND</div><span class="coin-sym">SAND</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ザ・サンドボックス</span><span class="coin-cap">約1,500億円</span></div>
-        <span class="coin-cat coin-cat-green">メタバース</span>
-        <div class="coin-desc-txt coin-desc-green">メタバースゲームプラットフォーム「The Sandbox」のガバナンストークン。ユーザーが土地（LAND NFT）を購入・開発してゲームや体験を作成・販売できる。アディダス等著名ブランドが参画。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#FF2D55;font-size:0.45rem">MANA</div><span class="coin-sym">MANA</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ディセントラランド</span><span class="coin-cap">約1,500億円</span></div>
-        <span class="coin-cat coin-cat-green">メタバース</span>
-        <div class="coin-desc-txt coin-desc-green">分散型メタバース「Decentraland」のガバナンストークン。仮想空間内の土地・アバター・ウェアラブルをNFTとして売買可能。DAO（分散自律組織）がプラットフォームを自律的に運営。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#EB001B;font-size:0.45rem">JASMY</div><span class="coin-sym">JASMY</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ジャスミー</span><span class="coin-cap">約750億円</span></div>
-        <span class="coin-cat coin-cat-green">IoT ユーティリティ（国産）</span>
-        <div class="coin-desc-txt coin-desc-green">「情報を民主化する」をコンセプトにした日本発のデータ主権プラットフォームトークン。個人データの安全な管理・流通を可能にするIoTデータ基盤を構築。国内取引所でも取り扱い中の国産銘柄。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#F4B728;font-size:0.52rem">ZEC</div><span class="coin-sym">ZEC</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">ジーキャッシュ</span><span class="coin-cap">約500億円</span></div>
-        <span class="coin-cat coin-cat-l1">PoW（採掘型）</span>
-        <div class="coin-desc-txt coin-desc-l1">ゼロ知識証明（zk-SNARK）を採用した高プライバシー暗号資産。送受金者・金額を選択的に非公開にできる「シールドトランザクション」が特徴。学術機関・プライバシー重視ユーザーに支持される。</div>
-      </div>
-
-      <div class="coin-card">
-        <div class="coin-card-top"><div class="coin-ico" style="background:#0033a0;font-size:0.45rem">JPYC</div><span class="coin-sym">JPYC</span></div>
-        <div class="coin-name-row"><span class="coin-name-jp">JPYコイン</span><span class="coin-cap">数十億円</span></div>
-        <span class="coin-cat coin-cat-stable">ステーブルコイン（円建て）</span>
-        <div class="coin-desc-txt coin-desc-stable">日本円に連動した国内発のステーブルコイン（1JPYC≒1円）。ERC-20準拠でイーサリアムチェーン上で動作。JPYC株式会社が発行し、日本国内のDeFi・Web3決済の円建て基盤として注目される。</div>
-      </div>
-
-    </div><!-- /coin-grid -->
+    <div id="tokenList" class="token-list">
+    </div><!-- /token-list -->
     </div><!-- /qa-sec-2 -->
 
     <!-- 規制・世界情勢セクション -->
@@ -4000,6 +3651,122 @@ function switchQaTab(idx) {
     if (b) b.classList.toggle('active', i === idx);
     if (s) s.classList.toggle('active', i === idx);
   }
+  if (idx === 2) fetchTokenRankings();
+}
+
+// ===== トークンデータ =====
+var TOKEN_DATA = [
+  {sym:'BTC',icon:'₿',bg:'#f7931a',name:'ビットコイン',cgId:'bitcoin',cat:'l1',catLabel:'PoW（採掘型）',desc:'2009年に誕生した世界初の暗号資産。総発行2,100万枚の希少性でデジタルゴールドと呼ばれ、半減期ごとに供給量が減少。ETF承認以降、機関投資家の流入が急拡大している。'},
+  {sym:'ETH',icon:'Ξ',bg:'#627eea',name:'イーサリアム',cgId:'ethereum',cat:'l1',catLabel:'PoS（保有型）',desc:'スマートコントラクトの基盤チェーン。DeFi・NFT・Web3アプリの大半がイーサリアム上で動く。2022年にPoWからPoSへ移行しエネルギー消費を約99%削減。'},
+  {sym:'USDT',icon:'U',bg:'#26a17b',name:'テザー',cgId:'tether',cat:'stable',catLabel:'ステーブルコイン',desc:'米ドル連動（1USDT≡１USD）。送金・取引・運用の基軸通貨として世界最大の流通量。TRC-20送金は手数料１ドル以下と格安で、bitradex入出金にも使用される。'},
+  {sym:'XRP',icon:'✕',bg:'#00aae4',name:'リップル',cgId:'ripple',cat:'l1',catLabel:'L1 基盤通貨',desc:'国際送金に特化。送金完結まで数秒・手数料は極めて低く銀行・金融機関との提携実績多数。SECとの詴訟が決着し法的透明性が向上、再評価が急進行中。'},
+  {sym:'BNB',icon:'B',bg:'#f0b90b',name:'バイナンスコイン',cgId:'binancecoin',cat:'l1',catLabel:'L1 基盤通貨',desc:'世界最大取引所Binanceのネイティブトークン。取引手数料割引・BNBチェーンのガス代に使用。定期バーンで供給量が継続的に減少し希少性が高まる。'},
+  {sym:'SOL',icon:'◎',bg:'#9945ff',name:'ソラナ',cgId:'solana',cat:'l1',catLabel:'PoS（保有型）',desc:'1秒あたり数万件を処理できる高速チェーン。手数料が極めて低くNFT・DeFi・ミームコイン発行で急成長。2024年以降、機関投資家からの注目が急増している。'},
+  {sym:'USDC',icon:'C',bg:'#2775ca',name:'USDコイン',cgId:'usd-coin',cat:'stable',catLabel:'ステーブルコイン',desc:'Circle社が発行する米ドル連動ステーブルコイン。毎月の準備金監査を公表し規制準拠が徹底。機関投資家・企業決済での利用が多く、USDTに次ぐ流通量を誤る。'},
+  {sym:'DOGE',icon:'Ð',bg:'#c2a633',name:'ドージコイン',cgId:'dogecoin',cat:'green',catLabel:'ミームコイン',desc:'柴犬がシンボルのミームコイン。イーロン・マスクの言及と米国政府効率化省（DOGE）との関連で世界的な知名度を獲得。'},
+  {sym:'ADA',icon:'A',bg:'#0033ad',name:'カルダノ',cgId:'cardano',cat:'l1',catLabel:'PoS（保有型）',desc:'学術研究・査読論文を基盤に設計された次世代ブロックチェーン。エネルギー効率のPoS採用。スマートコントラクト（Plutus）でDeFi・NFTエコシステムが拡大中。'},
+  {sym:'TRX',icon:'T',bg:'#ef0027',name:'トロン',cgId:'tron',cat:'l1',catLabel:'L1 基盤通貨',desc:'低コスト・高速送金特化チェーン。USDTのTRC-20送金は手数料１ドル以下と格安で、世界中の暗号資産取引で送金経路として多用されている。Justin Sun氏が主導。'},
+  {sym:'TON',icon:'T',bg:'#0098ea',name:'トンコイン',cgId:'the-open-network',cat:'l1',catLabel:'PoS（保有型）',desc:'Telegram主導のブロックチェーン。月間9億人超のTelegramユーザーと連携しアプリ内決済・ゲーム・ウォレット機能を統合。ユーザー獲得速度が他チェーンを圧倒する。'},
+  {sym:'AVAX',icon:'A',bg:'#e84142',name:'アバランチェ',cgId:'avalanche-2',cat:'l1',catLabel:'PoS（保有型）',desc:'1秒未満で決済が完了する超高速チェーン。企業・政府向けにカスタムチェーン（サブネット）を構築できる機能が特徴。金融機関・ゲーム会社との提携が相次いでいる。'},
+  {sym:'LINK',icon:'L',bg:'#375bd2',name:'チェーンリンク',cgId:'chainlink',cat:'green',catLabel:'ユーティリティ',desc:'現実世界のデータをブロックチェーンに接続するオラクルサービス。DeFiプロトコルの大半がChainlinkの価格フィードに依存しており、業界インフラとして不可欠。'},
+  {sym:'SHIB',icon:'S',bg:'#e01a2d',name:'シバイヌ',cgId:'shiba-inu',cat:'green',catLabel:'ミームコイン',desc:'DOGEに触発されたミームコイン。独自DEX「ShibaSwap」・L2「Shibarium」など独自エコシステムを構築中。大規模なコミュニティ「SHIB Army」が特徴。'},
+  {sym:'HYPE',icon:'H',bg:'#00d4ff',name:'ハイパーリキッド',cgId:'hyperliquid',cat:'green',catLabel:'分散型取引所',desc:'独自L1チェーン上で動く高性能分散型デリバティブ取引所のトークン。完全オンチェーンのオーダーブック方式で中央集権型並みの速度を実現、2024年エアドロップで急成長。'},
+  {sym:'BCH',icon:'B',bg:'#8DC351',name:'ビットコインキャッシュ',cgId:'bitcoin-cash',cat:'l1',catLabel:'PoW（採掘型）',desc:'2017年にBTCからハードフォークして誕生。ブロックサイズを拡大し送金速度と手数料効率を改善。日常決済での利用を目指す電子キャッシュとしての用途に特化。'},
+  {sym:'SUI',icon:'S',bg:'#4DA2FF',name:'スイ',cgId:'sui',cat:'l1',catLabel:'PoS（保有型）',desc:'Meta出身エンジニアが開発した次世代L1チェーン。並列処理技術で高速・低コストを実現。Move言語採用でスマートコントラクトのセキュリティが高く、2024年に急成長した。'},
+  {sym:'DOT',icon:'●',bg:'#e6007a',name:'ポルカドット',cgId:'polkadot',cat:'l1',catLabel:'PoS（保有型）',desc:'複数チェーン（パラチェーン）を接続するマルチチェーンプラットフォーム。イーサリアム共同創設者Gavin Wood氏が開発。異なるチェーン間の資産・データやり取りを可能にする。'},
+  {sym:'LTC',icon:'L',bg:'#345d9d',name:'ライトコイン',cgId:'litecoin',cat:'l1',catLabel:'PoW（採掘型）',desc:'2011年にBTCを改良した「デジタルシルバー」。ブロック生成速度がBTCの4倍で送金が速く手数料も安い。SegWit・Lightning Networkを先行実装し技術的信頼性が高い。'},
+  {sym:'NEAR',icon:'N',bg:'#00C08B',name:'NEAR Protocol',cgId:'near',cat:'l1',catLabel:'PoS（保有型）',desc:'開発者・ユーザーに優しい高性能L1チェーン。シャーディング技術で処理能力を拡張。Web2ライクUI/UXを実現するアカウントシステムが特徴。'},
+  {sym:'APT',icon:'A',bg:'#2D9CDB',name:'アプトス',cgId:'aptos',cat:'l1',catLabel:'PoS（保有型）',desc:'MetaのDiemプロジェクト出身エンジニアが開発。Move言語採用の高速L1チェーン。セキュリティと並列処理能力を重視した設計で機関投資家から注目を集める。'},
+  {sym:'XLM',icon:'✦',bg:'#0073BD',name:'ステラ',cgId:'stellar',cat:'l1',catLabel:'L1 基盤通貨',desc:'低コスト・高速の国際送金・決済特化チェーン。リップル元共同創設者が設立した非営利財団が運営。新興国の金融インフラ整備・ステーブルコイン発行基盤として政府・企業と連携。'},
+  {sym:'UNI',icon:'U',bg:'#ff007a',name:'ユニスワップ',cgId:'uniswap',cat:'green',catLabel:'DeFi（分散型金融）',desc:'最大手DEXのガバナンストークン。AMM方式で什介者なしにトークン交換が可能。DeFi取引量の大部分を占め業界の基盤インフラとして確立。'},
+  {sym:'PEPE',icon:'P',bg:'#00B140',name:'ペペ',cgId:'pepe',cat:'green',catLabel:'ミームコイン',desc:'「Pepe the Frog」をモチーフにしたミームコイン、2023年誕生で短期間に時価総額上位へ急浮上。旺盛な投機需要とSNSコミュニティで価値を維持。'},
+  {sym:'ETC',icon:'E',bg:'#328432',name:'イーサリアムクラシック',cgId:'ethereum-classic',cat:'l1',catLabel:'PoW（採掘型）',desc:'2016年DAOハック後のハードフォークで分岐したチェーン。「コードは法律」原則を守る保守派が支持。マイニング（PoW）継続を保ちながら独自エコシステムを運営し続けている。'},
+  {sym:'ATOM',icon:'A',bg:'#2e3148',name:'コスモス',cgId:'cosmos',cat:'l1',catLabel:'PoS（保有型）',desc:'「ブロックチェーンのインターネット」を目指すエコシステムの中核トークン。IBCプロトコルで異なるチェーン間のデータ・資産移転を可能にし、相互運用性の基盤を構築する。'},
+  {sym:'XMR',icon:'◉',bg:'#FF6600',name:'モネロ',cgId:'monero',cat:'l1',catLabel:'PoW（採掘型）',desc:'高いプライバシー保護が特徴。送受金者・金額がすべて暗号化され第三者からは追跡不可能。金融プライバシーを重視するユーザーに強く支持される一方、規制当局の注目度も高い。'},
+  {sym:'WIF',icon:'W',bg:'#9945FF',name:'ドッグウィファハット',cgId:'dogwifcoin',cat:'green',catLabel:'ミームコイン',desc:'帽子をかぶった柴犬のミームをモチーフにしたソラナ基盤のコイン、2023年末に誕生し急騰、ミームコインブームを犒引。短期間で時価総額上位に定着した人気銅柄。'},
+  {sym:'ICP',icon:'I',bg:'#3B00B9',name:'インターネットコンピューター',cgId:'internet-computer',cat:'l1',catLabel:'L1 基盤通貨',desc:'DFINITY財団が開発した分散型クラウドコンピューティング基盤。スマートコントラクトがWeb2レベルの速度で動作し、完全分散型のWebアプリ（dApp）を構築できる。'},
+  {sym:'POL',icon:'P',bg:'#8247e5',name:'ポリゴン',cgId:'matic-network',cat:'green',catLabel:'Layer 2',desc:'イーサリアムのスケーリングソリューション。ガス代を大幅に削減しつつETHのセキュリティを活用。MATIC→POLへリブランド後、zk-Rollup搭載の次世代L2へと進化中。'},
+  {sym:'AAVE',icon:'A',bg:'#B6509E',name:'アーベ',cgId:'aave',cat:'green',catLabel:'DeFi（分散型金融）',desc:'DeFi最大手の分散型レンディングプロトコルのガバナンストークン。暗号資産を担保に借り入れ、または預け入れで利息収入が得られる。フラッシュローンを世界で初めて実装した。'},
+  {sym:'OP',icon:'O',bg:'#FF0420',name:'オプティミズム',cgId:'optimism',cat:'green',catLabel:'Layer 2',desc:'イーサリアムL2「Optimism」のガバナンストークン。Optimistic Rollup技術でETHの手数料を大幅削減。Coinbase・Worldcoinなど多くの大型プロジェクトが採用している。'},
+  {sym:'ARB',icon:'A',bg:'#2D374B',name:'アービトラム',cgId:'arbitrum',cat:'green',catLabel:'Layer 2',desc:'イーサリアムL2の中でDeFi取引量トップのArbitrumのガバナンストークン。Optimistic Rollupでセキュリティを維持しながら低コストを実現。DeFiプロトコルの主要展開先。'},
+  {sym:'RENDER',icon:'R',bg:'#C73635',name:'レンダーネットワーク',cgId:'render-token',cat:'green',catLabel:'AI・GPU',desc:'GPU算力を分散して3D・AI・映像レンダリングを提供するプラットフォームのトークン。余剰GPUを提供し報酬を得る仕組み。AI需要拡大とともに注目度が急上昇中。'},
+  {sym:'INJ',icon:'I',bg:'#0082F8',name:'インジェクティブ',cgId:'injective-protocol',cat:'green',catLabel:'DeFi（分散型金融）',desc:'DeFi特化L1チェーンのネイティブトークン。オーダーブック型DEX・先物・デリバティブをゼロガス料金で高速提供。週次バーンで供給量を継続的に削減する設計。'},
+  {sym:'MKR',icon:'M',bg:'#1AAB9B',name:'メーカー',cgId:'maker',cat:'green',catLabel:'DeFi（分散型金融）',desc:'分散型ステーブルコインDAIを発行するMakerDAOのガバナンストークン。ETH等を担保にDAIを鲳造できる仕組みがDeFiの礎を築いた歴史的プロトコル。'},
+  {sym:'FET',icon:'F',bg:'#1A4B8C',name:'フェッチ.ai（ASI）',cgId:'fetch-ai',cat:'green',catLabel:'AI ユーティリティ',desc:'AIエージェントが自律的にタスクを実行する分散型AIプラットフォームのトークン。Fetch.ai・SingularityNET・Ocean Protocolが合併しASI Allianceを形成。AI×Web3の次世代インフラ。'},
+  {sym:'STX',icon:'S',bg:'#5546FF',name:'スタックス',cgId:'blockstack',cat:'green',catLabel:'Layer 2（Bitcoin）',desc:'ビットコインのセキュリティを活用しながらスマートコントラクトを実現するBitcoin L2のトークン。Clarity言語でBitcoin DeFiを構築可能で、BTC普及とともに需要が高まる先駆け。'},
+  {sym:'FLOKI',icon:'F',bg:'#F8971C',name:'フロキ',cgId:'floki',cat:'green',catLabel:'ミームコイン',desc:'イーロン・マスクの愛犬「Floki」にちなんだミームコイン。ゲームプラットフォーム「Valhalla」やDeFi機能を備えた独自エコシステムを構築中。高いマーケティング力で知名度を拡大。'},
+  {sym:'VET',icon:'V',bg:'#15BDFF',name:'ヴィチェーン',cgId:'vechain',cat:'green',catLabel:'サプライチェーン',desc:'サプライチェーン管理・トレーサビリティ特化のエンタープライズチェーン。食品・医薬品・高級品の真赋証明に活用。VET保有者がVTHO（ガス代）を得るDualトークンモデルが特徴。'},
+  {sym:'FIL',icon:'F',bg:'#0090FF',name:'ファイルコイン',cgId:'filecoin',cat:'green',catLabel:'ストレージ',desc:'分散型ストレージネットワークのトークン。余剰ストレージを提供してFILを報酬として受け取る仕組み。IPFSと連携し検閲耐性の高い分散型ウェブストレージとして注目される。'},
+  {sym:'GRT',icon:'G',bg:'#6F4CBA',name:'ザ・グラフ',cgId:'the-graph',cat:'green',catLabel:'データ ユーティリティ',desc:'ブロックチェーンデータのインデックス化・クエリを行う「Web3のGoogle」とも呼ばれるプロトコル。DeFi・NFTアプリが必要とするオンチェーンデータを効率的に取得するインフラ。'},
+  {sym:'IMX',icon:'I',bg:'#17B5E8',name:'イミュータブルX',cgId:'immutable-x',cat:'green',catLabel:'NFT Layer 2',desc:'NFTゲーム特化のイーサリアムL2のトークン。ゲーム内NFTの発行・売買でガス料金ゼロを実現。Gods Unchained・Illuviumなど大型ゲームが採用し、ゲームチェーンの主流へ。'},
+  {sym:'EGLD',icon:'E',bg:'#1F3244',name:'マルチバースX',cgId:'elrond-erd-2',cat:'l1',catLabel:'PoS（保有型）',desc:'高速・低コストのL1チェーン「MultiversX（旧Elrond）」のトークン。シャーディング技術で毎秒15,000件超を処理。DeFi・NFT・メタバース・ゲームの総合エコシステムを構築中。'},
+  {sym:'ALGO',icon:'A',bg:'#555555',name:'アルゴランド',cgId:'algorand',cat:'l1',catLabel:'PoS（保有型）',desc:'MITチューリング賞受賞者Silvio Micali氏が設計した高性能チェーン。Pure PoSで高速・低コスト・省エネを実現。国連・政府機関との連携実績を持つ学術的信頼性の高いチェーン。'},
+  {sym:'SAND',icon:'S',bg:'#04ADEF',name:'ザ・サンドボックス',cgId:'the-sandbox',cat:'green',catLabel:'メタバース',desc:'メタバースゲームプラットフォーム「The Sandbox」のガバナンストークン。ユーザーが土地（LAND NFT）を購入・開発してゲームや体験を作成・販売できる。アディダス等著名ブランドが参画。'},
+  {sym:'MANA',icon:'M',bg:'#FF2D55',name:'ディセントラランド',cgId:'decentraland',cat:'green',catLabel:'メタバース',desc:'分散型メタバース「Decentraland」のガバナンストークン。仮想空間内の土地・アバター・ウェアラブルをNFTとして売買可能。DAO（分散自律組織）がプラットフォームを自律的に運営。'},
+  {sym:'JASMY',icon:'J',bg:'#EB001B',name:'ジャスミー',cgId:'jasmycoin',cat:'green',catLabel:'IoT（国産）',desc:'「情報を民主化する」をコンセプトにした日本発のデータ主権プラットフォームトークン。個人データの安全な管理・流通を可能にするIoTデータ基盤を構築。国内取引所でも取り扱い中の国産銅柄。'},
+  {sym:'ZEC',icon:'Z',bg:'#F4B728',name:'ジーキャッシュ',cgId:'zcash',cat:'l1',catLabel:'PoW（採掘型）',desc:'ゼロ知識証明（zk-SNARK）を採用した高プライバシー暗号資産。送受金者・金額を選択的に非公開にできる「シールドトランザクション」が特徴。学術機関・プライバシー重視ユーザーに支持される。'},
+  {sym:'JPYC',icon:'¥',bg:'#0033a0',name:'JPYコイン',cgId:'jpyc',cat:'stable',catLabel:'ステーブルコイン（円建て）',desc:'日本円に連動した国内発のステーブルコイン（1JPYC≡１円）。ERC-20準拠でイーサリアムチェーン上で動作。JPYC株式会社が発行し、日本国内のDeFi・Web3決済の円建て基盤として注目される。'}
+];
+
+var TOKEN_MAP = {};
+TOKEN_DATA.forEach(function(t){ TOKEN_MAP[t.sym]=t; TOKEN_MAP[t.cgId]=t; });
+
+function fetchTokenRankings() {
+  var CACHE_KEY = 'token_rank_cache';
+  var TTL = 24 * 60 * 60 * 1000;
+  try {
+    var cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+    if (cached && (Date.now() - cached.ts) < TTL) { renderTokenList(cached.ranks, cached.dateStr); return; }
+  } catch(e) {}
+  fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=jpy&order=market_cap_desc&per_page=100&page=1&sparkline=false')
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      var ranks = {};
+      data.forEach(function(coin, i) {
+        var s = (coin.symbol || '').toUpperCase();
+        var rd = { rank: coin.market_cap_rank || (i+1), cap: coin.market_cap };
+        if (TOKEN_MAP[s]) ranks[s] = rd;
+        if (TOKEN_MAP[coin.id]) ranks[coin.id] = rd;
+      });
+      var d = new Date();
+      var dateStr = d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日時点';
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ts:Date.now(), ranks:ranks, dateStr:dateStr})); } catch(e) {}
+      renderTokenList(ranks, dateStr);
+    })
+    .catch(function() { renderTokenList({}, '（ランク取得失敗）'); });
+}
+
+function renderTokenList(ranks, dateStr) {
+  var el = document.getElementById('tokenList');
+  var dateEl = document.getElementById('tokenRankDate');
+  if (!el) return;
+  if (dateEl) dateEl.textContent = dateStr || '';
+  var sorted = TOKEN_DATA.slice().sort(function(a,b) {
+    var ra = (ranks[a.sym] || ranks[a.cgId] || {}).rank || 9999;
+    var rb = (ranks[b.sym] || ranks[b.cgId] || {}).rank || 9999;
+    return ra - rb;
+  });
+  var html = sorted.map(function(t) {
+    var rd = ranks[t.sym] || ranks[t.cgId] || {};
+    var rank = rd.rank || '–';
+    var cap = rd.cap ? (rd.cap >= 1e12 ? '約' + Math.round(rd.cap/1e12) + '兆円'
+                     : rd.cap >= 1e8  ? '約' + Math.round(rd.cap/1e8) + '億円'
+                     : '–') : '–';
+    var rankCls = (typeof rank === 'number' && rank <= 3) ? 'token-rank token-rank-top3' : 'token-rank';
+    return '<div class="token-row">' +
+      '<div class="' + rankCls + '">#' + rank + '</div>' +
+      '<div class="coin-ico" style="background:' + t.bg + ';font-size:' + (t.icon.length>1?'0.5rem':'0.8rem') + '">' + t.icon + '</div>' +
+      '<div class="token-body">' +
+        '<div class="token-header">' +
+          '<span class="coin-sym">' + t.sym + '</span>' +
+          '<span class="coin-name-jp">' + t.name + '</span>' +
+          '<span class="coin-cap">' + cap + '</span>' +
+          '<span class="coin-cat coin-cat-' + t.cat + '">' + t.catLabel + '</span>' +
+        '</div>' +
+        '<div class="coin-desc-txt">' + t.desc + '</div>' +
+      '</div></div>';
+  }).join('');
+  el.innerHTML = html;
 }
 
 // ===== 書籍 年別データ =====
@@ -4892,6 +4659,7 @@ window.onload = function() {
   switchBookYear(0);
   renderSimHistory();
   updateLiveCalc();
+  fetchTokenRankings();
   // 5分毎にレート＆指標を自動更新、30分毎にニュースを更新
   setInterval(function() { fetchRate(); fetchMarketData(); }, 5 * 60 * 1000);
   setInterval(fetchNewsHeadlines, 30 * 60 * 1000);
