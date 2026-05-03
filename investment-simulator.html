@@ -141,6 +141,10 @@
       display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 10px;
     }
     @media (max-width: 400px) { .input-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 360px) {
+      .ms-profit { font-size: 1.05rem !important; }
+      .ms-balance { font-size: 0.95rem !important; }
+    }
     .input-group { display: flex; flex-direction: column; gap: 4px; }
     label { font-size: 0.78rem; color: var(--muted); font-weight: 600; }
     input[type="number"], input[type="date"] {
@@ -1032,7 +1036,6 @@
     <label id="principalLabel"><span class="step-badge">①黄色の枠内へ金額を入力</span></label>
     <div style="display:flex;align-items:center;gap:8px">
       <input type="number" id="principal" value="1000" min="1" step="100"
-             oninput="updateLiveCalc()"
              style="flex:1;min-width:0"
              oninput="updatePrincipalYen()" />
       <span id="principalYen" style="display:inline-block;background:var(--bg);border:1.5px solid var(--border);border-radius:20px;padding:2px 10px;font-size:0.78rem;font-weight:700;color:var(--muted);white-space:nowrap;flex-shrink:0"></span>
@@ -1066,7 +1069,7 @@
       </div>
       <div class="input-group">
         <label><span class="tt" ontouchstart="ttTap(this)">年利（%）<span class="tt-pop">年間の利回り（利率）。180%なら、日利換算で約0.49%/日。</span></span></label>
-        <input type="number" id="annualRate" value="182.5" min="0.1" step="0.1" oninput="updateLiveCalc()" />
+        <input type="number" id="annualRate" value="182.5" min="0.1" step="0.1" />
       </div>
       <div class="input-group">
         <label><span class="tt" ontouchstart="ttTap(this)">出金手数料（%）<span class="tt-pop">投資額により自動設定：$30,000未満→5%、$30,000〜→3%、$50,000〜→1.5%、$100,000〜→0%</span></span><span style="font-size:0.6rem;background:rgba(10,158,109,0.12);color:#0a9e6d;font-weight:700;padding:2px 6px;border-radius:6px;margin-left:5px">自動</span></label>
@@ -2686,11 +2689,15 @@ function applyRate(rate) {
   document.getElementById('rateTime').textContent  = nowTimeStr();
   try { localStorage.setItem('sim_last_rate', gJpyRate); } catch(e) {}
   updatePrincipalYen();
-  setMC('usdjpy', '¥' + gJpyRate, 0, false, false); // 指標パネルにも即時反映
+  setMC('usdjpy', '¥' + gJpyRate, 0, false, false);
+  var rb = document.querySelector('.rate-btn');
+  if (rb) { rb.disabled = false; rb.textContent = '更新'; rb.style.opacity = ''; }
 }
 function fallbackRate() {
   document.getElementById('rateNum').textContent = gJpyRate;
   document.getElementById('rateDate').textContent  = '※設定値を使用中';
+  var rb = document.querySelector('.rate-btn');
+  if (rb) { rb.disabled = false; rb.textContent = '更新'; rb.style.opacity = ''; }
   document.getElementById('rateTime').textContent  = nowTimeStr();
   updateTicker();
   setMC('usdjpy', gJpyRate > 0 ? '¥' + gJpyRate : '---', 0, false);
@@ -2699,7 +2706,10 @@ function fetchRate() {
   document.getElementById('rateDate').textContent = '取得中...';
   document.getElementById('rateNum').textContent  = gJpyRate > 0 ? gJpyRate : '---';
   document.getElementById('rateTime').textContent  = '';
+  var rateBtn = document.querySelector('.rate-btn');
+  if (rateBtn) { rateBtn.disabled = true; rateBtn.textContent = '取得中'; rateBtn.style.opacity = '0.6'; }
   var done = false;
+  function restoreRateBtn() { if (rateBtn) { rateBtn.disabled = false; rateBtn.textContent = '更新'; rateBtn.style.opacity = ''; } }
 
   // API 1: CoinGecko — USDT/JPY+BTC+ETH+ゴールド、1リクエストでまとめて取得
   var xg = new XMLHttpRequest();
@@ -3123,6 +3133,7 @@ function simulate() {
 
     // シミュレーション結果セクションを表示
     document.getElementById('simResultsSection').classList.remove('hidden');
+    setTimeout(function() { document.getElementById('simResultsSection').scrollIntoView({behavior:'smooth', block:'start'}); }, 50);
 
     // マイルストーン
     var startDate = lastStartDate || new Date();
@@ -3136,14 +3147,6 @@ function simulate() {
     lastRows = sim.rows;
     renderTable(sim.rows, false, jpyRate);
 
-    // 履歴保存
-    var profit1m = principal * (Math.pow(1 + annualRate / 100 / 365, 30) - 1) * (1 - fee / 100);
-    var profit1y = principal * (Math.pow(1 + annualRate / 100 / 365, 365) - 1) * (1 - fee / 100);
-    saveSimHistory(
-      { principal: principal, annualRate: annualRate, days: days, fee: fee, jpyRate: jpyRate, simMode: simMode },
-      { profit1m: simMode === 'jpy' && jpyRate > 0 ? Math.round(profit1m * jpyRate) : profit1m,
-        profit1y: simMode === 'jpy' && jpyRate > 0 ? Math.round(profit1y * jpyRate) : profit1y }
-    );
 
   } catch(e) {
     var eb = document.getElementById('errorBox');
@@ -3277,10 +3280,10 @@ function msCell(label, value, pct, jpyRate, color, divColor, hasBorder, useAccen
   return '<div style="padding:12px 14px;' + border + '">' +
     '<div style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;color:var(--muted);margin-bottom:6px">' + label + '</div>' +
     '<div style="font-size:0.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">💰 利益額</div>' +
-    '<div style="font-size:1.35rem;font-weight:900;color:' + color + ';letter-spacing:-0.03em;line-height:1.1">' + profitMain + '</div>' +
+    '<div class="ms-profit" style="font-size:1.35rem;font-weight:900;color:' + color + ';letter-spacing:-0.03em;line-height:1.1">' + profitMain + '</div>' +
     '<div style="font-size:0.68rem;color:var(--muted);margin-top:2px;margin-bottom:8px">' + profitSub + '</div>' +
     '<div style="font-size:0.62rem;color:var(--muted);margin-bottom:2px;letter-spacing:0.04em;font-weight:700;text-transform:uppercase">最終残高</div>' +
-    '<div style="font-size:1.2rem;font-weight:900;color:var(--accent);letter-spacing:-0.02em;border-bottom:2px solid ' + color + ';padding-bottom:3px;display:inline-block">' + total + '</div>' +
+    '<div class="ms-balance" style="font-size:1.2rem;font-weight:900;color:var(--accent);letter-spacing:-0.02em;border-bottom:2px solid ' + color + ';padding-bottom:3px;display:inline-block">' + total + '</div>' +
     '<div style="font-size:0.65rem;color:var(--muted);margin-top:3px;margin-bottom:6px">' + totalSub + '</div>' +
     '<div style="display:inline-block;font-size:0.76rem;font-weight:700;padding:2px 9px;border-radius:20px;background:' + pBg + ';color:' + color + '">' + arrow + fmtPct(pct) + '</div>' +
   '</div>';
@@ -4771,8 +4774,6 @@ window.onload = function() {
   initYtDots('yt-swrap-1', 'yt-dots-1', 3);
   initYtDots('yt-swrap-2', 'yt-dots-2', 3);
   switchBookYear(0);
-  renderSimHistory();
-  updateLiveCalc();
   fetchTokenRankings();
   // 5分毎にレート＆指標を自動更新、30分毎にニュースを更新
   setInterval(function() { fetchRate(); fetchMarketData(); }, 5 * 60 * 1000);
