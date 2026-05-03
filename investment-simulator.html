@@ -3133,7 +3133,7 @@ function simulate() {
 
     // シミュレーション結果セクションを表示
     document.getElementById('simResultsSection').classList.remove('hidden');
-    setTimeout(function() { document.getElementById('simResultsSection').scrollIntoView({behavior:'smooth', block:'start'}); }, 50);
+    setTimeout(function() { document.getElementById('simSummaryBox').scrollIntoView({behavior:'smooth', block:'start'}); }, 50);
 
     // マイルストーン
     var startDate = lastStartDate || new Date();
