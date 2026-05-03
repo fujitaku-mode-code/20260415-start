@@ -200,10 +200,8 @@
       color: var(--accent);
       letter-spacing: 0.1em; text-transform: uppercase;
       padding: 10px 4px 8px;
-      border-bottom: 1.5px solid rgba(0,0,0,0.07);
       margin-bottom: 10px;
     }
-    body.dark .sim-results-header { border-bottom-color: rgba(255,255,255,0.08); }
     .sim-results-header .sim-results-icon {
       width: 22px; height: 22px; border-radius: 50%;
       background: var(--accent); color: #fff;
@@ -978,9 +976,6 @@
   <div class="title-row">
     <h1>投資シミュレーター<span class="site-subtitle">INVESTMENT SIMULATOR</span></h1>
     <div class="theme-row">
-      <button class="title-refresh-btn" type="button" onclick="titleRefresh()" title="レート更新">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-      </button>
       <button class="calc-open-btn" type="button" onclick="openCalc()" title="計算機">🧮</button>
       <button class="dark-btn" id="darkBtn" onclick="toggleDark()">🌙</button>
     </div>
@@ -1024,17 +1019,14 @@
   <!-- 為替レートバナー -->
   <div class="rate-banner">
     <div style="flex:1;min-width:0">
-      <div style="margin-bottom:5px;padding-left:1em"><span class="step-badge">①「更新」ボタンを押し日本円を表示</span></div>
       <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;padding-left:1em">
         <span class="rate-num" id="rateNum">---</span>
         <span class="rate-unit">円 / ドル</span>
+        <span class="rate-date" id="rateDate" style="font-size:0.72rem;margin-left:4px">取得中...</span>
+        <span class="rate-date" id="rateTime" style="font-size:0.72rem"></span>
       </div>
-      <div style="padding-left:1em;margin-top:3px">
-        <span class="rate-date" id="rateDate">取得中...</span>
-        <span class="rate-date" id="rateTime" style="margin-left:4px"></span>
-      </div>
+      <div style="padding-left:1em;margin-top:4px;font-size:0.68rem;color:var(--muted);font-weight:600">※リアルタイム更新</div>
     </div>
-    <button class="rate-btn" onclick="fetchRate()" style="padding:15px 18px;font-size:0.88rem;font-weight:700;flex-shrink:0;line-height:1">更新</button>
   </div>
 
   <!-- 投資額 -->
