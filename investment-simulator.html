@@ -3237,7 +3237,6 @@ function renderMilestonePage() {
   var nextBtn = '<button onclick="nextMilestone()" style="' + btnBase + (milestoneIdx === total-1 ? 'opacity:0.25;cursor:not-allowed' : '') + '" ' + (milestoneIdx === total-1 ? 'disabled' : '') + '>▶</button>';
 
   var html =
-    '<div style="display:flex;justify-content:center;align-items:center;gap:7px;padding:6px 0 10px">' + dots + '</div>' +
     '<div style="border-radius:14px;border:1.5px solid var(--border);border-left:4px solid ' + mc + ';background:var(--white);overflow:hidden">' +
       '<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px 9px;border-bottom:1px solid ' + div + '">' +
         '<div style="font-size:1.35rem;font-weight:900;color:' + mc + ';letter-spacing:-0.03em;line-height:1.2">' +
@@ -3255,7 +3254,8 @@ function renderMilestonePage() {
         '<span style="font-size:0.7rem;color:var(--muted);font-weight:600">' + (milestoneIdx+1) + ' / ' + total + '</span>' +
         nextBtn +
       '</div>' +
-    '</div>';
+    '</div>' +
+    '<div style="display:flex;justify-content:center;align-items:center;gap:7px;padding:8px 0 4px">' + dots + '</div>';
 
   document.getElementById('milestoneGrid').innerHTML = html;
 }
