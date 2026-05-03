@@ -69,7 +69,9 @@
     .title-row {
       display: flex; align-items: center; justify-content: space-between; gap: 10px;
     }
-    h1 { font-size: 1.3rem; font-weight: 900; color: var(--text); letter-spacing: -0.01em; }
+    h1 { font-size: 1.1rem; font-weight: 900; color: #000; letter-spacing: -0.01em; line-height: 1.15; }
+    body.dark h1 { color: #fff; }
+    .site-subtitle { display: block; font-size: 0.58rem; font-weight: 400; color: #0097c7; letter-spacing: 0.14em; margin-top: 1px; }
     .theme-row { flex-shrink:0; display:flex; align-items:center; gap:8px; }
 
     /* ===== ダークモードトグル ===== */
@@ -580,12 +582,17 @@
     }
     .calc-display {
       background:var(--bg); border-radius:10px;
-      padding:10px 14px; text-align:right;
-      font-size:1.7rem; font-weight:700; color:var(--text);
-      margin-bottom:12px; min-height:54px;
-      word-break:break-all; line-height:1.2;
+      padding:8px 14px 10px; text-align:right;
+      margin-bottom:12px;
       border:1.5px solid var(--border);
     }
+    .calc-expr { font-size:0.72rem; color:var(--muted); min-height:1.1em; word-break:break-all; }
+    .calc-num-display { font-size:1.7rem; font-weight:700; color:var(--text); word-break:break-all; line-height:1.2; }
+    .calc-hist-wrap { margin-top:10px; border-top:1px solid var(--border); padding-top:8px; }
+    .calc-hist-row { display:flex; justify-content:space-between; align-items:center; padding:4px 2px; border-bottom:1px solid var(--border); cursor:pointer; }
+    .calc-hist-row:last-child { border-bottom:none; }
+    .calc-hist-row:hover { background:rgba(0,0,0,0.04); border-radius:4px; }
+    body.dark .calc-hist-row:hover { background:rgba(255,255,255,0.05); }
     .calc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
     .calc-btn {
       padding:13px 4px; border:none; border-radius:10px;
@@ -949,7 +956,7 @@
 <!-- ヘッダー -->
 <div class="header">
   <div class="title-row">
-    <h1>投資シミュレーター</h1>
+    <h1>投資シミュレーター<span class="site-subtitle">INVESTMENT SIMULATOR</span></h1>
     <div class="theme-row">
       <button class="title-refresh-btn" type="button" onclick="titleRefresh()" title="レート更新">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
@@ -1064,38 +1071,6 @@
 
   <button class="btn" onclick="simulate()">④ シミュレーション実行</button>
   <div style="font-size:0.65rem;color:var(--muted);margin-top:5px;text-align:left">※設定額以上で累積利益を全額元本へ追加</div>
-</div>
-
-<!-- ライブ計算プレビュー -->
-<div id="liveCalcBox" style="display:none;border-radius:12px;border:1.5px solid var(--border);border-left:4px solid var(--accent);background:var(--white);padding:10px 14px;margin-bottom:10px">
-  <div style="font-size:0.62rem;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-bottom:8px">⚡ 入力中プレビュー（概算）</div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
-    <div style="text-align:center;padding:6px 4px;background:rgba(10,158,109,0.07);border-radius:8px">
-      <div style="font-size:0.58rem;color:var(--muted);margin-bottom:2px">日利</div>
-      <div id="liveDaily" style="font-size:1rem;font-weight:900;color:var(--accent)">---</div>
-    </div>
-    <div style="text-align:center;padding:6px 4px;background:rgba(79,110,247,0.07);border-radius:8px">
-      <div style="font-size:0.58rem;color:var(--muted);margin-bottom:2px">月利（概算）</div>
-      <div id="liveMonthly" style="font-size:1rem;font-weight:900;color:#4f6ef7">---</div>
-    </div>
-    <div style="text-align:center;padding:6px 4px;background:rgba(155,92,246,0.07);border-radius:8px">
-      <div style="font-size:0.58rem;color:var(--muted);margin-bottom:2px">年間利益（複利）</div>
-      <div id="liveYearly" style="font-size:1rem;font-weight:900;color:#9b5cf6">---</div>
-    </div>
-  </div>
-</div>
-
-<!-- シミュレーション履歴 -->
-<div id="simHistoryCard" class="card hidden" style="margin-bottom:10px">
-  <div class="card-title" style="cursor:pointer" onclick="toggleHistoryCard()">
-    <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">🕘</span>
-    シミュレーション履歴
-    <span id="historyToggleArrow" style="margin-left:auto;font-size:0.8rem;color:var(--muted)">▼</span>
-  </div>
-  <div id="simHistoryBody" style="padding:0 2px 4px">
-    <div id="simHistoryList"></div>
-    <button onclick="clearSimHistory()" style="font-size:0.65rem;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px 8px;margin-top:2px">🗑 履歴を消去</button>
-  </div>
 </div>
 
 <!-- 投資条件サマリー枠 -->
@@ -3213,11 +3188,11 @@ function msCell(label, value, pct, jpyRate, color, divColor, hasBorder, useAccen
   return '<div style="padding:12px 14px;' + border + '">' +
     '<div style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;color:var(--muted);margin-bottom:6px">' + label + '</div>' +
     '<div style="font-size:0.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">💰 利益額</div>' +
-    '<div style="font-size:1.75rem;font-weight:900;color:' + color + ';letter-spacing:-0.03em;line-height:1.1">' + profitMain + '</div>' +
-    '<div style="font-size:0.72rem;color:var(--muted);margin-top:2px;margin-bottom:8px">' + profitSub + '</div>' +
-    '<div style="font-size:0.68rem;color:var(--muted);margin-bottom:1px">最終残高</div>' +
-    '<div style="font-size:0.95rem;font-weight:800;color:var(--text)">' + total + '</div>' +
-    '<div style="font-size:0.68rem;color:var(--muted);margin-top:1px;margin-bottom:6px">' + totalSub + '</div>' +
+    '<div style="font-size:1.35rem;font-weight:900;color:' + color + ';letter-spacing:-0.03em;line-height:1.1">' + profitMain + '</div>' +
+    '<div style="font-size:0.68rem;color:var(--muted);margin-top:2px;margin-bottom:8px">' + profitSub + '</div>' +
+    '<div style="font-size:0.62rem;color:var(--muted);margin-bottom:2px;letter-spacing:0.04em;font-weight:700;text-transform:uppercase">最終残高</div>' +
+    '<div style="font-size:1.2rem;font-weight:900;color:var(--accent);letter-spacing:-0.02em;border-bottom:2px solid ' + color + ';padding-bottom:3px;display:inline-block">' + total + '</div>' +
+    '<div style="font-size:0.65rem;color:var(--muted);margin-top:3px;margin-bottom:6px">' + totalSub + '</div>' +
     '<div style="display:inline-block;font-size:0.76rem;font-weight:700;padding:2px 9px;border-radius:20px;background:' + pBg + ';color:' + color + '">' + arrow + fmtPct(pct) + '</div>' +
   '</div>';
 }
@@ -4339,8 +4314,15 @@ function renderXFeedWithTranslation(items) {
 }
 
 // ===== 計算機 =====
-var calcState = { display: '0', prev: '', op: '', newNum: true };
-function openCalc() { document.getElementById('calcOverlay').classList.add('open'); }
+var calcState = { display: '0', prev: '', op: '', newNum: true, expr: '' };
+var calcHistory = [];
+var CALC_HIST_KEY = 'calc_history';
+(function(){ try { calcHistory = JSON.parse(localStorage.getItem(CALC_HIST_KEY) || '[]'); } catch(e){} })();
+
+function openCalc() {
+  document.getElementById('calcOverlay').classList.add('open');
+  renderCalcHistory();
+}
 function closeCalcIfOutside(e) {
   if (e.target === document.getElementById('calcOverlay'))
     document.getElementById('calcOverlay').classList.remove('open');
@@ -4348,7 +4330,8 @@ function closeCalcIfOutside(e) {
 function calcAction(key) {
   var s = calcState;
   var disp = document.getElementById('calcDisplay');
-  if (key === 'C') { s.display = '0'; s.prev = ''; s.op = ''; s.newNum = true; }
+  var exprEl = document.getElementById('calcExpr');
+  if (key === 'C') { s.display = '0'; s.prev = ''; s.op = ''; s.newNum = true; s.expr = ''; }
   else if (key === '±') { s.display = String(-(parseFloat(s.display) || 0)); }
   else if (key === '%') { s.display = String((parseFloat(s.display) || 0) / 100); }
   else if ('0123456789'.indexOf(key) >= 0) {
@@ -4359,8 +4342,21 @@ function calcAction(key) {
     else if (s.display.indexOf('.') < 0) s.display += '.';
   } else if ('+-×÷'.indexOf(key) >= 0) {
     if (s.op && !s.newNum) calcExec();
+    s.expr = s.display + ' ' + key;
     s.prev = s.display; s.op = key; s.newNum = true;
-  } else if (key === '=') { if (s.op) { calcExec(); s.op = ''; } }
+  } else if (key === '=') {
+    if (s.op) {
+      var exprStr = s.expr + ' ' + s.display;
+      calcExec();
+      s.op = '';
+      calcHistory.unshift({ expr: exprStr, result: s.display });
+      if (calcHistory.length > 20) calcHistory.pop();
+      try { localStorage.setItem(CALC_HIST_KEY, JSON.stringify(calcHistory)); } catch(e){}
+      renderCalcHistory();
+      s.expr = '';
+    }
+  }
+  if (exprEl) exprEl.textContent = s.op ? (s.expr || '') : '';
   var t = s.display.length > 13 ? s.display.slice(0, 13) : s.display;
   disp.textContent = t || '0';
 }
@@ -4373,6 +4369,33 @@ function calcExec() {
   else if (s.op === '÷') r = b !== 0 ? a / b : 'Error';
   s.display = (r !== undefined) ? String(typeof r === 'number' ? parseFloat(r.toPrecision(10)) : r) : '0';
   s.prev = s.display; s.newNum = true;
+}
+function renderCalcHistory() {
+  var list = document.getElementById('calcHistList');
+  if (!list) return;
+  if (calcHistory.length === 0) {
+    list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:0.68rem;padding:8px">履歴なし</div>';
+    return;
+  }
+  list.innerHTML = calcHistory.map(function(h) {
+    var safe = String(h.result).replace(/'/g, '');
+    return '<div class="calc-hist-row" onclick="calcUseResult(\'' + safe + '\')">' +
+      '<span style="font-size:0.65rem;color:var(--muted)">' + h.expr + ' =</span>' +
+      '<span style="font-size:0.88rem;font-weight:700;color:var(--text)">' + h.result + '</span>' +
+      '</div>';
+  }).join('');
+}
+function calcUseResult(val) {
+  calcState.display = val; calcState.newNum = true; calcState.expr = '';
+  var d = document.getElementById('calcDisplay');
+  var e = document.getElementById('calcExpr');
+  if (d) d.textContent = val;
+  if (e) e.textContent = '';
+}
+function clearCalcHistory() {
+  calcHistory = [];
+  try { localStorage.removeItem(CALC_HIST_KEY); } catch(e){}
+  renderCalcHistory();
 }
 
 // ===== タイトル更新ボタン（タブ保持） =====
@@ -4684,7 +4707,10 @@ window.onload = function() {
 <!-- 計算機モーダル -->
 <div id="calcOverlay" class="calc-overlay" onclick="closeCalcIfOutside(event)">
   <div class="calc-box">
-    <div class="calc-display" id="calcDisplay">0</div>
+    <div class="calc-display">
+      <div class="calc-expr" id="calcExpr"></div>
+      <div class="calc-num-display" id="calcDisplay">0</div>
+    </div>
     <div class="calc-grid">
       <button class="calc-btn calc-cl" onclick="calcAction('C')">C</button>
       <button class="calc-btn calc-op" onclick="calcAction('±')">±</button>
@@ -4705,6 +4731,13 @@ window.onload = function() {
       <button class="calc-btn calc-num" style="grid-column:span 2" onclick="calcAction('0')">0</button>
       <button class="calc-btn calc-num" onclick="calcAction('.')">.</button>
       <button class="calc-btn calc-eq" onclick="calcAction('=')">=</button>
+    </div>
+    <div class="calc-hist-wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:0.62rem;font-weight:700;color:var(--muted);letter-spacing:0.05em">🕘 履歴</span>
+        <button onclick="clearCalcHistory()" style="font-size:0.6rem;color:var(--muted);background:none;border:none;cursor:pointer;padding:1px 4px">消去</button>
+      </div>
+      <div id="calcHistList" style="max-height:110px;overflow-y:auto"></div>
     </div>
   </div>
 </div>
