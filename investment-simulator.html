@@ -484,10 +484,10 @@
     .qa-sidebar-btn:nth-child(3).active { background:#059669; color:#fff; }
     .qa-sidebar-btn:nth-child(4) { border-color:#7c3aed; color:#7c3aed; background:rgba(124,58,237,0.1); }
     .qa-sidebar-btn:nth-child(4).active { background:#7c3aed; color:#fff; }
-    .qa-sidebar-btn:nth-child(5) { border-color:#d97706; color:#d97706; background:rgba(217,119,6,0.1); }
-    .qa-sidebar-btn:nth-child(5).active { background:#d97706; color:#fff; }
-    .qa-sidebar-btn:nth-child(5) { border-color:#d97706; color:#d97706; background:rgba(217,119,6,0.1); }
-    .qa-sidebar-btn:nth-child(5).active { background:#d97706; color:#fff; }
+    .qa-sidebar-btn:nth-child(5) { border-color:#dc2626; color:#dc2626; background:rgba(220,38,38,0.1); }
+    .qa-sidebar-btn:nth-child(5).active { background:#dc2626; color:#fff; }
+    .qa-sidebar-btn:nth-child(6) { border-color:#0891b2; color:#0891b2; background:rgba(8,145,178,0.1); }
+    .qa-sidebar-btn:nth-child(6).active { background:#0891b2; color:#fff; }
     /* ===== マニュアルカテゴリサイドバー ===== */
     .manual-cat-btn {
       width:100%; padding:8px 3px; border:2px solid; border-radius:10px;
@@ -1264,6 +1264,7 @@
       <button class="qa-sidebar-btn" id="qaBtn-2" onclick="switchQaTab(2)">トークン</button>
       <button class="qa-sidebar-btn" id="qaBtn-3" onclick="switchQaTab(3)">規制・<br>世界</button>
       <button class="qa-sidebar-btn" id="qaBtn-4" onclick="switchQaTab(4)">機関<br>投資家</button>
+      <button class="qa-sidebar-btn" id="qaBtn-5" onclick="switchQaTab(5)">Bit<br>radex</button>
     </div>
 
     <!-- 右コンテンツ -->
@@ -1787,6 +1788,55 @@
     </div>
 
     </div><!-- /qa-sec-4 -->
+
+    <!-- BitradexセクションEXTRA -->
+    <div id="qa-sec-5" class="qa-content-sec">
+      <div class="acc-header" onclick="toggleAcc(this)" style="padding:12px 14px">
+        <div class="qa-q">Q.【調査報告】BitradeXの信頼性と米国MSBライセンス制度の全容</div><span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="qa-a" style="font-size:0.78rem;line-height:1.8">
+
+          <p style="font-weight:800;color:#0891b2;margin-bottom:8px">1. 米国MSBライセンスの法的実態</p>
+          <p style="margin-bottom:8px">BitradeXが信頼性の根拠とする「米国MSBライセンス」は、正確には米国財務省の金融犯罪取締ネットワーク（FinCEN）への<strong>「届出（Registration）」</strong>を指します。</p>
+          <ul style="padding-left:1.2em;margin-bottom:8px">
+            <li><strong>制度の性質:</strong> 銀行秘密法（BSA）に基づき、送金業者や暗号資産交換業者が連邦政府に活動を報告する義務です。</li>
+            <li><strong>「免許」との違い:</strong> FinCENは事業内容の審査や承認を行わず、書類の提出のみで登録が完了します。</li>
+            <li><strong>大手との比較:</strong> VISA、PayPal、Coinbase等はFinCEN登録に加え、各州が発行する厳格な「送金ライセンス（MTL）」を保有し、数千万円単位の保証金や外部監査を維持しています。</li>
+          </ul>
+
+          <p style="font-weight:800;color:#0891b2;margin-bottom:8px">2. BitradeXの企業実態と整合性の分析</p>
+          <p style="margin-bottom:6px">公式発表と公開データの調査により、以下の事実が判明しました。</p>
+          <table style="width:100%;border-collapse:collapse;font-size:0.74rem;margin-bottom:10px">
+            <thead><tr style="background:#e6f2ff"><th style="padding:5px 8px;text-align:left;border:1px solid #ccc;font-weight:700">項目</th><th style="padding:5px 8px;text-align:left;border:1px solid #ccc;font-weight:700">調査結果・事実</th></tr></thead>
+            <tbody>
+              <tr><td style="padding:5px 8px;border:1px solid #ccc">法的設立日</td><td style="padding:5px 8px;border:1px solid #ccc">2025年3月18日（英国法人 BITRADEX FINTECH LIMITED）</td></tr>
+              <tr><td style="padding:5px 8px;border:1px solid #ccc">運営主張</td><td style="padding:5px 8px;border:1px solid #ccc">「2022年設立」と主張するが、登記上の履歴とは不一致</td></tr>
+              <tr><td style="padding:5px 8px;border:1px solid #ccc">所在地</td><td style="padding:5px 8px;border:1px solid #ccc">英国キングトンのバーチャルオフィス（Suite 10706）</td></tr>
+              <tr><td style="padding:5px 8px;border:1px solid #ccc">広告塔</td><td style="padding:5px 8px;border:1px solid #ccc">オリヴィエ・ジルー氏（元フランス代表）を公式アンバサダーに起用</td></tr>
+            </tbody>
+          </table>
+
+          <p style="font-weight:800;color:#dc2626;margin-bottom:8px">3. 規制当局による警告・アラート情報</p>
+          <p style="margin-bottom:6px">BitradeXおよび類似名称のプロジェクトに対し、一部の海外規制当局が懸念を表明しています。</p>
+          <ul style="padding-left:1.2em;margin-bottom:10px">
+            <li><strong>マレーシア証券委員会 (SC):</strong> 2026年3月17日、BitradeX（bitradex.ai）を「無認可の投資プラットフォーム」として投資家アラートリストに追加。</li>
+            <li><strong>英国金融行動監視機構 (FCA):</strong> 2022年に「BIT-TRADEX」というクローン名称の無認可業者に対し警告を発した事例があります。</li>
+          </ul>
+
+          <p style="font-weight:800;color:#0891b2;margin-bottom:8px">4. 信頼性評価とリスク管理</p>
+          <ul style="padding-left:1.2em;margin-bottom:10px">
+            <li><strong>コンプライアンスの意志:</strong> 米国MSBへの登録は、AML（マネロン対策）やKYC（本人確認）の枠組みを導入する姿勢を示すものであり、一定の透明性確保に寄与します。</li>
+            <li><strong>安全性と保証の不在:</strong> FinCEN登録は「政府による安全性保証」ではありません。特に年利100%を超えるような収益モデルについては、金融工学上のリスクが高いことを認識する必要があります。</li>
+            <li><strong>法的制限:</strong> 日本の金融庁や英国FCAなどの居住地規制に基づき、認可なしでの勧誘やサービス提供には法的リスクが伴います。</li>
+          </ul>
+
+          <p style="font-weight:800;margin-bottom:6px">総評</p>
+          <p>BitradeXはAIを活用した革新的なプラットフォームである一方、その信頼性の根拠とされるMSBライセンスは「連邦レベルの届出」に留まるものです。大手金融機関との比較は形式的には正しいものの、実質的な州ライセンスの有無や企業の歴史、規制当局からの最新のアラート状況を考慮した、多角的な判断が求められます。</p>
+
+        </div>
+      </div>
+    </div><!-- /qa-sec-5 -->
 
     </div><!-- /links-content-area -->
   </div><!-- /links-sidebar-layout -->
@@ -3845,7 +3895,7 @@ function downloadSelected(btn) {
 
 // ===== Q&Aサイドバータブ =====
 function switchQaTab(idx) {
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 6; i++) {
     var b = document.getElementById('qaBtn-' + i);
     var s = document.getElementById('qa-sec-' + i);
     if (b) b.classList.toggle('active', i === idx);
