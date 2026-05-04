@@ -3708,12 +3708,14 @@ function drawChartBase(ctx, W, activeIdx) {
     ctx.fillText(yLabel, PAD_L - 5, gy);
   }
 
-  // X軸ラベル
+  // X軸ラベル（左:left寄せ・中:center・右:right寄せで見切れ防止）
   ctx.fillStyle = axisColor; ctx.font = '12px Arial';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.textBaseline = 'alphabetic';
   var xIdxs = [0, Math.floor(pts.length / 2), pts.length - 1];
+  var xAligns = ['left', 'center', 'right'];
   for (var xi = 0; xi < xIdxs.length; xi++) {
     var xIdx = xIdxs[xi];
+    ctx.textAlign = xAligns[xi];
     ctx.fillText(pts[xIdx] + '日', PAD_L + gW * xIdx / (pts.length - 1 || 1), H - 6);
   }
 
