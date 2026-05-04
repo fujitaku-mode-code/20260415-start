@@ -4545,7 +4545,7 @@ function renderXFeedWithTranslation(items) {
 }
 
 // ===== 計算機 =====
-var calcState = { display: '0', prev: '', op: '', newNum: true, runExpr: '' };
+var calcState = { display: '0', prev: '', op: '', newNum: true, runExpr: '', doneExpr: false };
 var calcHistory = [];
 var CALC_HIST_KEY = 'calc_history';
 (function(){ try { calcHistory = JSON.parse(localStorage.getItem(CALC_HIST_KEY) || '[]'); } catch(e){} })();
@@ -4563,16 +4563,16 @@ function calcAction(key) {
   var disp = document.getElementById('calcDisplay');
   var exprEl = document.getElementById('calcExpr');
   if (key === 'C') {
-    s.display = '0'; s.prev = ''; s.op = ''; s.newNum = true; s.runExpr = '';
+    s.display = '0'; s.prev = ''; s.op = ''; s.newNum = true; s.runExpr = ''; s.doneExpr = false;
   } else if (key === '±') {
     s.display = String(-(parseFloat(s.display) || 0));
   } else if (key === '%') {
     s.display = String((parseFloat(s.display) || 0) / 100);
   } else if ('0123456789'.indexOf(key) >= 0) {
-    if (s.newNum) { s.display = key; s.newNum = false; }
+    if (s.newNum) { s.display = key; s.newNum = false; s.runExpr = s.doneExpr ? '' : s.runExpr; s.doneExpr = false; }
     else { s.display = (s.display === '0') ? key : (s.display.length < 12 ? s.display + key : s.display); }
   } else if (key === '.') {
-    if (s.newNum) { s.display = '0.'; s.newNum = false; }
+    if (s.newNum) { s.display = '0.'; s.newNum = false; s.runExpr = s.doneExpr ? '' : s.runExpr; s.doneExpr = false; }
     else if (s.display.indexOf('.') < 0) s.display += '.';
   } else if ('+-×÷'.indexOf(key) >= 0) {
     if (s.op && !s.newNum) {
@@ -4596,7 +4596,8 @@ function calcAction(key) {
       if (calcHistory.length > 20) calcHistory.pop();
       try { localStorage.setItem(CALC_HIST_KEY, JSON.stringify(calcHistory)); } catch(e){}
       renderCalcHistory();
-      s.runExpr = '';
+      s.runExpr = fullExpr + ' = ' + s.display;
+      s.doneExpr = true;
     }
   }
   if (exprEl) exprEl.textContent = s.runExpr || '';
