@@ -19,16 +19,16 @@
       --bg:         #ffffff;
       --white:      #ffffff;
       --border:     #cccccc;
-      --accent:     #7a5a00;
-      --accent2:    #9e7a10;
-      --btn-grad:   linear-gradient(135deg, #6b5000, #9e7a10);
+      --accent:     #444444;
+      --accent2:    #555555;
+      --btn-grad:   #3a82c4;
       --rate-bg:    #e6f2ff;
       --rate-border:#222222;
       --text:       #1c1a14;
       --muted:      #695d42;
       --green:      #0a9e6d;
       --orange:     #c96a10;
-      --yellow:     #9e7a10;
+      --yellow:     #3a82c4;
       --grid-line:  #e8dfc0;
       --radius:     0;
     }
@@ -37,9 +37,9 @@
       --bg:          #100f0c;
       --white:       #1c1a14;
       --border:      #3a3220;
-      --accent:      #e8b84b;
-      --accent2:     #f5d070;
-      --btn-grad:    linear-gradient(135deg, #9a6310, #c9902a);
+      --accent:      #888888;
+      --accent2:     #aaaaaa;
+      --btn-grad:    #3a82c4;
       --rate-bg:     #0a1e38;
       --rate-border: #4a94d6;
       --text:        #f0e8d0;
@@ -124,7 +124,7 @@
       gap: 10px;
       border-bottom: 1px solid var(--border);
     }
-    .rate-num { font-size: 1.8rem; font-weight: 900; color: var(--accent); letter-spacing: -0.03em; line-height: 1; }
+    .rate-num { font-size: 1.8rem; font-weight: 900; color: #444; letter-spacing: -0.03em; line-height: 1; }
     .rate-unit { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
     .rate-date { font-size: 0.64rem; color: var(--muted); text-align: left; }
     .rate-btn {
@@ -302,7 +302,7 @@
       padding: 10px 12px;
     }
     .required-field label { color: var(--text); font-size: 0.82rem; }
-    .required-field input { background: #e6f2ff; border-color: #3a82c4; }
+    .required-field input { background: #e6f2ff !important; border-color: #3a82c4 !important; border-radius: 0 !important; }
     .required-field input:focus { border-color: var(--accent); }
     .required-hint {
       font-size: 0.72rem; font-weight: 700;
@@ -387,7 +387,7 @@
     }
     .step-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
     .step-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; background: #fff; border-radius: 0; border: 1px solid #ccc; }
-    .step-num { min-width: 26px; height: 26px; border-radius: 50%; background: var(--btn-grad); color: #fff; font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .step-num { min-width: 26px; height: 26px; border-radius: 50%; background: #3a82c4; color: #fff; font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .step-text { font-size: 0.82rem; color: var(--text); line-height: 1.55; }
     .step-text b { color: var(--accent); }
     .step-note { font-size: 0.74rem; color: #d32f2f; font-weight: 600; margin-top: 3px; }
@@ -456,7 +456,7 @@
     .manual-sm-btn:active { opacity:0.75; }
     .manual-sm-btn:disabled { opacity:0.45; cursor:not-allowed; }
     .manual-sm-print { background:#fff; color:var(--text); border:1.5px solid #ccc; }
-    .manual-sm-dl    { background:var(--btn-grad); color:#fff; }
+    .manual-sm-dl    { background:#3a82c4; color:#fff; }
     /* ===== Q&Aサイドバー ===== */
     .qa-sidebar-btn {
       width:100%; padding:10px 4px; border:2px solid; border-radius:10px;
@@ -552,7 +552,7 @@
     .doc-act-btn:active { opacity:0.75; }
     .doc-act-btn:disabled { opacity:0.5; cursor:not-allowed; }
     .doc-act-print { background:#fff; color:var(--text); border:1.5px solid #ccc; }
-    .doc-act-dl { background:var(--btn-grad); color:#fff; }
+    .doc-act-dl { background:#3a82c4; color:#fff; }
     .doc-check-label {
       display:flex; align-items:center; gap:5px; cursor:pointer;
       font-size:0.72rem; color:var(--muted); font-weight:600;
@@ -564,7 +564,7 @@
     .doc-check-label input[type=checkbox] { accent-color:var(--accent); width:15px; height:15px; flex-shrink:0; cursor:pointer; }
     /* ===== タイトル 更新ボタン ===== */
     .title-refresh-btn {
-      background: var(--btn-grad); color:#fff;
+      background: #3a82c4; color:#fff;
       border:none; border-radius:50%;
       height:34px; width:34px; padding:0;
       cursor:pointer; flex-shrink:0;
@@ -620,7 +620,7 @@
     .calc-btn:active { opacity:0.65; }
     .calc-num { background:var(--bg); color:var(--text); }
     .calc-op  { background:rgba(122,90,0,0.12); color:var(--accent); }
-    .calc-eq  { background:var(--btn-grad); color:#fff; }
+    .calc-eq  { background:#3a82c4; color:#fff; }
     .calc-cl  { background:rgba(200,50,50,0.1); color:#c03030; }
     body.dark .calc-num { background:rgba(255,255,255,0.08); }
     body.dark .calc-op  { background:rgba(232,184,75,0.15); }
@@ -2538,7 +2538,7 @@
           <p style="margin-bottom:8px">BXC Phase 3 が今、ライブです。サブスクリプションが <strong>$0.35</strong> でオープンしています。</p>
           <p style="margin-bottom:8px">100 USDT からスタート、USDN 経由で 5% オフ、または BTX 経由で 3% オフ。</p>
           <a href="https://www.bitradex.ai/ja/token/bxc" target="_blank" rel="noopener"
-             style="display:inline-block;margin-top:4px;padding:8px 16px;background:var(--btn-grad);color:#fff;border-radius:8px;font-size:0.8rem;font-weight:700;text-decoration:none">
+             style="display:inline-block;margin-top:4px;padding:8px 16px;background:#3a82c4;color:#fff;border-radius:0;font-size:0.8rem;font-weight:700;text-decoration:none">
             こちらから参加 →
           </a>
         </div>
