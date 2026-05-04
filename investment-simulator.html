@@ -128,13 +128,14 @@
     .rate-unit { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
     .rate-date { font-size: 0.64rem; color: var(--muted); text-align: left; }
     .rate-btn {
-      background: #e6f2ff; color: #222;
-      border: 1.5px solid #222; border-radius: 0;
+      background: #fff; color: #222;
+      border: none; border-radius: 0;
       font-size: 0.82rem; font-weight: 700;
       padding: 8px 14px; cursor: pointer; white-space: nowrap;
+      border-left: 2px solid #ccc;
     }
-    .rate-btn:hover { background: #cce4ff; }
-    .rate-btn:active { background: #b0d4f8; }
+    .rate-btn:hover { background: #f0f6ff; }
+    .rate-btn:active { background: #e0ecff; }
 
     /* ===== 入力 ===== */
     .input-grid {
@@ -148,9 +149,9 @@
     .input-group { display: flex; flex-direction: column; gap: 4px; }
     label { font-size: 0.78rem; color: var(--muted); font-weight: 600; }
     input[type="number"], input[type="date"] {
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
+      background: #fff;
+      border: 1.5px solid #222;
+      border-radius: 0;
       color: var(--text);
       font-size: 1rem; font-weight: 600;
       padding: 8px 10px; width: 100%; outline: none;
@@ -163,16 +164,16 @@
       gap: 6px; margin-top: 8px;
     }
     .preset-btn {
-      padding: 6px 2px; border: 1.5px solid var(--border);
-      border-radius: 8px; background: var(--bg);
-      color: var(--text); font-size: 0.7rem; font-weight: 700;
+      padding: 6px 2px; border: 1.5px solid #222;
+      border-radius: 0; background: #fff;
+      color: #222; font-size: 0.7rem; font-weight: 700;
       cursor: pointer; text-align: center;
       font-family: 'Noto Sans JP', sans-serif;
-      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      transition: background 0.15s, color 0.15s;
       white-space: nowrap;
     }
     .preset-btn:active { opacity: 0.75; }
-    .preset-btn.active { background: #e6f2ff; color: #222; border-color: #222; }
+    .preset-btn.active { background: #3a82c4; color: #fff; border-color: #3a82c4; }
 
     .btn {
       background: #3a82c4; color: #fff;
@@ -296,7 +297,7 @@
 
     /* 必須入力フィールド */
     .required-field {
-      background: #e6f2ff;
+      background: #fff;
       border: 1.5px solid #222;
       border-radius: 12px;
       padding: 10px 12px;
@@ -373,7 +374,7 @@
       line-height: 1.3;
     }
     .sim-mode-btn:last-child { border-right: none; }
-    .sim-mode-btn.active { background: #e6f2ff; color: #222; border-bottom: 2px solid #222; }
+    .sim-mode-btn.active { background: #fff; color: #3a82c4; border-bottom: 2px solid #3a82c4; font-weight:900; }
     .tab-placeholder {
       text-align: center; padding: 40px 16px;
       color: var(--muted); font-size: 0.9rem;
@@ -955,8 +956,8 @@
     /* ===== プランセレクター ===== */
     .plan-select {
       width: 100%; padding: 10px 12px;
-      border: 1.5px solid var(--border); border-radius: 10px;
-      background: var(--bg); color: var(--text);
+      border: 1.5px solid #222; border-radius: 0;
+      background: #fff; color: var(--text);
       font-size: 0.88rem; font-weight: 700;
       font-family: 'Noto Sans JP', sans-serif;
       outline: none; cursor: pointer;
@@ -966,7 +967,7 @@
       background-repeat: no-repeat; background-position: right 12px center;
       padding-right: 34px;
     }
-    .plan-select:focus { border-color: var(--accent); }
+    .plan-select:focus { border-color: #3a82c4; outline: 2px solid rgba(58,130,196,0.2); }
     body.dark .plan-select { color-scheme: dark; }
   </style>
 </head>
