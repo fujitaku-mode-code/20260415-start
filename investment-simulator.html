@@ -16,9 +16,9 @@
 
     /* ===== テーマ変数 ===== */
     :root {
-      --bg:         #f5f0e8;
+      --bg:         #ffffff;
       --white:      #ffffff;
-      --border:     #d8c89a;
+      --border:     #cccccc;
       --accent:     #7a5a00;
       --accent2:    #9e7a10;
       --btn-grad:   linear-gradient(135deg, #6b5000, #9e7a10);
@@ -128,14 +128,13 @@
     .rate-unit { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
     .rate-date { font-size: 0.64rem; color: var(--muted); text-align: left; }
     .rate-btn {
-      background: #fff; color: #222;
+      background: #e6f2ff; color: #3a82c4;
       border: none; border-radius: 0;
       font-size: 0.82rem; font-weight: 700;
       padding: 8px 14px; cursor: pointer; white-space: nowrap;
-      border-left: 2px solid #ccc;
     }
-    .rate-btn:hover { background: #f0f6ff; }
-    .rate-btn:active { background: #e0ecff; }
+    .rate-btn:hover { background: #cce4ff; }
+    .rate-btn:active { background: #b8d8f8; }
 
     /* ===== 入力 ===== */
     .input-grid {
@@ -164,16 +163,16 @@
       gap: 6px; margin-top: 8px;
     }
     .preset-btn {
-      padding: 6px 2px; border: 1.5px solid #222;
-      border-radius: 0; background: #fff;
-      color: #222; font-size: 0.7rem; font-weight: 700;
+      padding: 6px 2px; border: none;
+      border-radius: 0; background: #e6f2ff;
+      color: #3a82c4; font-size: 0.7rem; font-weight: 700;
       cursor: pointer; text-align: center;
       font-family: 'Noto Sans JP', sans-serif;
       transition: background 0.15s, color 0.15s;
       white-space: nowrap;
     }
     .preset-btn:active { opacity: 0.75; }
-    .preset-btn.active { background: #3a82c4; color: #fff; border-color: #3a82c4; }
+    .preset-btn.active { background: #3a82c4; color: #fff; }
 
     .btn {
       background: #3a82c4; color: #fff;
@@ -354,7 +353,7 @@
       line-height: 1.35;
     }
     .tab-btn:last-child { border-right: none; }
-    .tab-btn.active { background: var(--btn-grad); color: #fff; }
+    .tab-btn.active { background: #3a82c4; color: #fff; }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
     /* ===== シミュレーター通貨モード ===== */
@@ -956,8 +955,8 @@
     /* ===== プランセレクター ===== */
     .plan-select {
       width: 100%; padding: 10px 12px;
-      border: 1.5px solid #222; border-radius: 0;
-      background: #fff; color: var(--text);
+      border: none; border-radius: 0;
+      background: #e6f2ff; color: #3a82c4;
       font-size: 0.88rem; font-weight: 700;
       font-family: 'Noto Sans JP', sans-serif;
       outline: none; cursor: pointer;
