@@ -34,20 +34,20 @@
     }
 
     body.dark {
-      --bg:          #100f0c;
-      --white:       #1c1a14;
-      --border:      #3a3220;
+      --bg:          #0f172a;
+      --white:       #1e293b;
+      --border:      #334155;
       --accent:      #888888;
       --accent2:     #aaaaaa;
       --btn-grad:    #3a82c4;
       --rate-bg:     #0a1e38;
       --rate-border: #4a94d6;
       --text:        #f0f0f0;
-      --muted:       #999999;
+      --muted:       #94a3b8;
       --green:       #26d89a;
       --orange:      #f0953a;
       --yellow:      #e8b84b;
-      --grid-line:   #2a2415;
+      --grid-line:   #1e293b;
     }
 
     body {
@@ -128,13 +128,13 @@
     .rate-unit { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
     .rate-date { font-size: 0.64rem; color: var(--muted); text-align: left; }
     .rate-btn {
-      background: #e6f2ff; color: #3a82c4;
+      background: #3a82c4; color: #fff;
       border: none; border-radius: 0;
       font-size: 0.82rem; font-weight: 700;
       padding: 8px 14px; cursor: pointer; white-space: nowrap;
     }
-    .rate-btn:hover { background: #cce4ff; }
-    .rate-btn:active { background: #b8d8f8; }
+    .rate-btn:hover { background: #2a6fb0; }
+    .rate-btn:active { background: #1f5a96; }
 
     /* ===== 入力 ===== */
     .input-grid {
@@ -221,6 +221,8 @@
     .milestone-cell { padding: 10px; text-align: center; border-right: 1px solid rgba(0,0,0,0.07); }
     body.dark .milestone-body { border-top-color: rgba(255,255,255,0.08); }
     body.dark .milestone-cell { border-right-color: rgba(255,255,255,0.08); }
+    body.dark #simSummaryBox { background:#1e293b !important; border-color:#3a82c4 !important; }
+    body.dark #simSummaryBox * { color:#e0f0ff !important; }
     body.dark .milestone-cell-pct { background: rgba(255,255,255,0.1); }
     body.dark .pill-yellow { background: rgba(232,184,75,0.2); color: #e8b84b; }
     body.dark .pill-accent { color: var(--accent); }
@@ -420,6 +422,8 @@
       background: rgba(211,47,47,0.08);
       border: none;
     }
+    body.dark .required-field { background: #1e3a5f !important; border-color: #3a82c4 !important; }
+    body.dark .required-field input { background: #1a3050 !important; border-color: #3a82c4 !important; color: #e0f0ff !important; }
     body.dark .rate-hint-1 {
       color: #ef9a9a;
       background: rgba(239,154,154,0.12);
@@ -623,7 +627,9 @@
     .calc-eq  { background:#3a82c4; color:#fff; }
     .calc-cl  { background:rgba(200,50,50,0.1); color:#c03030; }
     body.dark .calc-num { background:rgba(255,255,255,0.08); }
-    body.dark .calc-op  { background:rgba(232,184,75,0.15); }
+    body.dark .preset-btn { background:#1a3050 !important; color:#6ab0f5 !important; }
+    body.dark .preset-btn.active { background:#3a82c4 !important; color:#fff !important; }
+    body.dark .calc-op  { background:rgba(58,130,196,0.2); color:#6ab0f5; }
     body.dark .calc-cl  { background:rgba(239,154,154,0.12); color:#ef9a9a; }
     /* マーケット表 セクション色 */
     .mkt-grp.crypto-grp {
@@ -690,7 +696,7 @@
     .ticker-up   { color:#0a7a50 !important; }
     .ticker-down { color:#c0392b !important; }
     .ticker-sep  { color:#3a82c4; opacity:0.3; font-size:0.7rem; }
-    body.dark .ticker-wrap { background:#0a2040; border-color:#4a94d6; }
+    body.dark .ticker-wrap { background:#1e293b; border-color:#3a82c4; }
     body.dark .ticker-label { background:#4a94d6; }
     body.dark .ticker-item { color:#c0dfff; }
     /* ===== マニュアルカード（コンパクトアコーディオン） ===== */
@@ -770,7 +776,7 @@
       display: none; position: absolute;
       bottom: calc(100% + 8px); left: 0;
       transform: none;
-      background: #1c1a14; color: #f0e8d0;
+      background: #1e293b; color: #f1f5f9;
       font-size: 0.72rem; font-weight: 400; line-height: 1.6;
       padding: 9px 13px; border-radius: 9px;
       white-space: normal; width: min(210px, 80vw);
@@ -967,7 +973,8 @@
       padding-right: 34px;
     }
     .plan-select:focus { border-color: #3a82c4; outline: 2px solid rgba(58,130,196,0.2); }
-    body.dark .plan-select { color-scheme: dark; }
+    body.dark .plan-select { color-scheme: dark; background:#1a3050 !important; color:#e0f0ff !important; border-color:#3a82c4 !important; }
+    body.dark input[type="number"], body.dark input[type="date"] { background:#1a3050 !important; color:#e0f0ff !important; border-color:#3a82c4 !important; }
   </style>
 </head>
 <body>
@@ -2552,7 +2559,7 @@
 // ===== テーマ =====
 var THEMES = {
   light: { comp: '#7a5a00', simple: '#0a9e6d', fill: 'rgba(122,90,0,',   grid: '#e8dfc0', bg: '#ffffff' },
-  dark:  { comp: '#e8b84b', simple: '#26d89a', fill: 'rgba(232,184,75,', grid: '#2a2415', bg: '#1c1a14' }
+  dark:  { comp: '#6ab0f5', simple: '#26d89a', fill: 'rgba(106,176,245,', grid: '#334155', bg: '#1e293b' }
 };
 var isDark = false;
 function getTC() { return isDark ? THEMES.dark : THEMES.light; }
