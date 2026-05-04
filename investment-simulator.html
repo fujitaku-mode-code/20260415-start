@@ -99,8 +99,8 @@
     /* ===== カード ===== */
     .card {
       background: var(--white);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
+      border: 1.5px solid #ccc;
+      border-radius: 0;
       padding: 18px;
       margin-bottom: 14px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -302,7 +302,7 @@
       padding: 10px 12px;
     }
     .required-field label { color: var(--text); font-size: 0.82rem; }
-    .required-field input { background: #fff; border-color: #f0c030; }
+    .required-field input { background: #e6f2ff; border-color: #3a82c4; }
     .required-field input:focus { border-color: var(--accent); }
     .required-hint {
       font-size: 0.72rem; font-weight: 700;
@@ -338,8 +338,8 @@
     /* ===== タブ ===== */
     .tab-bar {
       display: flex; margin-bottom: 14px;
-      background: var(--white);
-      border: 1.5px solid var(--border);
+      background: #fff;
+      border: 1.5px solid #ccc;
       border-radius: 0;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -359,7 +359,7 @@
     /* ===== シミュレーター通貨モード ===== */
     .sim-mode-bar {
       display: flex; margin-bottom: 0;
-      background: var(--white); border: 1.5px solid var(--border);
+      background: #fff; border: 1.5px solid #ccc;
       border-radius: 0; overflow: hidden;
       box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     }
@@ -445,8 +445,8 @@
     }
     .doc-btn:active { opacity:0.72; }
     .doc-btn:disabled { opacity:0.5; cursor:not-allowed; }
-    .doc-btn-print { background:var(--bg); color:var(--text); border:1.5px solid var(--border); }
-    .doc-btn-dl    { background:var(--btn-grad); color:#fff; }
+    .doc-btn-print { background:#fff; color:var(--text); border:1.5px solid #ccc; }
+    .doc-btn-dl    { background:#3a82c4; color:#fff; }
     /* ===== ①② ヒントスタイル（赤茶・太字） ===== */
     .step-badge { font-size:0.82rem; font-weight:800; color:#3a82c4; }
     body.dark .step-badge { color:#6ea0f7; }
@@ -455,7 +455,7 @@
     .manual-sm-btn { padding:6px 14px; border-radius:8px; border:none; font-size:0.74rem; font-weight:700; cursor:pointer; font-family:'Noto Sans JP',sans-serif; transition:opacity 0.15s; white-space:nowrap; }
     .manual-sm-btn:active { opacity:0.75; }
     .manual-sm-btn:disabled { opacity:0.45; cursor:not-allowed; }
-    .manual-sm-print { background:var(--bg); color:var(--text); border:1.5px solid var(--border); }
+    .manual-sm-print { background:#fff; color:var(--text); border:1.5px solid #ccc; }
     .manual-sm-dl    { background:var(--btn-grad); color:#fff; }
     /* ===== Q&Aサイドバー ===== */
     .qa-sidebar-btn {
@@ -551,7 +551,7 @@
     .doc-act-btn { padding:9px 15px; border:none; border-radius:10px; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Noto Sans JP',sans-serif; white-space:nowrap; flex-shrink:0; }
     .doc-act-btn:active { opacity:0.75; }
     .doc-act-btn:disabled { opacity:0.5; cursor:not-allowed; }
-    .doc-act-print { background:var(--bg); color:var(--text); border:1.5px solid var(--border); }
+    .doc-act-print { background:#fff; color:var(--text); border:1.5px solid #ccc; }
     .doc-act-dl { background:var(--btn-grad); color:#fff; }
     .doc-check-label {
       display:flex; align-items:center; gap:5px; cursor:pointer;
@@ -703,7 +703,7 @@
       font-size:0.78rem; font-weight:800; color:var(--text);
       display:flex; align-items:center; gap:8px; margin-bottom:14px;
     }
-    .links-head::before { content:''; display:block; width:4px; height:18px; background:var(--btn-grad); border-radius:2px; flex-shrink:0; }
+    .links-head::before { content:''; display:block; width:4px; height:18px; background:#3a82c4; border-radius:0; flex-shrink:0; }
     .links-section { margin-bottom:16px; }
     .links-cat { font-size:0.6rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; padding-left:2px; }
     .links-grid { display:flex; flex-direction:column; gap:5px; }
@@ -716,7 +716,7 @@
     }
     .link-card:hover { border-color:var(--accent); }
     .link-card:active { transform:scale(0.97); }
-    .link-ico { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .link-ico { width:34px; height:34px; border-radius:0; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .link-ico svg { width:16px; height:16px; }
     .link-text { flex:1; min-width:0; }
     .link-name { font-size:0.8rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -735,7 +735,7 @@
     .mc-cell-chg.up { color:#0a9e6d; }
     .mc-cell-chg.down { color:#e05050; }
     /* ===== ニュースティッカー ===== */
-    .news-wrap { background:var(--white); border:1.5px solid var(--border); overflow:hidden; border-radius:10px; margin-bottom:14px; height:30px; display:flex; align-items:center; }
+    .news-wrap { background:#fff; border:1.5px solid #ccc; overflow:hidden; border-radius:0; margin-bottom:14px; height:30px; display:flex; align-items:center; }
     .news-label { background:#0f172a; color:#94a3b8; font-size:0.58rem; font-weight:900; padding:0 10px; height:100%; display:flex; align-items:center; letter-spacing:0.08em; flex-shrink:0; white-space:nowrap; }
     .news-body { flex:1; overflow:hidden; height:100%; }
     .news-items { display:inline-flex; align-items:center; height:100%; white-space:nowrap; animation:tickerScroll 120s linear infinite; will-change:transform; }
@@ -810,8 +810,8 @@
     .news-card:last-child { border-bottom: none; padding-bottom: 0; }
     .news-card:active { opacity: 0.65; }
     .news-card-meta { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
-    .news-card-src  { font-size: 0.6rem; font-weight: 800; color: var(--accent); background: rgba(122,90,0,0.09); padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
-    body.dark .news-card-src { background: rgba(232,184,75,0.12); }
+    .news-card-src  { font-size: 0.6rem; font-weight: 800; color: #3a82c4; background: #e6f2ff; padding: 2px 7px; border-radius: 0; white-space: nowrap; }
+    body.dark .news-card-src { background: rgba(58,130,196,0.15); }
     .news-card-date { font-size: 0.6rem; color: var(--muted); }
     .news-card-title { font-size: 1rem; font-weight: 700; line-height: 1.5; color: var(--text); }
 
@@ -827,8 +827,8 @@
     .mkt-slider { display: flex; gap: 8px; padding: 2px 1px; }
     .mkt-card {
       flex-shrink: 0; width: 118px;
-      background: var(--white); border: 1.5px solid var(--border);
-      border-radius: 10px; padding: 10px 10px 9px;
+      background: #fff; border: 1.5px solid #ccc;
+      border-radius: 0; padding: 10px 10px 9px;
       display: flex; flex-direction: column; gap: 5px;
       box-shadow: 0 1px 5px rgba(0,0,0,0.07);
     }
@@ -948,7 +948,7 @@
       font-family: 'Noto Sans JP', sans-serif; line-height: 1.3;
     }
     .news-sub-btn:last-child { border-right: none; }
-    .news-sub-btn.active { background: var(--btn-grad); color: #fff; }
+    .news-sub-btn.active { background: #3a82c4; color: #fff; }
     .nst-panel { display: none; }
     .nst-panel.active { display: block; }
 
