@@ -223,8 +223,6 @@
     body.dark .milestone-cell { border-right-color: rgba(255,255,255,0.08); }
     body.dark #simSummaryBox { background:#1e2d40 !important; border-color:#3a82c4 !important; }
     body.dark #simSummaryBox * { color:#e2e8f0 !important; }
-    body.dark .tab-btn { color:#93c5fd; }
-    body.dark .tab-btn.active { background:#3a82c4 !important; color:#fff !important; font-weight:900; }
     body.dark .tab-bar { background:#1e2d40; border-color:#334155; }
     body.dark thead tr { background:#1e3a5f; }
     body.dark th { color:#93c5fd; }
@@ -355,7 +353,7 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .tab-btn {
-      flex: 1; padding: 11px 4px;
+      flex: 1; padding: 7px 4px;
       background: none; border: none; cursor: pointer;
       font-size: 0.75rem; font-weight: 700; color: var(--muted);
       border-right: 1px solid var(--border);
@@ -364,6 +362,8 @@
     }
     .tab-btn:last-child { border-right: none; }
     .tab-btn.active { background: #3a82c4; color: #fff; }
+    body.dark .tab-btn { color: #93c5fd; }
+    body.dark .tab-btn.active { background: #3a82c4; color: #fff; font-weight: 900; }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
     /* ===== シミュレーター通貨モード ===== */
