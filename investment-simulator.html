@@ -1130,13 +1130,21 @@
 
   <!-- グラフ -->
   <div class="card" id="chartCard">
-    <div class="card-title">
-      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📉</span>
-      残高推移グラフ
+    <div class="card-title" style="justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📉</span>
+        残高推移グラフ
+      </div>
+      <select id="chartPeriodSel" onchange="changeChartPeriod(this.value)"
+        style="font-size:0.75rem;font-weight:700;padding:4px 8px;border:1.5px solid #3a82c4;border-radius:0;background:#e6f2ff;color:#3a82c4;cursor:pointer;font-family:'Noto Sans JP',sans-serif">
+        <option value="365">1年</option>
+        <option value="730">2年</option>
+        <option value="1095">3年</option>
+      </select>
     </div>
     <div style="font-size:0.7rem;color:var(--muted);margin:-8px 0 10px 6px">（グラフに触れると金額表示）</div>
     <div class="chart-wrap">
-      <canvas id="chart" height="230"></canvas>
+      <canvas id="chart" height="270"></canvas>
       <div class="chart-tooltip" id="chartTooltip"></div>
     </div>
     <div class="chart-legend" id="chartLegend"></div>
@@ -3222,8 +3230,15 @@ function simulate(doScroll) {
     var startDate = lastStartDate || new Date();
     renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate);
 
-    // グラフ
-    drawChart(principal, annualRate, fee, days, jpyRate);
+    // グラフ（プルダウンを現在の期間に合わせてリセット）
+    gChartPeriodDays = days;
+    var sel = document.getElementById('chartPeriodSel');
+    if (sel) {
+      var closest = [365,730,1095].reduce(function(a,b){ return Math.abs(b-days)<Math.abs(a-days)?b:a; });
+      sel.value = String(closest);
+      gChartPeriodDays = closest;
+    }
+    drawChart(principal, annualRate, fee, gChartPeriodDays, jpyRate);
 
     // テーブル
     var sim = runSimulation(principal, days, annualRate, fee, threshold);
@@ -3468,9 +3483,10 @@ function toggleFullTable() {
 // ===== グラフ =====
 var gChart = {
   pts:[], compData:[], simpleData:[],
-  PAD_L:72, PAD_R:14, PAD_T:14, PAD_B:30,
-  gW:0, gH:0, H:230, maxVal:0, jpyRate:155
+  PAD_L:60, PAD_R:10, PAD_T:12, PAD_B:28,
+  gW:0, gH:0, H:270, maxVal:0, jpyRate:155
 };
+var gChartPeriodDays = 365;
 
 function drawChart(principal, annualRate, fee, days, jpyRate) {
   var canvas = document.getElementById('chart');
@@ -3480,7 +3496,7 @@ function drawChart(principal, annualRate, fee, days, jpyRate) {
 
   gChart.jpyRate = jpyRate;
   gChart.mode    = simMode;
-  gChart.PAD_L   = (simMode === 'jpy') ? 82 : 72;
+  gChart.PAD_L   = (simMode === 'jpy') ? 70 : 60;
   var feeRate = fee / 100;
   var W = canvas.parentElement.clientWidth || 320;
   canvas.width  = W;
@@ -3518,9 +3534,16 @@ function drawChart(principal, annualRate, fee, days, jpyRate) {
 }
 
 function redrawCurrentChart() {
-  var p  = gSimParams;
+  var p = gSimParams;
   if (!p.principal) return;
-  drawChart(p.principal, p.annualRate, p.fee, p.days, p.jpyRate);
+  drawChart(p.principal, p.annualRate, p.fee, gChartPeriodDays, p.jpyRate);
+}
+
+function changeChartPeriod(val) {
+  gChartPeriodDays = parseInt(val) || 365;
+  var p = gSimParams;
+  if (!p || !p.principal) return;
+  drawChart(p.principal, p.annualRate, p.fee, gChartPeriodDays, p.jpyRate);
 }
 
 function drawChartBase(ctx, W, activeIdx) {
