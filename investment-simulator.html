@@ -30,7 +30,7 @@
       --orange:     #c96a10;
       --yellow:     #9e7a10;
       --grid-line:  #e8dfc0;
-      --radius:     16px;
+      --radius:     0;
     }
 
     body.dark {
@@ -148,7 +148,7 @@
     .input-group { display: flex; flex-direction: column; gap: 4px; }
     label { font-size: 0.78rem; color: var(--muted); font-weight: 600; }
     input[type="number"], input[type="date"] {
-      background: #fff;
+      background: #e6f2ff;
       border: 1.5px solid #222;
       border-radius: 0;
       color: var(--text);
@@ -186,7 +186,7 @@
 
     .error-box {
       background: #fff0f0; border: 1.5px solid #ffaaaa;
-      border-radius: 10px; color: #c0392b;
+      border-radius: 0; color: #c0392b;
       font-size: 0.85rem; padding: 12px; margin-bottom: 14px; display: none;
     }
 
@@ -246,7 +246,7 @@
 
     .assumptions {
       font-size: 0.75rem; color: var(--muted);
-      background: var(--bg); border-radius: 10px;
+      background: #fff; border-radius: 0;
       padding: 10px 14px; margin-top: 12px; line-height: 1.9;
       border: 1px solid var(--border);
     }
@@ -270,9 +270,9 @@
     .legend-line  { width: 18px; height: 3px; border-radius: 2px; }
 
     /* ===== テーブル ===== */
-    .table-wrap { overflow-x: auto; border-radius: 10px; border: 1.5px solid var(--border); }
+    .table-wrap { overflow-x: auto; border-radius: 0; border: 1.5px solid #ccc; }
     table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 300px; }
-    thead tr { background: var(--bg); }
+    thead tr { background: #f0f8ff; }
     th { padding: 9px 8px; text-align: right; color: var(--muted); font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
     th:first-child, th:nth-child(2) { text-align: left; }
     td { padding: 7px 8px; text-align: right; border-top: 1px solid var(--border); color: var(--text); font-weight: 600; }
@@ -284,8 +284,8 @@
     .td-yen { display: block; font-size: 0.67rem; color: var(--muted); font-weight: 400; }
 
     .show-more-btn {
-      background: var(--bg); border: 1.5px solid var(--border);
-      border-radius: 10px; color: var(--muted);
+      background: #fff; border: 1.5px solid #ccc;
+      border-radius: 0; color: var(--muted);
       font-size: 0.85rem; font-weight: 600; padding: 9px;
       width: 100%; cursor: pointer; margin-top: 10px;
     }
@@ -381,12 +381,12 @@
     /* ===== 資料集 ===== */
     .guide-title {
       background: var(--btn-grad); color: #fff;
-      border-radius: 10px; padding: 11px 14px;
+      border-radius: 0; padding: 11px 14px;
       font-weight: 700; font-size: 0.85rem;
       margin-bottom: 10px; margin-top: 6px;
     }
     .step-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
-    .step-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; background: var(--bg); border-radius: 10px; border: 1px solid var(--border); }
+    .step-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; background: #fff; border-radius: 0; border: 1px solid #ccc; }
     .step-num { min-width: 26px; height: 26px; border-radius: 50%; background: var(--btn-grad); color: #fff; font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .step-text { font-size: 0.82rem; color: var(--text); line-height: 1.55; }
     .step-text b { color: var(--accent); }
@@ -403,7 +403,7 @@
     .acc-body { overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
     .acc-body.open { max-height: 9999px; }
     /* ===== SNSリンク ===== */
-    .sns-card { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 10px; text-decoration: none; color: var(--text); transition: background 0.15s; }
+    .sns-card { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: #fff; border: 1.5px solid #ccc; border-radius: 0; margin-bottom: 10px; text-decoration: none; color: var(--text); transition: background 0.15s; }
     .sns-card:active { background: var(--border); }
     .sns-icon { width: 38px; height: 38px; border-radius: 10px; background: #000; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .sns-icon svg { width: 20px; height: 20px; fill: #fff; }
@@ -493,7 +493,7 @@
     /* ===== コインカードグリッド ===== */
     /* ===== トークンリスト（縦1列） ===== */
     .token-list { display:flex; flex-direction:column; gap:5px; }
-    .token-row { display:flex; align-items:flex-start; gap:8px; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:9px 10px; }
+    .token-row { display:flex; align-items:flex-start; gap:8px; background:#fff; border:1.5px solid #ccc; border-radius:0; padding:9px 10px; }
     .token-rank { font-size:0.75rem; font-weight:900; color:var(--accent); min-width:22px; text-align:right; flex-shrink:0; padding-top:4px; }
     .token-rank-top3 { color:#c9902a; }
     .coin-ico { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:900; color:#fff; flex-shrink:0; margin-top:2px; }
@@ -694,7 +694,7 @@
     body.dark .ticker-label { background:#4a94d6; }
     body.dark .ticker-item { color:#c0dfff; }
     /* ===== マニュアルカード（コンパクトアコーディオン） ===== */
-    .manual-card { border:1.5px solid var(--border); border-radius:10px; margin-bottom:5px; background:var(--white); overflow:hidden; }
+    .manual-card { border:1.5px solid #ccc; border-radius:0; margin-bottom:5px; background:var(--white); overflow:hidden; }
     .manual-card .acc-header { padding:9px 14px; gap:12px; }
     .manual-card .acc-header .link-ico { font-size:1.1rem; }
     /* ===== リンク先セクション（タブ②） ===== */
@@ -710,7 +710,7 @@
     .link-card {
       display:flex; align-items:center; gap:12px;
       padding:9px 14px; background:var(--white);
-      border:1.5px solid var(--border); border-radius:10px;
+      border:1.5px solid #ccc; border-radius:0;
       text-decoration:none; color:var(--text);
       transition:border-color 0.15s, transform 0.1s;
     }
@@ -785,7 +785,7 @@
     .tt:hover .tt-pop, .tt.tt-open .tt-pop { display: block; }
 
     /* ===== マーケットコンパクトリスト ===== */
-    .mkt-wrap  { border-radius: 10px; border: 1.5px solid var(--border); overflow: hidden; margin-bottom: 14px; }
+    .mkt-wrap  { border-radius: 0; border: 1.5px solid #ccc; overflow: hidden; margin-bottom: 14px; }
     .mkt-grp   { font-size: 0.54rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; padding: 5px 12px 3px; background: var(--bg); display: block; border-top: 1px solid var(--border); }
     .mkt-grp:first-child { border-top: none; }
     .mkt-row2  { display: flex; align-items: center; padding: 7px 12px; border-top: 1px solid var(--border); }
@@ -1041,7 +1041,7 @@
       <input type="number" id="principal" value="1000" min="1" step="100"
              style="flex:1;min-width:0"
              oninput="updatePrincipalYen()" />
-      <span id="principalYen" style="display:inline-block;background:var(--bg);border:1.5px solid var(--border);border-radius:20px;padding:2px 10px;font-size:0.78rem;font-weight:700;color:var(--muted);white-space:nowrap;flex-shrink:0"></span>
+      <span id="principalYen" style="display:inline-block;background:#e6f2ff;border:none;border-radius:0;padding:2px 10px;font-size:0.78rem;font-weight:700;color:#3a82c4;white-space:nowrap;flex-shrink:0"></span>
     </div>
     <div class="preset-btns" id="presetBtns"></div>
   </div>
