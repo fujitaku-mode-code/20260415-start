@@ -629,11 +629,11 @@
       font-family:'Noto Sans JP',sans-serif; transition:opacity 0.1s;
     }
     .calc-btn:active { opacity:0.65; }
-    .calc-num { background:var(--bg); color:var(--text); }
-    .calc-op  { background:rgba(122,90,0,0.12); color:var(--accent); }
-    .calc-eq  { background:#3a82c4; color:#fff; }
-    .calc-cl  { background:rgba(200,50,50,0.1); color:#c03030; }
-    body.dark .calc-num { background:rgba(255,255,255,0.08); }
+    .calc-num { background:#e6f2ff; color:#1a3a8f; font-size:1.05rem; }
+    .calc-op  { background:#3a82c4; color:#fff; }
+    .calc-eq  { background:#1a3a8f; color:#fff; }
+    .calc-cl  { background:#fee2e2; color:#c03030; }
+    body.dark .calc-num { background:#253354; color:#93c5fd; }
     body.dark .preset-btn { background:#253354 !important; color:#93c5fd !important; }
     body.dark .preset-btn.active { background:#3a82c4 !important; color:#fff !important; }
     body.dark .calc-op  { background:rgba(58,130,196,0.2); color:#6ab0f5; }
@@ -4519,7 +4519,7 @@ function renderXFeedWithTranslation(items) {
 }
 
 // ===== 計算機 =====
-var calcState = { display: '0', prev: '', op: '', newNum: true, expr: '' };
+var calcState = { display: '0', prev: '', op: '', newNum: true, runExpr: '' };
 var calcHistory = [];
 var CALC_HIST_KEY = 'calc_history';
 (function(){ try { calcHistory = JSON.parse(localStorage.getItem(CALC_HIST_KEY) || '[]'); } catch(e){} })();
@@ -4536,32 +4536,44 @@ function calcAction(key) {
   var s = calcState;
   var disp = document.getElementById('calcDisplay');
   var exprEl = document.getElementById('calcExpr');
-  if (key === 'C') { s.display = '0'; s.prev = ''; s.op = ''; s.newNum = true; s.expr = ''; }
-  else if (key === '±') { s.display = String(-(parseFloat(s.display) || 0)); }
-  else if (key === '%') { s.display = String((parseFloat(s.display) || 0) / 100); }
-  else if ('0123456789'.indexOf(key) >= 0) {
+  if (key === 'C') {
+    s.display = '0'; s.prev = ''; s.op = ''; s.newNum = true; s.runExpr = '';
+  } else if (key === '±') {
+    s.display = String(-(parseFloat(s.display) || 0));
+  } else if (key === '%') {
+    s.display = String((parseFloat(s.display) || 0) / 100);
+  } else if ('0123456789'.indexOf(key) >= 0) {
     if (s.newNum) { s.display = key; s.newNum = false; }
     else { s.display = (s.display === '0') ? key : (s.display.length < 12 ? s.display + key : s.display); }
   } else if (key === '.') {
     if (s.newNum) { s.display = '0.'; s.newNum = false; }
     else if (s.display.indexOf('.') < 0) s.display += '.';
   } else if ('+-×÷'.indexOf(key) >= 0) {
-    if (s.op && !s.newNum) calcExec();
-    s.expr = s.display + ' ' + key;
+    if (s.op && !s.newNum) {
+      // 連続計算: 前の数を式に追加して計算
+      s.runExpr += s.display + ' ' + key + ' ';
+      calcExec();
+    } else if (!s.op) {
+      // 最初の演算子
+      s.runExpr = s.display + ' ' + key + ' ';
+    } else {
+      // 数字を入力せず演算子を変更
+      s.runExpr = s.runExpr.replace(/[+\-×÷]\s*$/, key + ' ');
+    }
     s.prev = s.display; s.op = key; s.newNum = true;
   } else if (key === '=') {
     if (s.op) {
-      var exprStr = s.expr + ' ' + s.display;
+      var fullExpr = s.runExpr + s.display;
       calcExec();
       s.op = '';
-      calcHistory.unshift({ expr: exprStr, result: s.display });
+      calcHistory.unshift({ expr: fullExpr, result: s.display });
       if (calcHistory.length > 20) calcHistory.pop();
       try { localStorage.setItem(CALC_HIST_KEY, JSON.stringify(calcHistory)); } catch(e){}
       renderCalcHistory();
-      s.expr = '';
+      s.runExpr = '';
     }
   }
-  if (exprEl) exprEl.textContent = s.op ? (s.expr || '') : '';
+  if (exprEl) exprEl.textContent = s.runExpr || '';
   var t = s.display.length > 13 ? s.display.slice(0, 13) : s.display;
   disp.textContent = t || '0';
 }
@@ -4591,7 +4603,7 @@ function renderCalcHistory() {
   }).join('');
 }
 function calcUseResult(val) {
-  calcState.display = val; calcState.newNum = true; calcState.expr = '';
+  calcState.display = val; calcState.newNum = true; calcState.runExpr = ''; calcState.op = ''; calcState.prev = '';
   var d = document.getElementById('calcDisplay');
   var e = document.getElementById('calcExpr');
   if (d) d.textContent = val;
