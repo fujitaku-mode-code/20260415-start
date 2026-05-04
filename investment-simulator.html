@@ -175,13 +175,14 @@
     .preset-btn.active { background: var(--btn-grad); color: #fff; border-color: transparent; }
 
     .btn {
-      background: var(--btn-grad); color: #fff;
-      border: none; border-radius: 12px;
-      font-size: 1rem; font-weight: 700; padding: 11px;
+      background: #1a3a8f; color: #fff;
+      border: none; border-radius: 0;
+      font-size: 1rem; font-weight: 700; padding: 12px;
       width: 100%; cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      letter-spacing: 0.04em;
     }
-    .btn:active { opacity: 0.88; }
+    .btn:hover { background: #223fa0; }
+    .btn:active { background: #142d70; }
 
     .error-box {
       background: #fff0f0; border: 1.5px solid #ffaaaa;
@@ -662,11 +663,12 @@
     body.dark #nst-1 .mkt-row2:nth-child(odd) { background: rgba(12,22,45,0.5); }
     /* ===== 経済指標ティッカー ===== */
     .ticker-wrap {
-      background:var(--text); overflow:hidden; border-radius:7px;
+      background:#fff; overflow:hidden; border-radius:0;
+      border:1.5px solid #1a3a8f;
       margin-bottom:10px; height:28px; display:flex; align-items:center;
     }
     .ticker-label {
-      background:var(--accent); color:#fff; font-size:0.65rem; font-weight:900;
+      background:#1a3a8f; color:#fff; font-size:0.65rem; font-weight:900;
       padding:0 7px; height:100%; display:flex; align-items:center;
       white-space:nowrap; flex-shrink:0; letter-spacing:0.06em;
     }
@@ -682,14 +684,15 @@
       to   { transform:translateX(-50%); }
     }
     .ticker-item {
-      color:var(--bg); font-size:0.72rem; font-weight:600;
+      color:#1a3a8f; font-size:0.72rem; font-weight:600;
       padding:0 10px; font-family:'Noto Sans JP',sans-serif;
     }
-    .ticker-up   { color:#26d89a !important; }
-    .ticker-down { color:#f08080 !important; }
-    .ticker-sep  { color:var(--accent); opacity:0.4; font-size:0.7rem; }
-    body.dark .ticker-wrap { background:#f0e8d0; }
-    body.dark .ticker-item { color:#1c1a14; }
+    .ticker-up   { color:#0a7a50 !important; }
+    .ticker-down { color:#c0392b !important; }
+    .ticker-sep  { color:#1a3a8f; opacity:0.3; font-size:0.7rem; }
+    body.dark .ticker-wrap { background:#0f1e40; border-color:#3a5abf; }
+    body.dark .ticker-label { background:#3a5abf; }
+    body.dark .ticker-item { color:#a0c0ff; }
     /* ===== マニュアルカード（コンパクトアコーディオン） ===== */
     .manual-card { border:1.5px solid var(--border); border-radius:10px; margin-bottom:5px; background:var(--white); overflow:hidden; }
     .manual-card .acc-header { padding:9px 14px; gap:12px; }
@@ -1087,15 +1090,14 @@
 </div>
 
 <!-- 投資条件サマリー枠 -->
-<div id="simSummaryBox" class="hidden" style="border-radius:14px;border:1.5px solid var(--border);border-left:4px solid var(--accent);background:var(--white);overflow:hidden;margin-bottom:14px">
-  <div style="padding:10px 16px 4px">
-    <div style="font-size:0.85rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">運用シミュレーション対象</div>
+<div id="simSummaryBox" class="hidden" style="border:1.5px solid #1a3a8f;border-left:5px solid #1a3a8f;border-radius:0;background:#fff;overflow:hidden;margin-bottom:14px">
+  <div style="padding:10px 16px 12px">
+    <div style="font-size:0.72rem;font-weight:800;color:#1a3a8f;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">運用シミュレーション対象</div>
     <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.1">
-      <span id="simSummaryAmt" style="font-size:1.9rem;font-weight:900;color:var(--accent);letter-spacing:-0.03em"></span>
-      <span id="simSummarySub" style="font-size:0.82rem;font-weight:600;color:var(--muted)"></span>
+      <span id="simSummaryAmt" style="font-size:1.9rem;font-weight:900;color:#1a3a8f;letter-spacing:-0.03em"></span>
+      <span id="simSummarySub" style="font-size:0.82rem;font-weight:600;color:#1a3a8f;opacity:0.65"></span>
     </div>
   </div>
-  <div style="height:4px;background:linear-gradient(90deg,var(--accent),transparent);margin-top:8px;opacity:0.35"></div>
 </div>
 
 <!-- シミュレーション結果セクション -->
