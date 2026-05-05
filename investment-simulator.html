@@ -140,9 +140,13 @@
       display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 10px;
     }
     @media (max-width: 400px) { .input-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) {
+      .ms-profit  { font-size: 1.05rem !important; word-break: break-all; }
+      .ms-balance { font-size: 1.05rem !important; word-break: break-all; display: block !important; }
+    }
     @media (max-width: 360px) {
-      .ms-profit { font-size: 1.05rem !important; }
-      .ms-balance { font-size: 0.95rem !important; }
+      .ms-profit  { font-size: 0.92rem !important; }
+      .ms-balance { font-size: 0.92rem !important; }
     }
     .input-group { display: flex; flex-direction: column; gap: 4px; }
     label { font-size: 0.78rem; color: var(--muted); font-weight: 600; }
@@ -3543,7 +3547,7 @@ function msCell(label, value, pct, jpyRate, color, divColor, hasBorder, useAccen
     ? profitSign + '¥' + commaInt(profit * jpyRate)
     : profitSign + fmtUSD(profit);
   var profitSub = isJpy ? (profitSign + fmtUSD(profit)) : (profitSign + fmtJPY(profit, jpyRate));
-  return '<div style="padding:12px 14px;' + border + '">' +
+  return '<div style="padding:10px 8px;' + border + 'min-width:0;overflow:hidden;">' +
     '<div style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;color:var(--muted);margin-bottom:6px">' + label + '</div>' +
     '<div style="font-size:0.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">💰 利益額</div>' +
     '<div class="ms-profit" style="font-size:1.35rem;font-weight:900;color:' + color + ';letter-spacing:-0.03em;line-height:1.1">' + profitMain + '</div>' +
