@@ -614,7 +614,7 @@
     .calc-overlay.open { display:flex; }
     .calc-box {
       background:var(--white); border-radius:22px;
-      padding:16px; width:250px;
+      padding:20px; width:300px;
       box-shadow:0 10px 40px rgba(0,0,0,0.3);
     }
     .calc-display {
@@ -2362,7 +2362,39 @@
           </div>
         </div>
 
-        <!-- 動画2: 02OqQkW7slg -->
+        <!-- 動画2: Vxr1vZ-h3jA -->
+        <div class="yt-slide">
+          <div class="yt-wrap">
+            <iframe src="https://www.youtube.com/embed/Vxr1vZ-h3jA?rel=0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="yt-info">
+            <div class="yt-info-left">
+              <div class="yt-info-title" id="yt-title-15">読み込み中...</div>
+              <div class="yt-info-ch" id="yt-ch-15"></div>
+            </div>
+            <a href="https://www.youtube.com/watch?v=Vxr1vZ-h3jA" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+          </div>
+        </div>
+
+        <!-- 動画3: 3hGzoDlXoPk -->
+        <div class="yt-slide">
+          <div class="yt-wrap">
+            <iframe src="https://www.youtube.com/embed/3hGzoDlXoPk?rel=0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen loading="lazy"></iframe>
+          </div>
+          <div class="yt-info">
+            <div class="yt-info-left">
+              <div class="yt-info-title" id="yt-title-16">読み込み中...</div>
+              <div class="yt-info-ch" id="yt-ch-16"></div>
+            </div>
+            <a href="https://www.youtube.com/watch?v=3hGzoDlXoPk" target="_blank" rel="noopener" class="yt-info-link">▶ YouTube</a>
+          </div>
+        </div>
+
+        <!-- 動画4: 02OqQkW7slg -->
         <div class="yt-slide">
           <div class="yt-wrap">
             <iframe src="https://www.youtube.com/embed/02OqQkW7slg?start=171&rel=0"
@@ -4399,6 +4431,8 @@ function fetchAllYtMeta() {
   fetchYtMeta('T0stmsQF1bs', 'yt-title-0', 'yt-ch-0');
   fetchYtMeta('qIrDHawpnb8', 'yt-title-9', 'yt-ch-9');
   fetchYtMeta('hmb6pIlqh70', 'yt-title-10', 'yt-ch-10');
+  fetchYtMeta('Vxr1vZ-h3jA', 'yt-title-15', 'yt-ch-15');
+  fetchYtMeta('3hGzoDlXoPk', 'yt-title-16', 'yt-ch-16');
   fetchYtMeta('02OqQkW7slg', 'yt-title-11', 'yt-ch-11');
   fetchYtMeta('0pa-7e7-tqo', 'yt-title-12', 'yt-ch-12');
   fetchYtMeta('1DhMTZ0D7J4', 'yt-title-13', 'yt-ch-13');
@@ -5067,7 +5101,7 @@ window.onload = function() {
   fetchFxNewsHeadlines();
   fetchBitradexFeed();
   fetchAllYtMeta();
-  initYtDots('yt-swrap-0', 'yt-dots-0', 7);
+  initYtDots('yt-swrap-0', 'yt-dots-0', 9);
   initYtDots('yt-swrap-1', 'yt-dots-1', 5);
   initYtDots('yt-swrap-2', 'yt-dots-2', 3);
   switchBookYear(0);
