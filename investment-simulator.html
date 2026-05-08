@@ -1402,9 +1402,11 @@
   </div>
   <!-- 表示順序（別枠・薄グラデーション） -->
   <div id="sortPanel" class="sort-panel-below">
-    <div class="sort-inline-title" id="sortPanelTitle">⇅ 表示順序</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div class="sort-inline-title" id="sortPanelTitle" style="margin-bottom:0;font-size:0.78rem">⇅ 表示順序</div>
+      <div class="sort-inline-save" id="sortSaveBadge">💾 自動保存</div>
+    </div>
     <div class="sort-inline-rows" id="sortPanelRows"><!-- JS で動的生成 --></div>
-    <div class="sort-inline-save" id="sortSaveBadge">💾 自動保存</div>
   </div>
 </div>
 
