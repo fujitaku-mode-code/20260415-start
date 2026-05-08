@@ -740,6 +740,48 @@
     .sort-row-btn:disabled { opacity:0.2; cursor:default; transform:none; }
     /* ===== サマリー枠ラッパー ===== */
     #simHeaderRow { margin-bottom: 14px; }
+    /* ===== 表示順序パネル（サマリー下の別枠・薄グラデ） ===== */
+    .sort-panel-below {
+      background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 55%, #ede9fe 100%);
+      border: 1.5px solid rgba(99,102,241,0.22);
+      border-radius: 0; padding: 8px 14px 10px;
+      margin-top: 6px;
+    }
+    body.dark .sort-panel-below {
+      background: linear-gradient(135deg, rgba(30,53,100,0.28) 0%, rgba(99,102,241,0.18) 100%);
+      border-color: rgba(147,197,253,0.2);
+    }
+    .sort-panel-below .sort-inline-title {
+      color: #3730a3; margin-bottom: 6px;
+    }
+    body.dark .sort-panel-below .sort-inline-title { color: #a5b4fc; }
+    /* 横並び3アイテム */
+    .sort-panel-below .sort-inline-rows {
+      flex-direction: row; gap: 6px; flex-wrap: nowrap;
+    }
+    .sort-panel-below .sort-inline-row {
+      flex: 1; padding: 4px 6px; border-radius: 5px;
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(99,102,241,0.12);
+    }
+    .sort-panel-below .sort-inline-row:hover {
+      background: rgba(255,255,255,0.85);
+    }
+    body.dark .sort-panel-below .sort-inline-row {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(147,197,253,0.12);
+    }
+    .sort-panel-below .sort-inline-num  { color: rgba(55,48,163,0.45); }
+    .sort-panel-below .sort-inline-name { color: #1e3a8a; }
+    .sort-panel-below .sort-inline-btn  {
+      border-color: rgba(30,58,138,0.25); color: #1e3a8a;
+    }
+    .sort-panel-below .sort-inline-btn:hover { background: #1e3a8a; color: #fff; border-color: #1e3a8a; }
+    .sort-panel-below .sort-inline-save { color: rgba(55,48,163,0.4); margin-top: 5px; }
+    body.dark .sort-panel-below .sort-inline-num  { color: rgba(165,180,252,0.5); }
+    body.dark .sort-panel-below .sort-inline-name { color: #bfdbfe; }
+    body.dark .sort-panel-below .sort-inline-btn  { border-color: rgba(147,197,253,0.3); color: #93c5fd; }
+    body.dark .sort-panel-below .sort-inline-row:hover { background: rgba(255,255,255,0.1); }
     /* ===== サマリー内インライン並び替えパネル ===== */
     .sort-inline {
       border-left: 1.5px solid rgba(58,130,196,0.25);
@@ -1346,25 +1388,23 @@
   <div id="simFootnote" style="font-size:0.65rem;color:var(--muted);margin-top:5px;text-align:left">※設定額以上で累積利益を全額元本へ追加</div>
 </div>
 
-<!-- サマリー枠（並び替えも内包）→シミュレーション実行後に表示 -->
+<!-- サマリー枠 → シミュレーション実行後に表示 -->
 <div id="simHeaderRow" class="hidden">
+  <!-- 運用シミュレーション対象 -->
   <div id="simSummaryBox" style="border:1.5px solid #3a82c4;border-left:5px solid #3a82c4;border-radius:0;background:#fff;overflow:hidden;">
-    <div style="padding:10px 14px 12px;display:flex;gap:14px;align-items:flex-start">
-      <!-- 左：投資条件サマリー -->
-      <div style="flex:1;min-width:0">
-        <div id="simSummaryHeader" style="font-size:0.72rem;font-weight:800;color:#3a82c4;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">運用シミュレーション対象</div>
-        <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.1">
-          <span id="simSummaryAmt" style="font-size:1.9rem;font-weight:900;color:#3a82c4;letter-spacing:-0.03em"></span>
-          <span id="simSummarySub" style="font-size:0.82rem;font-weight:600;color:#3a82c4;opacity:0.65"></span>
-        </div>
-      </div>
-      <!-- 右：表示順序（インライン統合） -->
-      <div class="sort-inline" id="sortPanel">
-        <div class="sort-inline-title" id="sortPanelTitle">⇅ 表示順序</div>
-        <div class="sort-inline-rows" id="sortPanelRows"><!-- JS で動的生成 --></div>
-        <div class="sort-inline-save" id="sortSaveBadge">💾 自動保存</div>
+    <div style="padding:10px 14px 12px">
+      <div id="simSummaryHeader" style="font-size:0.72rem;font-weight:800;color:#3a82c4;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">運用シミュレーション対象</div>
+      <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.1">
+        <span id="simSummaryAmt" style="font-size:1.9rem;font-weight:900;color:#3a82c4;letter-spacing:-0.03em"></span>
+        <span id="simSummarySub" style="font-size:0.82rem;font-weight:600;color:#3a82c4;opacity:0.65"></span>
       </div>
     </div>
+  </div>
+  <!-- 表示順序（別枠・薄グラデーション） -->
+  <div id="sortPanel" class="sort-panel-below">
+    <div class="sort-inline-title" id="sortPanelTitle">⇅ 表示順序</div>
+    <div class="sort-inline-rows" id="sortPanelRows"><!-- JS で動的生成 --></div>
+    <div class="sort-inline-save" id="sortSaveBadge">💾 自動保存</div>
   </div>
 </div>
 
