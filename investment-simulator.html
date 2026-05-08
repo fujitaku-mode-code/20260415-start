@@ -618,20 +618,48 @@
     }
     .lang-select:hover { box-shadow:0 3px 12px rgba(58,130,196,0.25); border-color:#3a82c4; }
     body.dark .lang-select { background:var(--white); color:var(--text); color-scheme:dark; }
-    /* ===== セクション並び替えボタン ===== */
-    .sort-handle {
-      display:inline-flex; align-items:center; gap:2px; margin-left:auto;
-      flex-shrink:0;
+    /* ===== セクション並び替えパネル ===== */
+    .sort-panel {
+      background:linear-gradient(135deg,#1e3564,#2a52a0);
+      border-radius:12px; padding:12px 14px; margin-bottom:14px;
+      box-shadow:0 4px 16px rgba(30,53,100,0.35);
     }
-    .sort-arrow {
-      width:22px; height:22px; border:1.5px solid var(--border);
-      border-radius:5px; background:var(--bg); cursor:pointer;
-      font-size:0.7rem; display:flex; align-items:center; justify-content:center;
-      color:var(--muted); padding:0; transition:background 0.15s,color 0.15s;
+    body.dark .sort-panel { background:linear-gradient(135deg,#0f1e40,#1a3264); box-shadow:0 4px 16px rgba(0,0,0,0.5); }
+    .sort-panel-head {
+      display:flex; align-items:center; gap:6px; margin-bottom:10px;
     }
-    .sort-arrow:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
-    .sort-arrow:active { opacity:0.7; }
-    .sort-arrow:disabled { opacity:0.25; cursor:default; }
+    .sort-panel-icon {
+      width:26px; height:26px; border-radius:7px; background:rgba(255,255,255,0.18);
+      display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;
+    }
+    .sort-panel-title { font-size:0.78rem; font-weight:900; color:#fff; letter-spacing:0.06em; }
+    .sort-panel-hint  { font-size:0.62rem; font-weight:400; color:rgba(255,255,255,0.55); margin-top:1px; }
+    .sort-rows { display:flex; flex-direction:column; gap:6px; }
+    .sort-row {
+      display:flex; align-items:center; gap:10px;
+      background:rgba(255,255,255,0.1); border-radius:9px; padding:9px 12px;
+      border:1.5px solid rgba(255,255,255,0.1);
+      transition:background 0.15s;
+    }
+    .sort-row:hover { background:rgba(255,255,255,0.16); }
+    .sort-row-num {
+      font-size:0.7rem; font-weight:900; color:rgba(255,255,255,0.5);
+      min-width:16px; flex-shrink:0;
+    }
+    .sort-row-emoji { font-size:1rem; flex-shrink:0; }
+    .sort-row-name  { flex:1; font-size:0.82rem; font-weight:700; color:#fff; }
+    .sort-row-btns  { display:flex; gap:5px; flex-shrink:0; }
+    .sort-row-btn {
+      width:30px; height:30px; border:none; border-radius:7px;
+      background:rgba(255,255,255,0.18); color:#fff;
+      font-size:0.75rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:background 0.15s, transform 0.1s;
+      padding:0;
+    }
+    .sort-row-btn:hover { background:rgba(255,255,255,0.38); }
+    .sort-row-btn:active { transform:scale(0.9); }
+    .sort-row-btn:disabled { opacity:0.2; cursor:default; transform:none; }
     /* 計算機モーダル */
     .calc-overlay {
       display:none; position:fixed; inset:0;
@@ -1187,17 +1215,26 @@
 
 <!-- シミュレーション結果セクション -->
 <div id="simResultsSection" class="sim-results-section hidden">
+
+  <!-- ===== 並び替えパネル（カード外に独立配置） ===== -->
+  <div class="sort-panel" id="sortPanel">
+    <div class="sort-panel-head">
+      <div class="sort-panel-icon">⇅</div>
+      <div>
+        <div class="sort-panel-title" id="sortPanelTitle">表示順序の変更</div>
+        <div class="sort-panel-hint" id="sortPanelHint">▲▼ で並び替え · ドラッグ&amp;ドロップも可</div>
+      </div>
+    </div>
+    <div class="sort-rows" id="sortPanelRows">
+      <!-- JS で動的生成 -->
+    </div>
+  </div>
+
   <!-- 期間別シミュレーション -->
   <div class="card" id="milestoneCard" draggable="true" ondragstart="cardDragStart(event,'milestoneCard')" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'milestoneCard')">
-    <div class="card-title" style="justify-content:space-between;align-items:center">
-      <div style="display:flex;align-items:center;gap:6px">
-        <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
-        <span id="cardTitleMilestone" data-i18n="cardMilestone">期間別シミュレーション</span>
-      </div>
-      <div class="sort-handle">
-        <button class="sort-arrow" onclick="moveCard('milestoneCard',-1)" title="上へ">▲</button>
-        <button class="sort-arrow" onclick="moveCard('milestoneCard',1)" title="下へ">▼</button>
-      </div>
+    <div class="card-title">
+      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
+      <span id="cardTitleMilestone" data-i18n="cardMilestone">期間別シミュレーション</span>
     </div>
     <div class="milestone-grid" id="milestoneGrid"></div>
   </div>
@@ -1209,18 +1246,12 @@
         <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📉</span>
         <span id="cardTitleChart">残高推移グラフ</span>
       </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <select id="chartPeriodSel" onchange="changeChartPeriod(this.value)"
-          style="font-size:0.75rem;font-weight:700;padding:4px 8px;border:1.5px solid #3a82c4;border-radius:0;background:#e6f2ff;color:#3a82c4;cursor:pointer;font-family:'Noto Sans JP',sans-serif">
-          <option value="365">1年</option>
-          <option value="730">2年</option>
-          <option value="1095">3年</option>
-        </select>
-        <div class="sort-handle">
-          <button class="sort-arrow" onclick="moveCard('chartCard',-1)" title="上へ">▲</button>
-          <button class="sort-arrow" onclick="moveCard('chartCard',1)" title="下へ">▼</button>
-        </div>
-      </div>
+      <select id="chartPeriodSel" onchange="changeChartPeriod(this.value)"
+        style="font-size:0.75rem;font-weight:700;padding:4px 8px;border:1.5px solid #3a82c4;border-radius:0;background:#e6f2ff;color:#3a82c4;cursor:pointer;font-family:'Noto Sans JP',sans-serif">
+        <option value="365">1年</option>
+        <option value="730">2年</option>
+        <option value="1095">3年</option>
+      </select>
     </div>
     <div id="chartHint" style="font-size:0.7rem;color:var(--muted);margin:-8px 0 10px 6px">（グラフに触れると金額表示）</div>
     <div class="chart-wrap">
@@ -1232,16 +1263,10 @@
 
   <!-- 日別明細 -->
   <div class="card" id="tableCard" draggable="true" ondragstart="cardDragStart(event,'tableCard')" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'tableCard')">
-    <div class="card-title" style="justify-content:space-between;align-items:center">
-      <div style="display:flex;align-items:center;gap:6px">
-        <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📋</span>
-        <span id="cardTitleTable">日別明細</span>
-        <span class="badge badge-sub" id="tableBadge">再投資日は緑色</span>
-      </div>
-      <div class="sort-handle">
-        <button class="sort-arrow" onclick="moveCard('tableCard',-1)" title="上へ">▲</button>
-        <button class="sort-arrow" onclick="moveCard('tableCard',1)" title="下へ">▼</button>
-      </div>
+    <div class="card-title">
+      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📋</span>
+      <span id="cardTitleTable">日別明細</span>
+      <span class="badge badge-sub" id="tableBadge">再投資日は緑色</span>
     </div>
     <div class="table-wrap">
       <table>
@@ -3480,6 +3505,7 @@ function simulate(doScroll) {
 
     // シミュレーション結果セクションを表示
     document.getElementById('simResultsSection').classList.remove('hidden');
+    renderSortPanel();
     if (doScroll) setTimeout(function() { document.getElementById('simSummaryBox').scrollIntoView({behavior:'smooth', block:'start'}); }, 50);
 
     // マイルストーン
@@ -5339,6 +5365,8 @@ function applyLang(lang) {
   }
   // テーブル（描画済みなら再描画）
   if (lastRows.length > 0) renderTable(lastRows, fullTableVisible, lastJpyRate);
+  // 並び替えパネル（言語対応で再描画）
+  if (typeof renderSortPanel === 'function') renderSortPanel();
 }
 
 // ===== セクション並び替え =====
@@ -5393,6 +5421,53 @@ function moveCard(cardId, dir) {
   if (dir < 0) section.insertBefore(el, ref);
   else section.insertBefore(ref, el);
   saveCardOrder();
+  renderSortPanel();
+}
+
+// ===== 並び替えパネル描画 =====
+var CARD_META = {
+  milestoneCard: { emoji:'📅', nameKey:'cardMilestone', nameJa:'期間別シミュレーション' },
+  chartCard:     { emoji:'📉', nameKey:'cardChart',     nameJa:'残高推移グラフ' },
+  tableCard:     { emoji:'📋', nameKey:'cardTable',     nameJa:'日別明細' }
+};
+
+function renderSortPanel() {
+  var panel = document.getElementById('sortPanelRows');
+  if (!panel) return;
+  var section = document.getElementById('simResultsSection');
+  if (!section) return;
+  var cards = Array.prototype.slice.call(section.children).filter(function(el) {
+    return CARD_IDS.indexOf(el.id) >= 0;
+  });
+  var t = i18n[gLang] || i18n.ja;
+  panel.innerHTML = cards.map(function(card, i) {
+    var meta = CARD_META[card.id] || { emoji:'□', nameJa: card.id };
+    var name = t[meta.nameKey] || meta.nameJa;
+    var isFirst = (i === 0), isLast = (i === cards.length - 1);
+    return '<div class="sort-row" draggable="true"' +
+        ' ondragstart="cardDragStart(event,\'' + card.id + '\')"' +
+        ' ondragover="cardDragOver(event)"' +
+        ' ondrop="cardDrop(event,\'' + card.id + '\')">' +
+      '<span class="sort-row-num">' + (i+1) + '.</span>' +
+      '<span class="sort-row-emoji">' + meta.emoji + '</span>' +
+      '<span class="sort-row-name">' + name + '</span>' +
+      '<div class="sort-row-btns">' +
+        '<button class="sort-row-btn" onclick="moveCard(\'' + card.id + '\',-1)" ' + (isFirst?'disabled':'') + ' title="上へ">▲</button>' +
+        '<button class="sort-row-btn" onclick="moveCard(\'' + card.id + '\',1)" '  + (isLast?'disabled':'')  + ' title="下へ">▼</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  // パネルのタイトルもi18n対応
+  var ph = document.getElementById('sortPanelHint');
+  if (ph) ph.textContent = (gLang === 'ja') ? '▲▼ で並び替え · ドラッグ＆ドロップも可' :
+                            (gLang === 'en') ? '▲▼ to reorder · Drag & Drop also works' :
+                            (gLang === 'es') ? '▲▼ para reordenar · Arrastrar también funciona' :
+                            (gLang === 'zh') ? '▲▼ 排序 · 支持拖放' : '▲▼ 순서 변경 · 드래그 앤 드롭 가능';
+  var pt = document.getElementById('sortPanelTitle');
+  if (pt) pt.textContent = (gLang === 'ja') ? '表示順序の変更' :
+                            (gLang === 'en') ? 'Reorder Sections' :
+                            (gLang === 'es') ? 'Reordenar Secciones' :
+                            (gLang === 'zh') ? '调整显示顺序' : '표시 순서 변경';
 }
 
 function cardDragStart(e, id) {
@@ -5419,8 +5494,10 @@ function cardDrop(e, targetId) {
   if (srcIdx < tgtIdx) section.insertBefore(src, tgt.nextSibling);
   else section.insertBefore(src, tgt);
   document.querySelectorAll('#simResultsSection .card').forEach(function(c) { c.style.opacity = ''; });
+  document.querySelectorAll('#sortPanelRows .sort-row').forEach(function(r) { r.style.opacity = ''; });
   dragSrcId = null;
   saveCardOrder();
+  renderSortPanel();
 }
 
 // ===== 起動 =====
