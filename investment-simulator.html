@@ -675,6 +675,33 @@
     .sort-row-btn:hover { background:rgba(255,255,255,0.38); }
     .sort-row-btn:active { transform:scale(0.9); }
     .sort-row-btn:disabled { opacity:0.2; cursor:default; transform:none; }
+    /* ===== 左右2カラムラッパー ===== */
+    #simHeaderRow {
+      display: flex; gap: 10px; margin-bottom: 14px; align-items: stretch;
+    }
+    /* コンパクト版ソートパネル（右カラム用） */
+    .sort-panel-compact {
+      flex: 0 0 42%; min-width: 110px;
+      padding: 8px 10px;
+    }
+    .sort-panel-compact .sort-panel-head { margin-bottom: 5px; gap: 5px; }
+    .sort-panel-compact .sort-panel-icon {
+      width: 20px; height: 20px; border-radius: 5px; font-size: 0.72rem; flex-shrink:0;
+    }
+    .sort-panel-compact .sort-panel-title { font-size: 0.68rem; }
+    .sort-panel-compact .sort-rows { gap: 4px; }
+    .sort-panel-compact .sort-row {
+      padding: 5px 7px; border-radius: 6px; gap: 5px;
+    }
+    .sort-panel-compact .sort-row-num { font-size: 0.6rem; min-width: 12px; }
+    .sort-panel-compact .sort-row-emoji { font-size: 0.82rem; }
+    .sort-panel-compact .sort-row-name {
+      font-size: 0.62rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80px;
+    }
+    .sort-panel-compact .sort-row-btns { gap: 3px; }
+    .sort-panel-compact .sort-row-btn {
+      width: 22px; height: 22px; border-radius: 5px; font-size: 0.6rem;
+    }
     /* 計算機モーダル */
     .calc-overlay {
       display:none; position:fixed; inset:0;
@@ -1220,33 +1247,30 @@
   <div id="simFootnote" style="font-size:0.65rem;color:var(--muted);margin-top:5px;text-align:left">※設定額以上で累積利益を全額元本へ追加</div>
 </div>
 
-<!-- 投資条件サマリー枠 -->
-<div id="simSummaryBox" class="hidden" style="border:1.5px solid #3a82c4;border-left:5px solid #3a82c4;border-radius:0;background:#fff;overflow:hidden;margin-bottom:14px">
-  <div style="padding:10px 16px 12px">
-    <div id="simSummaryHeader" style="font-size:0.72rem;font-weight:800;color:#3a82c4;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">運用シミュレーション対象</div>
-    <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.1">
-      <span id="simSummaryAmt" style="font-size:1.9rem;font-weight:900;color:#3a82c4;letter-spacing:-0.03em"></span>
-      <span id="simSummarySub" style="font-size:0.82rem;font-weight:600;color:#3a82c4;opacity:0.65"></span>
+<!-- 左右2カラム（サマリー + 並び替え）→シミュレーション実行後に表示 -->
+<div id="simHeaderRow" class="hidden">
+  <!-- 左：投資条件サマリー -->
+  <div id="simSummaryBox" style="flex:1;min-width:0;border:1.5px solid #3a82c4;border-left:5px solid #3a82c4;border-radius:0;background:#fff;overflow:hidden;">
+    <div style="padding:10px 14px 12px">
+      <div id="simSummaryHeader" style="font-size:0.72rem;font-weight:800;color:#3a82c4;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">運用シミュレーション対象</div>
+      <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.1">
+        <span id="simSummaryAmt" style="font-size:1.9rem;font-weight:900;color:#3a82c4;letter-spacing:-0.03em"></span>
+        <span id="simSummarySub" style="font-size:0.82rem;font-weight:600;color:#3a82c4;opacity:0.65"></span>
+      </div>
     </div>
+  </div>
+  <!-- 右：表示順序変更（コンパクト） -->
+  <div class="sort-panel sort-panel-compact" id="sortPanel">
+    <div class="sort-panel-head">
+      <div class="sort-panel-icon">⇅</div>
+      <div class="sort-panel-title" id="sortPanelTitle">表示順序</div>
+    </div>
+    <div class="sort-rows" id="sortPanelRows"><!-- JS で動的生成 --></div>
   </div>
 </div>
 
 <!-- シミュレーション結果セクション -->
 <div id="simResultsSection" class="sim-results-section hidden">
-
-  <!-- ===== 並び替えパネル（カード外に独立配置） ===== -->
-  <div class="sort-panel" id="sortPanel">
-    <div class="sort-panel-head">
-      <div class="sort-panel-icon">⇅</div>
-      <div>
-        <div class="sort-panel-title" id="sortPanelTitle">表示順序の変更</div>
-        <div class="sort-panel-hint" id="sortPanelHint">▲▼ で並び替え · ドラッグ&amp;ドロップも可</div>
-      </div>
-    </div>
-    <div class="sort-rows" id="sortPanelRows">
-      <!-- JS で動的生成 -->
-    </div>
-  </div>
 
   <!-- 期間別シミュレーション -->
   <div class="card" id="milestoneCard" draggable="true" ondragstart="cardDragStart(event,'milestoneCard')" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'milestoneCard')">
@@ -3513,10 +3537,8 @@ function simulate(doScroll) {
 
     var effDays = Math.max(0, days - 1);
 
-    // 投資条件サマリー枠を更新・表示
+    // 投資条件サマリー＋並び替えパネルを更新・表示
     (function() {
-      var box = document.getElementById('simSummaryBox');
-      if (!box) return;
       var amt, sub;
       if (simMode === 'jpy' && jpyRate > 0) {
         amt = '¥' + commaInt(principal * jpyRate);
@@ -3527,13 +3549,13 @@ function simulate(doScroll) {
       }
       document.getElementById('simSummaryAmt').textContent = amt;
       document.getElementById('simSummarySub').textContent = sub;
-      box.classList.remove('hidden');
+      document.getElementById('simHeaderRow').classList.remove('hidden');
     })();
 
     // シミュレーション結果セクションを表示
     document.getElementById('simResultsSection').classList.remove('hidden');
     renderSortPanel();
-    if (doScroll) setTimeout(function() { document.getElementById('simSummaryBox').scrollIntoView({behavior:'smooth', block:'start'}); }, 50);
+    if (doScroll) setTimeout(function() { document.getElementById('simHeaderRow').scrollIntoView({behavior:'smooth', block:'start'}); }, 50);
 
     // マイルストーン
     var startDate = lastStartDate || new Date();
@@ -5484,17 +5506,12 @@ function renderSortPanel() {
       '</div>' +
     '</div>';
   }).join('');
-  // パネルのタイトルもi18n対応
-  var ph = document.getElementById('sortPanelHint');
-  if (ph) ph.textContent = (gLang === 'ja') ? '▲▼ で並び替え · ドラッグ＆ドロップも可' :
-                            (gLang === 'en') ? '▲▼ to reorder · Drag & Drop also works' :
-                            (gLang === 'es') ? '▲▼ para reordenar · Arrastrar también funciona' :
-                            (gLang === 'zh') ? '▲▼ 排序 · 支持拖放' : '▲▼ 순서 변경 · 드래그 앤 드롭 가능';
+  // パネルタイトルをi18n対応（コンパクト版は短いラベル）
   var pt = document.getElementById('sortPanelTitle');
-  if (pt) pt.textContent = (gLang === 'ja') ? '表示順序の変更' :
-                            (gLang === 'en') ? 'Reorder Sections' :
-                            (gLang === 'es') ? 'Reordenar Secciones' :
-                            (gLang === 'zh') ? '调整显示顺序' : '표시 순서 변경';
+  if (pt) pt.textContent = (gLang === 'ja') ? '表示順序' :
+                            (gLang === 'en') ? 'Order' :
+                            (gLang === 'es') ? 'Orden' :
+                            (gLang === 'zh') ? '排序' : '순서';
 }
 
 function cardDragStart(e, id) {
