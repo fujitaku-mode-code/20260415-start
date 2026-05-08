@@ -5686,7 +5686,7 @@ function renderSortPanel() {
   var t = i18n[gLang] || i18n.ja;
   panel.innerHTML = cards.map(function(card, i) {
     var meta = CARD_META[card.id] || { emoji:'□', nameJa: card.id, shortJa: card.id };
-    var name = meta.shortJa || meta.nameJa;
+    var name = (t && t[meta.nameKey]) || meta.nameJa;
     var isFirst = (i === 0), isLast = (i === cards.length - 1);
     return '<div class="sort-inline-row" draggable="true"' +
         ' ondragstart="cardDragStart(event,\'' + card.id + '\')"' +
