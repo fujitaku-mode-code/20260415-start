@@ -118,6 +118,29 @@
       margin-bottom: 14px;
       display: flex; align-items: center; gap: 6px;
     }
+    /* ===== 結果カード：simSummaryBox と同書体・色違い ===== */
+    #milestoneCard { border-left: 5px solid #7c3aed; }
+    #chartCard     { border-left: 5px solid #d97706; }
+    #tableCard     { border-left: 5px solid #0891b2; }
+    #milestoneCard .card-title {
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; color: #7c3aed;
+    }
+    #chartCard .card-title {
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; color: #d97706;
+    }
+    #tableCard .card-title {
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; color: #0891b2;
+    }
+    #milestoneCard .card-title-icon { background: rgba(124,58,237,0.12) !important; }
+    #chartCard     .card-title-icon { background: rgba(217,119,6,0.12)  !important; }
+    #tableCard     .card-title-icon { background: rgba(8,145,178,0.12)  !important; }
+    /* ダークモード対応 */
+    body.dark #milestoneCard { border-left-color: #a78bfa; }
+    body.dark #chartCard     { border-left-color: #fbbf24; }
+    body.dark #tableCard     { border-left-color: #38bdf8; }
+    body.dark #milestoneCard .card-title { color: #a78bfa; }
+    body.dark #chartCard     .card-title { color: #fbbf24; }
+    body.dark #tableCard     .card-title { color: #38bdf8; }
     .card-title-icon {
       width: 22px; height: 22px; border-radius: 6px;
       display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;
