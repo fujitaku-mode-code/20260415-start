@@ -1468,11 +1468,11 @@
         <span id="cardTitleTable">日別明細</span>
         <span class="badge badge-sub" id="tableBadge">再投資日は緑色</span>
       </div>
-      <!-- 展開ボタン（タイトル右側） -->
+      <!-- 表示行数トグル（常時表示） -->
       <div class="table-inline-btns" id="tableInlineBtns">
-        <button class="table-inline-btn hidden" id="show30Btn"      onclick="setTableMode('30d')">30日</button>
-        <button class="table-inline-btn hidden" id="showAllBtn"     onclick="setTableMode('full')">全表示</button>
-        <button class="table-inline-btn collapse-btn hidden" id="tableCollapseBtn" onclick="setTableMode('compact')">▲5日</button>
+        <button class="table-inline-btn active" id="show5Btn"   onclick="setTableMode('compact')">5日</button>
+        <button class="table-inline-btn"        id="show30Btn"  onclick="setTableMode('30d')">30日</button>
+        <button class="table-inline-btn"        id="showAllBtn" onclick="setTableMode('full')">全日</button>
       </div>
     </div>
     <div class="table-wrap">
@@ -3911,29 +3911,24 @@ function renderTable(rows, full, jpyRate) {
   document.getElementById('th-daily').innerHTML     = '日利' + hPre + '<br><span style="font-weight:400">' + hSub + '</span>';
   document.getElementById('th-pending').innerHTML   = '累積利益' + hPre + '<br><span style="font-weight:400">' + hSub + '</span>';
 
-  var show30Btn     = document.getElementById('show30Btn');
-  var showAllBtn    = document.getElementById('showAllBtn');
-  var collapseBtn   = document.getElementById('tableCollapseBtn');
-  var hasMore = rows.length > 5;
+  var show5Btn   = document.getElementById('show5Btn');
+  var show30Btn  = document.getElementById('show30Btn');
+  var showAllBtn = document.getElementById('showAllBtn');
+  var totalRows  = rows.length;
 
+  // アクティブボタンを更新
+  if (show5Btn)   show5Btn.classList.toggle('active',   tableMode === 'compact');
+  if (show30Btn)  show30Btn.classList.toggle('active',  tableMode === '30d');
+  if (showAllBtn) showAllBtn.classList.toggle('active', tableMode === 'full');
+
+  // 表示行を決定
   var displayRows;
-  var totalRows = rows.length;
-
   if (tableMode === 'compact') {
     displayRows = rows.slice(0, 5);
-    if (show30Btn)   { show30Btn.classList.toggle('hidden', !hasMore); show30Btn.classList.remove('active'); show30Btn.textContent = '30日'; }
-    if (showAllBtn)  { showAllBtn.classList.toggle('hidden', !hasMore); showAllBtn.classList.remove('active'); showAllBtn.textContent = '全' + totalRows + '日'; }
-    if (collapseBtn) collapseBtn.classList.add('hidden');
   } else if (tableMode === '30d') {
     displayRows = rows.slice(0, Math.min(30, totalRows));
-    if (show30Btn)   { show30Btn.classList.toggle('hidden', !hasMore); show30Btn.classList.add('active');    show30Btn.textContent = '✔30日'; }
-    if (showAllBtn)  { showAllBtn.classList.toggle('hidden', !hasMore); showAllBtn.classList.remove('active'); showAllBtn.textContent = '全' + totalRows + '日'; }
-    if (collapseBtn) collapseBtn.classList.toggle('hidden', !hasMore);
   } else {
     displayRows = rows;
-    if (show30Btn)   { show30Btn.classList.toggle('hidden', !hasMore); show30Btn.classList.remove('active'); show30Btn.textContent = '30日'; }
-    if (showAllBtn)  { showAllBtn.classList.toggle('hidden', !hasMore); showAllBtn.classList.add('active');   showAllBtn.textContent = '✔全' + totalRows + '日'; }
-    if (collapseBtn) collapseBtn.classList.toggle('hidden', !hasMore);
   }
 
   // 出金手数料は収益（利益）部分のみに適用。元本は手数料対象外。
@@ -3984,7 +3979,7 @@ function renderTable(rows, full, jpyRate) {
   tbody.innerHTML = html;
 }
 
-function toggleFullTable() { setTableMode(tableMode === 'compact' ? 'full' : 'compact'); }
+function toggleFullTable() { setTableMode(tableMode === 'compact' ? 'full' : 'compact'); } // 後方互換
 
 function setTableMode(mode) {
   tableMode = mode;
