@@ -757,31 +757,29 @@
     body.dark .sort-panel-below .sort-inline-title { color: #a5b4fc; }
     /* 横並び3アイテム */
     .sort-panel-below .sort-inline-rows {
-      flex-direction: row; gap: 6px; flex-wrap: nowrap;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px;
     }
     .sort-panel-below .sort-inline-row {
-      flex: 1; padding: 4px 6px; border-radius: 5px;
-      background: rgba(255,255,255,0.5);
-      border: 1px solid rgba(99,102,241,0.12);
+      padding: 5px 7px; border-radius: 5px; min-width: 0;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(99,102,241,0.22);
     }
-    .sort-panel-below .sort-inline-row:hover {
-      background: rgba(255,255,255,0.85);
-    }
+    .sort-panel-below .sort-inline-row:hover { background: rgba(255,255,255,0.92); }
     body.dark .sort-panel-below .sort-inline-row {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(147,197,253,0.12);
+      background: rgba(255,255,255,0.08); border-color: rgba(147,197,253,0.18);
     }
-    .sort-panel-below .sort-inline-num  { color: rgba(55,48,163,0.45); }
-    .sort-panel-below .sort-inline-name { color: #1e3a8a; }
+    body.dark .sort-panel-below .sort-inline-row:hover { background: rgba(255,255,255,0.14); }
+    .sort-panel-below .sort-inline-num  { color: #3730a3; font-weight: 900; font-size: 0.65rem; }
+    .sort-panel-below .sort-inline-emoji { font-size: 0.9rem; }
+    .sort-panel-below .sort-inline-name { color: #1e3a8a; font-size: 0.72rem; font-weight: 800; }
     .sort-panel-below .sort-inline-btn  {
-      border-color: rgba(30,58,138,0.25); color: #1e3a8a;
+      border-color: rgba(30,58,138,0.4); color: #1e40af; width: 20px; height: 20px;
     }
-    .sort-panel-below .sort-inline-btn:hover { background: #1e3a8a; color: #fff; border-color: #1e3a8a; }
-    .sort-panel-below .sort-inline-save { color: #dc2626; margin-top: 5px; font-size: 0.58rem; }
-    body.dark .sort-panel-below .sort-inline-num  { color: rgba(165,180,252,0.5); }
-    body.dark .sort-panel-below .sort-inline-name { color: #bfdbfe; }
-    body.dark .sort-panel-below .sort-inline-btn  { border-color: rgba(147,197,253,0.3); color: #93c5fd; }
-    body.dark .sort-panel-below .sort-inline-row:hover { background: rgba(255,255,255,0.1); }
+    .sort-panel-below .sort-inline-btn:hover { background: #1e40af; color: #fff; border-color: #1e40af; }
+    .sort-panel-below .sort-inline-save { color: #dc2626; font-size: 0.62rem; }
+    body.dark .sort-panel-below .sort-inline-num  { color: #a5b4fc; font-weight: 900; }
+    body.dark .sort-panel-below .sort-inline-name { color: #bfdbfe; font-weight: 800; }
+    body.dark .sort-panel-below .sort-inline-btn  { border-color: rgba(147,197,253,0.45); color: #93c5fd; }
     /* ===== サマリー内インライン並び替えパネル ===== */
     .sort-inline {
       border-left: 1.5px solid rgba(58,130,196,0.25);
