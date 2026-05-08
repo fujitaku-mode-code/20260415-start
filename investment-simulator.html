@@ -696,8 +696,9 @@
     .sort-row-btn:disabled { opacity:0.2; cursor:default; transform:none; }
     /* ===== 左右2カラムラッパー ===== */
     #simHeaderRow {
-      display: flex; gap: 10px; margin-bottom: 14px; align-items: stretch;
+      display: flex; gap: 10px; margin-bottom: 14px; align-items: flex-start;
     }
+    #simSummaryBox { align-self: flex-start; }
     /* コンパクト版ソートパネル（右カラム用） */
     .sort-panel-compact {
       flex: 0 0 42%; min-width: 110px;
@@ -1279,7 +1280,10 @@
   <div class="sort-panel sort-panel-compact" id="sortPanel">
     <div class="sort-panel-head">
       <div class="sort-panel-icon">⇅</div>
-      <div class="sort-panel-title" id="sortPanelTitle">表示順序</div>
+      <div style="flex:1;min-width:0">
+        <div class="sort-panel-title" id="sortPanelTitle">表示順序</div>
+        <div id="sortSaveBadge" style="font-size:0.55rem;font-weight:700;color:rgba(255,255,255,0.55);margin-top:1px;transition:color 0.3s">💾 自動保存</div>
+      </div>
     </div>
     <div class="sort-rows" id="sortPanelRows"><!-- JS で動的生成 --></div>
   </div>
@@ -5485,6 +5489,16 @@ function saveCardOrder() {
   order.sort(function(a,b) { return a.idx - b.idx; });
   var ids = order.map(function(o) { return o.id; });
   try { localStorage.setItem(CARD_ORDER_KEY, JSON.stringify(ids)); } catch(e) {}
+  // 保存フラッシュ演出
+  var badge = document.getElementById('sortSaveBadge');
+  if (badge) {
+    badge.style.color = '#7aff9a';
+    badge.textContent = '💾 保存しました';
+    setTimeout(function() {
+      badge.style.color = 'rgba(255,255,255,0.55)';
+      badge.textContent = '💾 自動保存';
+    }, 1500);
+  }
 }
 
 function restoreCardOrder() {
@@ -5495,6 +5509,18 @@ function restoreCardOrder() {
     var el = document.getElementById(id);
     if (el) section.appendChild(el);
   });
+  // 保存データがある場合はバッジに復元済を表示
+  try {
+    var hasSaved = !!localStorage.getItem(CARD_ORDER_KEY);
+    if (hasSaved) {
+      var badge = document.getElementById('sortSaveBadge');
+      if (badge) badge.textContent = '💾 前回の順序を復元';
+      setTimeout(function() {
+        var b = document.getElementById('sortSaveBadge');
+        if (b) b.textContent = '💾 自動保存';
+      }, 2500);
+    }
+  } catch(e) {}
 }
 
 function moveCard(cardId, dir) {
