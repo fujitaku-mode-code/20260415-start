@@ -605,6 +605,33 @@
     }
     .calc-open-btn:hover { box-shadow:0 3px 12px rgba(184,134,11,0.25); border-color:var(--accent); }
     .calc-open-btn:active { transform:scale(0.95); }
+    /* ===== 言語ボタン ===== */
+    .lang-btn {
+      height:34px; padding:0 8px; min-width:34px;
+      border-radius:17px; border:1.5px solid var(--border);
+      cursor:pointer; outline:none; font-size:0.68rem; font-weight:700;
+      background:var(--white); color:var(--text);
+      transition:background 0.2s,color 0.2s,border-color 0.2s,box-shadow 0.2s;
+      display:flex; align-items:center; justify-content:center; gap:3px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.08); flex-shrink:0; white-space:nowrap;
+      letter-spacing:0.04em;
+    }
+    .lang-btn:hover { box-shadow:0 3px 12px rgba(58,130,196,0.25); border-color:#3a82c4; }
+    .lang-btn:active { transform:scale(0.95); }
+    /* ===== セクション並び替えボタン ===== */
+    .sort-handle {
+      display:inline-flex; align-items:center; gap:2px; margin-left:auto;
+      flex-shrink:0;
+    }
+    .sort-arrow {
+      width:22px; height:22px; border:1.5px solid var(--border);
+      border-radius:5px; background:var(--bg); cursor:pointer;
+      font-size:0.7rem; display:flex; align-items:center; justify-content:center;
+      color:var(--muted); padding:0; transition:background 0.15s,color 0.15s;
+    }
+    .sort-arrow:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .sort-arrow:active { opacity:0.7; }
+    .sort-arrow:disabled { opacity:0.25; cursor:default; }
     /* 計算機モーダル */
     .calc-overlay {
       display:none; position:fixed; inset:0;
@@ -1029,6 +1056,7 @@
   <div class="title-row">
     <h1>投資シミュレーター<span class="site-subtitle">INVESTMENT SIMULATOR</span></h1>
     <div class="theme-row">
+      <button class="lang-btn" id="langBtn" onclick="cycleLang()" title="言語切替">🌐 <span id="langLabel">日本語</span></button>
       <button class="calc-open-btn" type="button" onclick="openCalc()" title="計算機">🧮</button>
       <button class="dark-btn" id="darkBtn" onclick="toggleDark()">🌙</button>
     </div>
@@ -1154,27 +1182,39 @@
 <!-- シミュレーション結果セクション -->
 <div id="simResultsSection" class="sim-results-section hidden">
   <!-- 期間別シミュレーション -->
-  <div class="card" id="milestoneCard">
-    <div class="card-title">
-      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
-      期間別シミュレーション
+  <div class="card" id="milestoneCard" draggable="true" ondragstart="cardDragStart(event,'milestoneCard')" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'milestoneCard')">
+    <div class="card-title" style="justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
+        期間別シミュレーション
+      </div>
+      <div class="sort-handle">
+        <button class="sort-arrow" onclick="moveCard('milestoneCard',-1)" title="上へ">▲</button>
+        <button class="sort-arrow" onclick="moveCard('milestoneCard',1)" title="下へ">▼</button>
+      </div>
     </div>
     <div class="milestone-grid" id="milestoneGrid"></div>
   </div>
 
   <!-- グラフ -->
-  <div class="card" id="chartCard">
+  <div class="card" id="chartCard" draggable="true" ondragstart="cardDragStart(event,'chartCard')" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'chartCard')">
     <div class="card-title" style="justify-content:space-between;align-items:center">
       <div style="display:flex;align-items:center;gap:6px">
         <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📉</span>
         残高推移グラフ
       </div>
-      <select id="chartPeriodSel" onchange="changeChartPeriod(this.value)"
-        style="font-size:0.75rem;font-weight:700;padding:4px 8px;border:1.5px solid #3a82c4;border-radius:0;background:#e6f2ff;color:#3a82c4;cursor:pointer;font-family:'Noto Sans JP',sans-serif">
-        <option value="365">1年</option>
-        <option value="730">2年</option>
-        <option value="1095">3年</option>
-      </select>
+      <div style="display:flex;align-items:center;gap:6px">
+        <select id="chartPeriodSel" onchange="changeChartPeriod(this.value)"
+          style="font-size:0.75rem;font-weight:700;padding:4px 8px;border:1.5px solid #3a82c4;border-radius:0;background:#e6f2ff;color:#3a82c4;cursor:pointer;font-family:'Noto Sans JP',sans-serif">
+          <option value="365">1年</option>
+          <option value="730">2年</option>
+          <option value="1095">3年</option>
+        </select>
+        <div class="sort-handle">
+          <button class="sort-arrow" onclick="moveCard('chartCard',-1)" title="上へ">▲</button>
+          <button class="sort-arrow" onclick="moveCard('chartCard',1)" title="下へ">▼</button>
+        </div>
+      </div>
     </div>
     <div style="font-size:0.7rem;color:var(--muted);margin:-8px 0 10px 6px">（グラフに触れると金額表示）</div>
     <div class="chart-wrap">
@@ -1185,11 +1225,17 @@
   </div>
 
   <!-- 日別明細 -->
-  <div class="card" id="tableCard">
-    <div class="card-title">
-      <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📋</span>
-      日別明細
-      <span class="badge badge-sub">再投資日は緑色</span>
+  <div class="card" id="tableCard" draggable="true" ondragstart="cardDragStart(event,'tableCard')" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'tableCard')">
+    <div class="card-title" style="justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📋</span>
+        日別明細
+        <span class="badge badge-sub">再投資日は緑色</span>
+      </div>
+      <div class="sort-handle">
+        <button class="sort-arrow" onclick="moveCard('tableCard',-1)" title="上へ">▲</button>
+        <button class="sort-arrow" onclick="moveCard('tableCard',1)" title="下へ">▼</button>
+      </div>
     </div>
     <div class="table-wrap">
       <table>
@@ -1230,7 +1276,7 @@
   <!-- サブタブバー -->
   <div class="news-sub-bar" style="margin-bottom:4px">
     <button class="news-sub-btn active" id="docsBtn-0" onclick="switchDocsTab(0)">📚 書籍</button>
-    <button class="news-sub-btn" id="docsBtn-1" onclick="switchDocsTab(1)">❓ Q&amp;A</button>
+    <button class="news-sub-btn" id="docsBtn-1" onclick="switchDocsTab(1)">❓ 雑学</button>
     <button class="news-sub-btn" id="docsBtn-2" onclick="switchDocsTab(2)">📋 マニュアル</button>
     <button class="news-sub-btn" id="docsBtn-3" onclick="switchDocsTab(3)">🔗 リンク先</button>
   </div>
@@ -1267,7 +1313,7 @@
 
     <!-- 左サイドバー -->
     <div class="links-sidebar" style="width:54px">
-      <button class="qa-sidebar-btn active" id="qaBtn-0" onclick="switchQaTab(0)">雑学</button>
+      <button class="qa-sidebar-btn active" id="qaBtn-0" onclick="switchQaTab(0)">Q&A</button>
       <button class="qa-sidebar-btn" id="qaBtn-1" onclick="switchQaTab(1)">初心者<br>解説</button>
       <button class="qa-sidebar-btn" id="qaBtn-2" onclick="switchQaTab(2)">トークン</button>
       <button class="qa-sidebar-btn" id="qaBtn-3" onclick="switchQaTab(3)">規制・<br>世界</button>
@@ -3646,15 +3692,14 @@ function renderTable(rows, full, jpyRate) {
     return (isJpy) ? ('<span class="td-yen">$' + commaDec(vf) + '</span>')
                    : ('<span class="td-yen">' + fmtJPY(vf, rate) + '</span>');
   };
-  // 日利・累積利益は全額収益のため手数料適用
+  // 日利・累積利益は出金時まで手数料不要（再投資中は内部計算のまま表示）
+  // ※手数料は出金時のみ適用。閾値100ドル設定時、100ドル到達で再投資（緑）が正しい動作
   var fmtMain = function(v) {
-    var vf = v * feeK;
-    return (isJpy && rate > 0) ? ('¥' + commaInt(vf * rate)) : commaDec(vf);
+    return (isJpy && rate > 0) ? ('¥' + commaInt(v * rate)) : commaDec(v);
   };
   var fmtSub2 = function(v) {
-    var vf = v * feeK;
-    return (isJpy) ? ('<span class="td-yen">$' + commaDec(vf) + '</span>')
-                   : ('<span class="td-yen">' + fmtJPY(vf, rate) + '</span>');
+    return (isJpy) ? ('<span class="td-yen">$' + commaDec(v) + '</span>')
+                   : ('<span class="td-yen">' + fmtJPY(v, rate) + '</span>');
   };
   for (var i = 0; i < displayRows.length; i++) {
     var row = displayRows[i];
@@ -5052,6 +5097,228 @@ function renderNewsCards(items) {
   }).join('');
 }
 
+// ===== 言語切替 =====
+var LANGS = ['ja','en','es','zh','ko'];
+var LANG_LABELS = { ja:'日本語', en:'English', es:'Español', zh:'中文', ko:'한국어' };
+var gLang = 'ja';
+
+var i18n = {
+  ja: {
+    tab0:'1. シミュレーター', tab1:'2. ニュース', tab2:'3. 資料・リンク集',
+    simMode_usd:'$ ドル表示（USD）', simMode_jpy:'¥ 円表示（JPY）',
+    btnSim:'▶ シミュレーション実行',
+    rateUpdate:'更新',
+    planLabel:'②プランを選択',
+    principalLabel:'①黄色の枠内へ金額を入力',
+    detailLabel:'▼ 詳細設定（運用日数・年利・出金手数料・再投資）',
+    days:'運用日数（日）', rate:'年利（%）', fee:'出金手数料（%）', threshold:'再投資額（$）',
+    ms0:'1ヶ月後', ms1:'3ヶ月後', ms2:'6ヶ月後', ms3:'1年後', ms4:'1年半後', ms5:'2年後', ms6:'3年後',
+    chartTitle:'残高推移グラフ',
+    chartHint:'（グラフに触れると金額表示）',
+    tableTitle:'日別明細',
+    tableBadge:'再投資日は緑色',
+    thDay:'日', thDate:'日付',
+    docs0:'📚 書籍', docs1:'❓ 雑学', docs2:'📄 マニュアル', docs3:'🔗 リンク集',
+    news0:'暗号資産', news1:'為替・株式・商品', news2:'bitradeX公式',
+  },
+  en: {
+    tab0:'1. Simulator', tab1:'2. News', tab2:'3. Resources',
+    simMode_usd:'$ USD Display', simMode_jpy:'¥ JPY Display',
+    btnSim:'▶ Run Simulation',
+    rateUpdate:'Refresh',
+    planLabel:'② Select Plan',
+    principalLabel:'① Enter amount in the yellow box',
+    detailLabel:'▼ Advanced Settings',
+    days:'Days', rate:'Annual Rate (%)', fee:'Withdrawal Fee (%)', threshold:'Reinvest Threshold ($)',
+    ms0:'1 Month', ms1:'3 Months', ms2:'6 Months', ms3:'1 Year', ms4:'18 Months', ms5:'2 Years', ms6:'3 Years',
+    chartTitle:'Balance Chart',
+    chartHint:'(Tap chart for values)',
+    tableTitle:'Daily Details',
+    tableBadge:'Green = Reinvest Day',
+    thDay:'Day', thDate:'Date',
+    docs0:'📚 Books', docs1:'❓ Trivia', docs2:'📄 Manual', docs3:'🔗 Links',
+    news0:'Crypto', news1:'FX / Stocks', news2:'bitradeX Official',
+  },
+  es: {
+    tab0:'1. Simulador', tab1:'2. Noticias', tab2:'3. Recursos',
+    simMode_usd:'$ Mostrar USD', simMode_jpy:'¥ Mostrar JPY',
+    btnSim:'▶ Ejecutar Simulación',
+    rateUpdate:'Actualizar',
+    planLabel:'② Seleccionar Plan',
+    principalLabel:'① Ingrese el monto',
+    detailLabel:'▼ Configuración Avanzada',
+    days:'Días', rate:'Tasa Anual (%)', fee:'Comisión de Retiro (%)', threshold:'Umbral de Reinversión ($)',
+    ms0:'1 Mes', ms1:'3 Meses', ms2:'6 Meses', ms3:'1 Año', ms4:'18 Meses', ms5:'2 Años', ms6:'3 Años',
+    chartTitle:'Gráfico de Saldo',
+    chartHint:'(Toque para ver valores)',
+    tableTitle:'Detalles Diarios',
+    tableBadge:'Verde = Día de Reinversión',
+    thDay:'Día', thDate:'Fecha',
+    docs0:'📚 Libros', docs1:'❓ Trivia', docs2:'📄 Manual', docs3:'🔗 Enlaces',
+    news0:'Cripto', news1:'FX / Acciones', news2:'bitradeX Oficial',
+  },
+  zh: {
+    tab0:'1. 模拟器', tab1:'2. 新闻', tab2:'3. 资料',
+    simMode_usd:'$ 美元显示', simMode_jpy:'¥ 日元显示',
+    btnSim:'▶ 运行模拟',
+    rateUpdate:'刷新',
+    planLabel:'② 选择方案',
+    principalLabel:'① 请在黄色框内输入金额',
+    detailLabel:'▼ 高级设置',
+    days:'天数', rate:'年利率（%）', fee:'提现手续费（%）', threshold:'复投阈值（$）',
+    ms0:'1个月', ms1:'3个月', ms2:'6个月', ms3:'1年', ms4:'1年半', ms5:'2年', ms6:'3年',
+    chartTitle:'余额走势图',
+    chartHint:'（触摸图表查看金额）',
+    tableTitle:'每日明细',
+    tableBadge:'绿色 = 复投日',
+    thDay:'日', thDate:'日期',
+    docs0:'📚 书籍', docs1:'❓ 杂学', docs2:'📄 手册', docs3:'🔗 链接',
+    news0:'加密货币', news1:'外汇/股市', news2:'bitradeX官方',
+  },
+  ko: {
+    tab0:'1. 시뮬레이터', tab1:'2. 뉴스', tab2:'3. 자료',
+    simMode_usd:'$ USD 표시', simMode_jpy:'¥ JPY 표시',
+    btnSim:'▶ 시뮬레이션 실행',
+    rateUpdate:'갱신',
+    planLabel:'② 플랜 선택',
+    principalLabel:'① 노란 박스에 금액 입력',
+    detailLabel:'▼ 상세 설정',
+    days:'운용 일수', rate:'연이율（%）', fee:'출금 수수료（%）', threshold:'재투자 기준액（$）',
+    ms0:'1개월 후', ms1:'3개월 후', ms2:'6개월 후', ms3:'1년 후', ms4:'1년 반', ms5:'2년 후', ms6:'3년 후',
+    chartTitle:'잔고 추이 그래프',
+    chartHint:'（그래프를 터치하면 금액 표시）',
+    tableTitle:'일별 명세',
+    tableBadge:'녹색 = 재투자일',
+    thDay:'일', thDate:'날짜',
+    docs0:'📚 도서', docs1:'❓ 잡학', docs2:'📄 매뉴얼', docs3:'🔗 링크',
+    news0:'암호화폐', news1:'환율/주식', news2:'bitradeX 공식',
+  }
+};
+
+function cycleLang() {
+  var idx = LANGS.indexOf(gLang);
+  gLang = LANGS[(idx + 1) % LANGS.length];
+  applyLang(gLang);
+  try { localStorage.setItem('sim_lang', gLang); } catch(e) {}
+}
+
+function applyLang(lang) {
+  var t = i18n[lang] || i18n.ja;
+  gLang = lang;
+  var lb = document.getElementById('langLabel');
+  if (lb) lb.textContent = LANG_LABELS[lang] || lang;
+  function setText(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
+  function setHTML(id, v) { var el = document.getElementById(id); if (el) el.innerHTML = v; }
+  function setAttr(id, attr, v) { var el = document.getElementById(id); if (el) el.setAttribute(attr, v); }
+  // タブ
+  setText('tabBtn-0', t.tab0);
+  setText('tabBtn-1', t.tab1);
+  setText('tabBtn-2', t.tab2);
+  // シミュレーターモードボタン
+  setText('simModeBtn-usd', t.simMode_usd);
+  setText('simModeBtn-jpy', t.simMode_jpy);
+  // 為替レート更新ボタン
+  var rb = document.querySelector('.rate-btn');
+  if (rb) rb.textContent = t.rateUpdate;
+  // 実行ボタン
+  var sb = document.querySelector('.btn');
+  if (sb) sb.textContent = t.btnSim;
+  // ラベル
+  setText('docsBtn-0', t.docs0);
+  setText('docsBtn-1', t.docs1);
+  setText('docsBtn-2', t.docs2);
+  setText('docsBtn-3', t.docs3);
+  setText('nstBtn-0', t.news0);
+  setText('nstBtn-1', t.news1);
+  setText('nstBtn-2', t.news2);
+  // テーブルヘッダー
+  setText('thDate', t.thDate);
+  // マイルストーンラベルを更新（次回描画時に反映）
+  document.documentElement.lang = lang;
+}
+
+// ===== セクション並び替え =====
+var CARD_ORDER_KEY = 'sim_card_order';
+var CARD_IDS = ['milestoneCard','chartCard','tableCard'];
+var dragSrcId = null;
+
+function getSavedCardOrder() {
+  try {
+    var saved = JSON.parse(localStorage.getItem(CARD_ORDER_KEY) || 'null');
+    if (saved && saved.length === 3 && saved.every(function(id) { return CARD_IDS.indexOf(id) >= 0; })) return saved;
+  } catch(e) {}
+  return CARD_IDS.slice();
+}
+
+function saveCardOrder() {
+  var section = document.getElementById('simResultsSection');
+  if (!section) return;
+  var order = [];
+  CARD_IDS.forEach(function(id) {
+    if (document.getElementById(id)) {
+      var el = document.getElementById(id);
+      order.push({ id: id, idx: Array.prototype.indexOf.call(section.children, el) });
+    }
+  });
+  order.sort(function(a,b) { return a.idx - b.idx; });
+  var ids = order.map(function(o) { return o.id; });
+  try { localStorage.setItem(CARD_ORDER_KEY, JSON.stringify(ids)); } catch(e) {}
+}
+
+function restoreCardOrder() {
+  var order = getSavedCardOrder();
+  var section = document.getElementById('simResultsSection');
+  if (!section) return;
+  order.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) section.appendChild(el);
+  });
+}
+
+function moveCard(cardId, dir) {
+  var section = document.getElementById('simResultsSection');
+  if (!section) return;
+  var cards = Array.prototype.slice.call(section.children).filter(function(el) {
+    return CARD_IDS.indexOf(el.id) >= 0;
+  });
+  var idx = -1; for (var ci=0;ci<cards.length;ci++) { if (cards[ci].id===cardId){ idx=ci; break; } }
+  var target = idx + dir;
+  if (target < 0 || target >= cards.length) return;
+  var el = cards[idx];
+  var ref = cards[target];
+  if (dir < 0) section.insertBefore(el, ref);
+  else section.insertBefore(ref, el);
+  saveCardOrder();
+}
+
+function cardDragStart(e, id) {
+  dragSrcId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', id);
+  e.currentTarget.style.opacity = '0.5';
+  e.currentTarget.ondragend = function() { e.currentTarget.style.opacity = ''; };
+}
+function cardDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+function cardDrop(e, targetId) {
+  e.preventDefault();
+  var srcId = dragSrcId || e.dataTransfer.getData('text/plain');
+  if (!srcId || srcId === targetId) {
+    document.querySelectorAll('#simResultsSection .card').forEach(function(c) { c.style.opacity = ''; });
+    return;
+  }
+  var section = document.getElementById('simResultsSection');
+  var src = document.getElementById(srcId);
+  var tgt = document.getElementById(targetId);
+  if (!src || !tgt || !section) return;
+  var srcIdx = Array.prototype.indexOf.call(section.children, src);
+  var tgtIdx = Array.prototype.indexOf.call(section.children, tgt);
+  if (srcIdx < tgtIdx) section.insertBefore(src, tgt.nextSibling);
+  else section.insertBefore(src, tgt);
+  document.querySelectorAll('#simResultsSection .card').forEach(function(c) { c.style.opacity = ''; });
+  dragSrcId = null;
+  saveCardOrder();
+}
+
 // ===== 起動 =====
 window.onload = function() {
   // ダークモード復元（<body>直後で class は適用済み、ここでは変数とUIだけ同期）
@@ -5090,6 +5357,14 @@ window.onload = function() {
       document.getElementById('rateDate').textContent  = '前回取得値';
     }
   } catch(e) {}
+
+  // 言語復元
+  try {
+    var savedLang = localStorage.getItem('sim_lang');
+    if (savedLang && LANGS.indexOf(savedLang) >= 0) applyLang(savedLang);
+  } catch(e) {}
+  // カード順序復元
+  restoreCardOrder();
 
   updatePresetLabels();
   updatePrincipalYen(); // updateAutoFee()も内部で呼ばれる
