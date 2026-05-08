@@ -606,18 +606,18 @@
     .calc-open-btn:hover { box-shadow:0 3px 12px rgba(184,134,11,0.25); border-color:var(--accent); }
     .calc-open-btn:active { transform:scale(0.95); }
     /* ===== 言語ボタン ===== */
-    .lang-btn {
-      height:34px; padding:0 8px; min-width:34px;
-      border-radius:17px; border:1.5px solid var(--border);
-      cursor:pointer; outline:none; font-size:0.68rem; font-weight:700;
+    .lang-select {
+      height:34px; padding:0 6px; border-radius:17px;
+      border:1.5px solid var(--border); cursor:pointer; outline:none;
+      font-size:0.68rem; font-weight:700;
       background:var(--white); color:var(--text);
-      transition:background 0.2s,color 0.2s,border-color 0.2s,box-shadow 0.2s;
-      display:flex; align-items:center; justify-content:center; gap:3px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.08); flex-shrink:0; white-space:nowrap;
-      letter-spacing:0.04em;
+      box-shadow:0 2px 8px rgba(0,0,0,0.08); flex-shrink:0;
+      -webkit-appearance:none; appearance:none;
+      text-align:center; font-family:'Noto Sans JP',sans-serif;
+      transition:border-color 0.2s,box-shadow 0.2s;
     }
-    .lang-btn:hover { box-shadow:0 3px 12px rgba(58,130,196,0.25); border-color:#3a82c4; }
-    .lang-btn:active { transform:scale(0.95); }
+    .lang-select:hover { box-shadow:0 3px 12px rgba(58,130,196,0.25); border-color:#3a82c4; }
+    body.dark .lang-select { background:var(--white); color:var(--text); color-scheme:dark; }
     /* ===== セクション並び替えボタン ===== */
     .sort-handle {
       display:inline-flex; align-items:center; gap:2px; margin-left:auto;
@@ -1056,7 +1056,13 @@
   <div class="title-row">
     <h1>投資シミュレーター<span class="site-subtitle">INVESTMENT SIMULATOR</span></h1>
     <div class="theme-row">
-      <button class="lang-btn" id="langBtn" onclick="cycleLang()" title="言語切替">🌐 <span id="langLabel">日本語</span></button>
+      <select id="langSelect" class="lang-select" onchange="changeLang(this.value)" title="言語切替">
+        <option value="ja">🌐 日本語</option>
+        <option value="en">🌐 English</option>
+        <option value="es">🌐 Español</option>
+        <option value="zh">🌐 中文</option>
+        <option value="ko">🌐 한국어</option>
+      </select>
       <button class="calc-open-btn" type="button" onclick="openCalc()" title="計算機">🧮</button>
       <button class="dark-btn" id="darkBtn" onclick="toggleDark()">🌙</button>
     </div>
@@ -1106,8 +1112,8 @@
       </div>
       <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;padding-left:1em">
         <span class="rate-num" id="rateNum">---</span>
-        <span class="rate-unit">円 / ドル</span>
-        <span style="font-size:0.68rem;color:#d32f2f;font-weight:600">※非表示の場合は「更新」ボタンを押す</span>
+        <span class="rate-unit" id="rateUnit">円 / ドル</span>
+        <span id="rateHint" style="font-size:0.68rem;color:#d32f2f;font-weight:600">※非表示の場合は「更新」ボタンを押す</span>
       </div>
     </div>
     <button class="rate-btn" onclick="fetchRate()" style="padding:15px 18px;font-size:0.88rem;font-weight:700;flex-shrink:0;line-height:1">更新</button>
@@ -1127,7 +1133,7 @@
 
   <!-- プランセレクター（詳細設定の直上） -->
   <div style="margin-top:12px;margin-bottom:8px;padding-left:1em">
-    <label style="display:block;margin-bottom:6px"><span class="step-badge">②プランを選択</span></label>
+    <label style="display:block;margin-bottom:6px"><span class="step-badge" id="planLabel">②プランを選択</span></label>
     <select id="planSelect" class="plan-select" onchange="applyPlan(this.value)">
       <option value="360d" selected>bitradex AI 360D（年利182.5% / 365日）</option>
       <option value="180d">bitradex AI 180D（年利127.75% / 180日）</option>
@@ -1140,13 +1146,13 @@
 
   <!-- 詳細設定（折りたたみ） -->
   <div class="acc-header" id="detailAccHeader" onclick="toggleAcc(this)" style="padding:8px 0 6px;border-top:1px solid var(--border)">
-    <span style="font-size:0.78rem;font-weight:700;color:var(--muted)">⚙ 詳細設定（運用日数・年利・出金手数料・再投資）</span>
+    <span id="detailAccLabel" style="font-size:0.78rem;font-weight:700;color:var(--muted)">⚙ 詳細設定（運用日数・年利・出金手数料・再投資）</span>
     <span class="acc-arrow">▼</span>
   </div>
   <div class="acc-body" id="detailAccBody">
     <div class="input-grid" style="margin-top:10px;margin-bottom:10px">
       <div class="input-group">
-        <label>運用日数（日）</label>
+        <label id="labelDays">運用日数（日）</label>
         <input type="number" id="days" value="365" min="1" step="1" />
       </div>
       <div class="input-group">
@@ -1164,14 +1170,14 @@
     </div>
   </div>
 
-  <button class="btn" onclick="simulate(true)">③ シミュレーション実行</button>
-  <div style="font-size:0.65rem;color:var(--muted);margin-top:5px;text-align:left">※設定額以上で累積利益を全額元本へ追加</div>
+  <button class="btn" id="simRunBtn" onclick="simulate(true)">③ シミュレーション実行</button>
+  <div id="simFootnote" style="font-size:0.65rem;color:var(--muted);margin-top:5px;text-align:left">※設定額以上で累積利益を全額元本へ追加</div>
 </div>
 
 <!-- 投資条件サマリー枠 -->
 <div id="simSummaryBox" class="hidden" style="border:1.5px solid #3a82c4;border-left:5px solid #3a82c4;border-radius:0;background:#fff;overflow:hidden;margin-bottom:14px">
   <div style="padding:10px 16px 12px">
-    <div style="font-size:0.72rem;font-weight:800;color:#3a82c4;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">運用シミュレーション対象</div>
+    <div id="simSummaryHeader" style="font-size:0.72rem;font-weight:800;color:#3a82c4;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">運用シミュレーション対象</div>
     <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.1">
       <span id="simSummaryAmt" style="font-size:1.9rem;font-weight:900;color:#3a82c4;letter-spacing:-0.03em"></span>
       <span id="simSummarySub" style="font-size:0.82rem;font-weight:600;color:#3a82c4;opacity:0.65"></span>
@@ -1186,7 +1192,7 @@
     <div class="card-title" style="justify-content:space-between;align-items:center">
       <div style="display:flex;align-items:center;gap:6px">
         <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
-        期間別シミュレーション
+        <span id="cardTitleMilestone" data-i18n="cardMilestone">期間別シミュレーション</span>
       </div>
       <div class="sort-handle">
         <button class="sort-arrow" onclick="moveCard('milestoneCard',-1)" title="上へ">▲</button>
@@ -1201,7 +1207,7 @@
     <div class="card-title" style="justify-content:space-between;align-items:center">
       <div style="display:flex;align-items:center;gap:6px">
         <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📉</span>
-        残高推移グラフ
+        <span id="cardTitleChart">残高推移グラフ</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px">
         <select id="chartPeriodSel" onchange="changeChartPeriod(this.value)"
@@ -1216,7 +1222,7 @@
         </div>
       </div>
     </div>
-    <div style="font-size:0.7rem;color:var(--muted);margin:-8px 0 10px 6px">（グラフに触れると金額表示）</div>
+    <div id="chartHint" style="font-size:0.7rem;color:var(--muted);margin:-8px 0 10px 6px">（グラフに触れると金額表示）</div>
     <div class="chart-wrap">
       <canvas id="chart" height="270"></canvas>
       <div class="chart-tooltip" id="chartTooltip"></div>
@@ -1229,8 +1235,8 @@
     <div class="card-title" style="justify-content:space-between;align-items:center">
       <div style="display:flex;align-items:center;gap:6px">
         <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📋</span>
-        日別明細
-        <span class="badge badge-sub">再投資日は緑色</span>
+        <span id="cardTitleTable">日別明細</span>
+        <span class="badge badge-sub" id="tableBadge">再投資日は緑色</span>
       </div>
       <div class="sort-handle">
         <button class="sort-arrow" onclick="moveCard('tableCard',-1)" title="上へ">▲</button>
@@ -2998,7 +3004,8 @@ function runSimulation(principal, days, annualRate, feePercent, threshold) {
     var interest = d <= 1 ? 0 : p * dailyRate;
     pending += interest;
     var didReinvest = false;
-    if (pending >= threshold) {
+    // 閾値比較は出金手数料適用後の表示値と同じ基準で行う
+    if (pending * (1 - feeRate) >= threshold) {
       p          += pending;
       totalReinv += pending;
       pending     = 0;
@@ -3535,14 +3542,15 @@ var milestoneParams = null;
 var milestoneList = [];
 
 function renderMilestones(principal, annualRate, fee, threshold, jpyRate, startDate) {
+  var ms = (i18n[gLang] || i18n.ja).ms;
   milestoneList = [
-    { label:'1ヶ月後', date:addMonths(startDate,1),  color:'#f59e0b', dColor:'#fcd34d' },
-    { label:'3ヶ月後', date:addMonths(startDate,3),  color:'#0fb981', dColor:'#34d399' },
-    { label:'6ヶ月後', date:addMonths(startDate,6),  color:'#4f6ef7', dColor:'#60a5fa' },
-    { label:'1年後',   date:addMonths(startDate,12), color:'#9b5cf6', dColor:'#a78bfa' },
-    { label:'1年半後', date:addMonths(startDate,18), color:'#e04080', dColor:'#f472b6' },
-    { label:'2年後',   date:addMonths(startDate,24), color:'#c9902a', dColor:'#e8b84b' },
-    { label:'3年後',   date:addMonths(startDate,36), color:'#e53e3e', dColor:'#fc8181' }
+    { label:ms[0], date:addMonths(startDate,1),  color:'#f59e0b', dColor:'#fcd34d' },
+    { label:ms[1], date:addMonths(startDate,3),  color:'#0fb981', dColor:'#34d399' },
+    { label:ms[2], date:addMonths(startDate,6),  color:'#4f6ef7', dColor:'#60a5fa' },
+    { label:ms[3], date:addMonths(startDate,12), color:'#9b5cf6', dColor:'#a78bfa' },
+    { label:ms[4], date:addMonths(startDate,18), color:'#e04080', dColor:'#f472b6' },
+    { label:ms[5], date:addMonths(startDate,24), color:'#c9902a', dColor:'#e8b84b' },
+    { label:ms[6], date:addMonths(startDate,36), color:'#e53e3e', dColor:'#fc8181' }
   ];
   milestoneParams = { principal:principal, annualRate:annualRate, fee:fee, jpyRate:jpyRate, startDate:startDate };
   milestoneIdx = 0;
@@ -3594,8 +3602,8 @@ function renderMilestonePage() {
         '<div style="font-size:0.78rem;font-weight:700;background:' + mc + ';color:#fff;padding:4px 12px;border-radius:20px">' + days + '日後</div>' +
       '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr">' +
-        msCell('単利', simpV, (simpV/p.principal-1)*100, p.jpyRate, mc, div, true, false, p.principal) +
-        msCell('複利（日次）', compV, (compV/p.principal-1)*100, p.jpyRate, mc, div, false, true, p.principal) +
+        msCell((i18n[gLang]||i18n.ja).simple, simpV, (simpV/p.principal-1)*100, p.jpyRate, mc, div, true, false, p.principal) +
+        msCell((i18n[gLang]||i18n.ja).compound, compV, (compV/p.principal-1)*100, p.jpyRate, mc, div, false, true, p.principal) +
       '</div>' +
       '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-top:1px solid ' + div + '">' +
         prevBtn +
@@ -3627,10 +3635,10 @@ function msCell(label, value, pct, jpyRate, color, divColor, hasBorder, useAccen
   var profitSub = isJpy ? (profitSign + fmtUSD(profit)) : (profitSign + fmtJPY(profit, jpyRate));
   return '<div style="padding:10px 8px;' + border + 'min-width:0;overflow:hidden;">' +
     '<div style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;color:var(--muted);margin-bottom:6px">' + label + '</div>' +
-    '<div style="font-size:0.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">💰 利益額</div>' +
+    '<div style="font-size:0.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">💰 ' + (i18n[gLang]||i18n.ja).profit + '</div>' +
     '<div class="ms-profit" style="font-size:1.35rem;font-weight:900;color:' + color + ';letter-spacing:-0.03em;line-height:1.1">' + profitMain + '</div>' +
     '<div style="font-size:0.68rem;color:var(--muted);margin-top:2px;margin-bottom:8px">' + profitSub + '</div>' +
-    '<div style="font-size:0.62rem;color:var(--muted);margin-bottom:2px;letter-spacing:0.04em;font-weight:700;text-transform:uppercase">最終残高</div>' +
+    '<div style="font-size:0.62rem;color:var(--muted);margin-bottom:2px;letter-spacing:0.04em;font-weight:700;text-transform:uppercase">' + (i18n[gLang]||i18n.ja).finalBal + '</div>' +
     '<div class="ms-balance" style="font-size:1.5rem;font-weight:900;color:var(--accent);letter-spacing:-0.02em;border:2px solid ' + color + ';border-radius:8px;padding:5px 12px;display:inline-block;margin-top:4px">' + total + '</div>' +
     '<div style="font-size:0.65rem;color:var(--muted);margin-top:3px;margin-bottom:6px">' + totalSub + '</div>' +
     '<div style="display:inline-block;font-size:0.76rem;font-weight:700;padding:2px 9px;border-radius:20px;background:' + pBg + ';color:' + color + '">' + arrow + fmtPct(pct) + '</div>' +
@@ -3670,7 +3678,7 @@ function renderTable(rows, full, jpyRate) {
   } else {
     displayRows = rows.slice(0,20).concat([null]).concat(rows.slice(-5));
     btn.classList.remove('hidden');
-    btn.textContent = '▼ 全 ' + rows.length + ' 日を表示';
+    btn.textContent = ((i18n[gLang]||i18n.ja).showMore||'▼ 全 %d 日を表示').replace('%d', rows.length);
   }
 
   // 出金手数料は収益（利益）部分のみに適用。元本は手数料対象外。
@@ -3692,14 +3700,15 @@ function renderTable(rows, full, jpyRate) {
     return (isJpy) ? ('<span class="td-yen">$' + commaDec(vf) + '</span>')
                    : ('<span class="td-yen">' + fmtJPY(vf, rate) + '</span>');
   };
-  // 日利・累積利益は出金時まで手数料不要（再投資中は内部計算のまま表示）
-  // ※手数料は出金時のみ適用。閾値100ドル設定時、100ドル到達で再投資（緑）が正しい動作
+  // 日利・累積利益は出金手数料適用後の受取額を表示（閾値比較と一致させる）
   var fmtMain = function(v) {
-    return (isJpy && rate > 0) ? ('¥' + commaInt(v * rate)) : commaDec(v);
+    var vf = v * feeK;
+    return (isJpy && rate > 0) ? ('¥' + commaInt(vf * rate)) : commaDec(vf);
   };
   var fmtSub2 = function(v) {
-    return (isJpy) ? ('<span class="td-yen">$' + commaDec(v) + '</span>')
-                   : ('<span class="td-yen">' + fmtJPY(v, rate) + '</span>');
+    var vf = v * feeK;
+    return (isJpy) ? ('<span class="td-yen">$' + commaDec(vf) + '</span>')
+                   : ('<span class="td-yen">' + fmtJPY(vf, rate) + '</span>');
   };
   for (var i = 0; i < displayRows.length; i++) {
     var row = displayRows[i];
@@ -3724,7 +3733,8 @@ function toggleFullTable() {
   fullTableVisible = !fullTableVisible;
   renderTable(lastRows, fullTableVisible);
   var btn = document.getElementById('showMoreBtn');
-  btn.textContent = fullTableVisible ? '▲ 折りたたむ' : '▼ 全 ' + lastRows.length + ' 日を表示';
+  var lt = i18n[gLang]||i18n.ja;
+  btn.textContent = fullTableVisible ? (lt.showLess||'▲ 折りたたむ') : (lt.showMore||'▼ 全 %d 日を表示').replace('%d', lastRows.length);
   btn.classList.remove('hidden');
 }
 
@@ -3773,9 +3783,10 @@ function drawChart(principal, annualRate, fee, days, jpyRate) {
 
   // 凡例更新
   var tc = getTC();
+  var langT = i18n[gLang] || i18n.ja;
   document.getElementById('chartLegend').innerHTML =
-    '<div class="legend-item"><div class="legend-line" style="background:' + tc.comp + '"></div>複利（日次）</div>' +
-    '<div class="legend-item"><div class="legend-line" style="height:2px;border-top:2px dashed ' + tc.simple + ';background:none;width:18px"></div>単利</div>';
+    '<div class="legend-item"><div class="legend-line" style="background:' + tc.comp + '"></div>' + langT.compound + '</div>' +
+    '<div class="legend-item"><div class="legend-line" style="height:2px;border-top:2px dashed ' + tc.simple + ';background:none;width:18px"></div>' + langT.simple + '</div>';
 
   drawChartBase(ctx, W, -1);
   setupChartEvents(canvas, ctx, W);
@@ -5099,142 +5110,235 @@ function renderNewsCards(items) {
 
 // ===== 言語切替 =====
 var LANGS = ['ja','en','es','zh','ko'];
-var LANG_LABELS = { ja:'日本語', en:'English', es:'Español', zh:'中文', ko:'한국어' };
 var gLang = 'ja';
 
 var i18n = {
   ja: {
     tab0:'1. シミュレーター', tab1:'2. ニュース', tab2:'3. 資料・リンク集',
     simMode_usd:'$ ドル表示（USD）', simMode_jpy:'¥ 円表示（JPY）',
-    btnSim:'▶ シミュレーション実行',
-    rateUpdate:'更新',
+    btnSim:'③ シミュレーション実行',
+    rateUpdate:'更新', rateUnit:'円 / ドル',
+    rateHint:'※非表示の場合は「更新」ボタンを押す',
     planLabel:'②プランを選択',
     principalLabel:'①黄色の枠内へ金額を入力',
-    detailLabel:'▼ 詳細設定（運用日数・年利・出金手数料・再投資）',
-    days:'運用日数（日）', rate:'年利（%）', fee:'出金手数料（%）', threshold:'再投資額（$）',
-    ms0:'1ヶ月後', ms1:'3ヶ月後', ms2:'6ヶ月後', ms3:'1年後', ms4:'1年半後', ms5:'2年後', ms6:'3年後',
-    chartTitle:'残高推移グラフ',
+    detailLabel:'⚙ 詳細設定（運用日数・年利・出金手数料・再投資）',
+    labelDays:'運用日数（日）', labelRate:'年利（%）',
+    labelFee:'出金手数料（%）', labelThreshold:'再投資額（$）',
+    simFootnote:'※設定額以上で累積利益を全額元本へ追加',
+    simSummaryHeader:'運用シミュレーション対象',
+    cardMilestone:'期間別シミュレーション', cardChart:'残高推移グラフ', cardTable:'日別明細',
     chartHint:'（グラフに触れると金額表示）',
-    tableTitle:'日別明細',
-    tableBadge:'再投資日は緑色',
-    thDay:'日', thDate:'日付',
+    tableBadge:'再投資日は緑色', thDate:'日付',
+    simple:'単利', compound:'複利（日次）',
+    profit:'利益額', finalBal:'最終残高',
+    daysAfter:'日後', prevBtn:'◀', nextBtn:'▶',
+    ms:['1ヶ月後','3ヶ月後','6ヶ月後','1年後','1年半後','2年後','3年後'],
+    showMore:'▼ 全 %d 日を表示', showLess:'▲ 折りたたむ',
     docs0:'📚 書籍', docs1:'❓ 雑学', docs2:'📄 マニュアル', docs3:'🔗 リンク集',
     news0:'暗号資産', news1:'為替・株式・商品', news2:'bitradeX公式',
+    plan360:'bitradex AI 360D（年利182.5% / 365日）',
+    plan180:'bitradex AI 180D（年利127.75% / 180日）',
+    plan90:'bitradex AI 90D（年利109.5% / 90日）',
+    plan30:'bitradex AI 30D（年利31.5% / 30日）',
+    planDaily:'bitradex AI Daily（年利91.25% / 365日）',
+    planNo:'No Plan（手動で設定）',
   },
   en: {
     tab0:'1. Simulator', tab1:'2. News', tab2:'3. Resources',
     simMode_usd:'$ USD Display', simMode_jpy:'¥ JPY Display',
-    btnSim:'▶ Run Simulation',
-    rateUpdate:'Refresh',
+    btnSim:'③ Run Simulation',
+    rateUpdate:'Refresh', rateUnit:'JPY / USD',
+    rateHint:'※ If blank, press "Refresh"',
     planLabel:'② Select Plan',
     principalLabel:'① Enter amount in the yellow box',
-    detailLabel:'▼ Advanced Settings',
-    days:'Days', rate:'Annual Rate (%)', fee:'Withdrawal Fee (%)', threshold:'Reinvest Threshold ($)',
-    ms0:'1 Month', ms1:'3 Months', ms2:'6 Months', ms3:'1 Year', ms4:'18 Months', ms5:'2 Years', ms6:'3 Years',
-    chartTitle:'Balance Chart',
-    chartHint:'(Tap chart for values)',
-    tableTitle:'Daily Details',
-    tableBadge:'Green = Reinvest Day',
-    thDay:'Day', thDate:'Date',
+    detailLabel:'⚙ Advanced Settings',
+    labelDays:'Days', labelRate:'Annual Rate (%)',
+    labelFee:'Withdrawal Fee (%)', labelThreshold:'Reinvest Threshold ($)',
+    simFootnote:'※ Reinvests all accumulated profit when threshold is reached',
+    simSummaryHeader:'SIMULATION TARGET',
+    cardMilestone:'Period Simulation', cardChart:'Balance Chart', cardTable:'Daily Details',
+    chartHint:'(Tap chart to show values)',
+    tableBadge:'Green = Reinvest Day', thDate:'Date',
+    simple:'Simple', compound:'Compound (Daily)',
+    profit:'Profit', finalBal:'Final Balance',
+    daysAfter:' days later', prevBtn:'◀', nextBtn:'▶',
+    ms:['1 Month','3 Months','6 Months','1 Year','18 Months','2 Years','3 Years'],
+    showMore:'▼ Show all %d days', showLess:'▲ Collapse',
     docs0:'📚 Books', docs1:'❓ Trivia', docs2:'📄 Manual', docs3:'🔗 Links',
-    news0:'Crypto', news1:'FX / Stocks', news2:'bitradeX Official',
+    news0:'Crypto', news1:'FX / Stocks / Commodities', news2:'bitradeX Official',
+    plan360:'bitradex AI 360D (182.5% p.a. / 365 days)',
+    plan180:'bitradex AI 180D (127.75% p.a. / 180 days)',
+    plan90:'bitradex AI 90D (109.5% p.a. / 90 days)',
+    plan30:'bitradex AI 30D (31.5% p.a. / 30 days)',
+    planDaily:'bitradex AI Daily (91.25% p.a. / 365 days)',
+    planNo:'No Plan (manual settings)',
   },
   es: {
     tab0:'1. Simulador', tab1:'2. Noticias', tab2:'3. Recursos',
     simMode_usd:'$ Mostrar USD', simMode_jpy:'¥ Mostrar JPY',
-    btnSim:'▶ Ejecutar Simulación',
-    rateUpdate:'Actualizar',
+    btnSim:'③ Ejecutar Simulación',
+    rateUpdate:'Actualizar', rateUnit:'JPY / USD',
+    rateHint:'※ Si no aparece, presione "Actualizar"',
     planLabel:'② Seleccionar Plan',
-    principalLabel:'① Ingrese el monto',
-    detailLabel:'▼ Configuración Avanzada',
-    days:'Días', rate:'Tasa Anual (%)', fee:'Comisión de Retiro (%)', threshold:'Umbral de Reinversión ($)',
-    ms0:'1 Mes', ms1:'3 Meses', ms2:'6 Meses', ms3:'1 Año', ms4:'18 Meses', ms5:'2 Años', ms6:'3 Años',
-    chartTitle:'Gráfico de Saldo',
-    chartHint:'(Toque para ver valores)',
-    tableTitle:'Detalles Diarios',
-    tableBadge:'Verde = Día de Reinversión',
-    thDay:'Día', thDate:'Fecha',
-    docs0:'📚 Libros', docs1:'❓ Trivia', docs2:'📄 Manual', docs3:'🔗 Enlaces',
-    news0:'Cripto', news1:'FX / Acciones', news2:'bitradeX Oficial',
+    principalLabel:'① Ingrese el monto en el cuadro amarillo',
+    detailLabel:'⚙ Configuración Avanzada',
+    labelDays:'Días de inversión', labelRate:'Tasa anual (%)',
+    labelFee:'Comisión de retiro (%)', labelThreshold:'Umbral de reinversión ($)',
+    simFootnote:'※ Reinvierte al alcanzar el umbral',
+    simSummaryHeader:'OBJETIVO DE SIMULACIÓN',
+    cardMilestone:'Simulación por Período', cardChart:'Gráfico de Saldo', cardTable:'Detalles Diarios',
+    chartHint:'(Toque el gráfico para ver valores)',
+    tableBadge:'Verde = Día de Reinversión', thDate:'Fecha',
+    simple:'Interés Simple', compound:'Interés Compuesto',
+    profit:'Ganancia', finalBal:'Saldo Final',
+    daysAfter:' días después', prevBtn:'◀', nextBtn:'▶',
+    ms:['1 Mes','3 Meses','6 Meses','1 Año','18 Meses','2 Años','3 Años'],
+    showMore:'▼ Mostrar %d días', showLess:'▲ Contraer',
+    docs0:'📚 Libros', docs1:'❓ Curiosidades', docs2:'📄 Manual', docs3:'🔗 Enlaces',
+    news0:'Criptomonedas', news1:'Divisas / Acciones', news2:'bitradeX Oficial',
+    plan360:'bitradex AI 360D (182.5% anual / 365 días)',
+    plan180:'bitradex AI 180D (127.75% anual / 180 días)',
+    plan90:'bitradex AI 90D (109.5% anual / 90 días)',
+    plan30:'bitradex AI 30D (31.5% anual / 30 días)',
+    planDaily:'bitradex AI Daily (91.25% anual / 365 días)',
+    planNo:'Sin Plan (configuración manual)',
   },
   zh: {
     tab0:'1. 模拟器', tab1:'2. 新闻', tab2:'3. 资料',
     simMode_usd:'$ 美元显示', simMode_jpy:'¥ 日元显示',
-    btnSim:'▶ 运行模拟',
-    rateUpdate:'刷新',
-    planLabel:'② 选择方案',
-    principalLabel:'① 请在黄色框内输入金额',
-    detailLabel:'▼ 高级设置',
-    days:'天数', rate:'年利率（%）', fee:'提现手续费（%）', threshold:'复投阈值（$）',
-    ms0:'1个月', ms1:'3个月', ms2:'6个月', ms3:'1年', ms4:'1年半', ms5:'2年', ms6:'3年',
-    chartTitle:'余额走势图',
+    btnSim:'③ 运行模拟',
+    rateUpdate:'刷新', rateUnit:'日元 / 美元',
+    rateHint:'※ 如未显示，请点击"刷新"',
+    planLabel:'②选择方案',
+    principalLabel:'①请在黄色框内输入金额',
+    detailLabel:'⚙ 高级设置',
+    labelDays:'运用天数', labelRate:'年利率（%）',
+    labelFee:'提现手续费（%）', labelThreshold:'复投阈值（$）',
+    simFootnote:'※达到阈值后将累计利润全部复投',
+    simSummaryHeader:'模拟对象',
+    cardMilestone:'分期模拟', cardChart:'余额走势图', cardTable:'每日明细',
     chartHint:'（触摸图表查看金额）',
-    tableTitle:'每日明细',
-    tableBadge:'绿色 = 复投日',
-    thDay:'日', thDate:'日期',
+    tableBadge:'绿色 = 复投日', thDate:'日期',
+    simple:'单利', compound:'复利（日结）',
+    profit:'收益', finalBal:'最终余额',
+    daysAfter:'天后', prevBtn:'◀', nextBtn:'▶',
+    ms:['1个月','3个月','6个月','1年','1年半','2年','3年'],
+    showMore:'▼ 显示全部 %d 天', showLess:'▲ 收起',
     docs0:'📚 书籍', docs1:'❓ 杂学', docs2:'📄 手册', docs3:'🔗 链接',
     news0:'加密货币', news1:'外汇/股市', news2:'bitradeX官方',
+    plan360:'bitradex AI 360D（年利182.5% / 365天）',
+    plan180:'bitradex AI 180D（年利127.75% / 180天）',
+    plan90:'bitradex AI 90D（年利109.5% / 90天）',
+    plan30:'bitradex AI 30D（年利31.5% / 30天）',
+    planDaily:'bitradex AI Daily（年利91.25% / 365天）',
+    planNo:'无方案（手动设置）',
   },
   ko: {
     tab0:'1. 시뮬레이터', tab1:'2. 뉴스', tab2:'3. 자료',
     simMode_usd:'$ USD 표시', simMode_jpy:'¥ JPY 표시',
-    btnSim:'▶ 시뮬레이션 실행',
-    rateUpdate:'갱신',
-    planLabel:'② 플랜 선택',
-    principalLabel:'① 노란 박스에 금액 입력',
-    detailLabel:'▼ 상세 설정',
-    days:'운용 일수', rate:'연이율（%）', fee:'출금 수수료（%）', threshold:'재투자 기준액（$）',
-    ms0:'1개월 후', ms1:'3개월 후', ms2:'6개월 후', ms3:'1년 후', ms4:'1년 반', ms5:'2년 후', ms6:'3년 후',
-    chartTitle:'잔고 추이 그래프',
+    btnSim:'③ 시뮬레이션 실행',
+    rateUpdate:'갱신', rateUnit:'엔 / 달러',
+    rateHint:'※ 표시되지 않으면 "갱신" 버튼을 누르세요',
+    planLabel:'②플랜 선택',
+    principalLabel:'①노란 박스에 금액 입력',
+    detailLabel:'⚙ 상세 설정',
+    labelDays:'운용 일수（일）', labelRate:'연이율（%）',
+    labelFee:'출금 수수료（%）', labelThreshold:'재투자 기준액（$）',
+    simFootnote:'※기준액 이상이 되면 전액 재투자',
+    simSummaryHeader:'운용 시뮬레이션 대상',
+    cardMilestone:'기간별 시뮬레이션', cardChart:'잔고 추이 그래프', cardTable:'일별 명세',
     chartHint:'（그래프를 터치하면 금액 표시）',
-    tableTitle:'일별 명세',
-    tableBadge:'녹색 = 재투자일',
-    thDay:'일', thDate:'날짜',
+    tableBadge:'녹색 = 재투자일', thDate:'날짜',
+    simple:'단리', compound:'복리（일차）',
+    profit:'수익액', finalBal:'최종 잔고',
+    daysAfter:'일 후', prevBtn:'◀', nextBtn:'▶',
+    ms:['1개월 후','3개월 후','6개월 후','1년 후','1년 반','2년 후','3년 후'],
+    showMore:'▼ 전체 %d 일 표시', showLess:'▲ 접기',
     docs0:'📚 도서', docs1:'❓ 잡학', docs2:'📄 매뉴얼', docs3:'🔗 링크',
-    news0:'암호화폐', news1:'환율/주식', news2:'bitradeX 공식',
+    news0:'암호화폐', news1:'환율/주식/상품', news2:'bitradeX 공식',
+    plan360:'bitradex AI 360D（연이율182.5% / 365일）',
+    plan180:'bitradex AI 180D（연이율127.75% / 180일）',
+    plan90:'bitradex AI 90D（연이율109.5% / 90일）',
+    plan30:'bitradex AI 30D（연이율31.5% / 30일）',
+    planDaily:'bitradex AI Daily（연이율91.25% / 365일）',
+    planNo:'No Plan（수동 설정）',
   }
 };
 
-function cycleLang() {
-  var idx = LANGS.indexOf(gLang);
-  gLang = LANGS[(idx + 1) % LANGS.length];
-  applyLang(gLang);
-  try { localStorage.setItem('sim_lang', gLang); } catch(e) {}
+function changeLang(lang) {
+  if (LANGS.indexOf(lang) < 0) return;
+  applyLang(lang);
+  try { localStorage.setItem('sim_lang', lang); } catch(e) {}
 }
 
 function applyLang(lang) {
   var t = i18n[lang] || i18n.ja;
   gLang = lang;
-  var lb = document.getElementById('langLabel');
-  if (lb) lb.textContent = LANG_LABELS[lang] || lang;
-  function setText(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
-  function setHTML(id, v) { var el = document.getElementById(id); if (el) el.innerHTML = v; }
-  function setAttr(id, attr, v) { var el = document.getElementById(id); if (el) el.setAttribute(attr, v); }
-  // タブ
-  setText('tabBtn-0', t.tab0);
-  setText('tabBtn-1', t.tab1);
-  setText('tabBtn-2', t.tab2);
-  // シミュレーターモードボタン
-  setText('simModeBtn-usd', t.simMode_usd);
-  setText('simModeBtn-jpy', t.simMode_jpy);
-  // 為替レート更新ボタン
-  var rb = document.querySelector('.rate-btn');
-  if (rb) rb.textContent = t.rateUpdate;
-  // 実行ボタン
-  var sb = document.querySelector('.btn');
-  if (sb) sb.textContent = t.btnSim;
-  // ラベル
-  setText('docsBtn-0', t.docs0);
-  setText('docsBtn-1', t.docs1);
-  setText('docsBtn-2', t.docs2);
-  setText('docsBtn-3', t.docs3);
-  setText('nstBtn-0', t.news0);
-  setText('nstBtn-1', t.news1);
-  setText('nstBtn-2', t.news2);
-  // テーブルヘッダー
-  setText('thDate', t.thDate);
-  // マイルストーンラベルを更新（次回描画時に反映）
+  // セレクト同期
+  var sel = document.getElementById('langSelect');
+  if (sel) sel.value = lang;
   document.documentElement.lang = lang;
+
+  function setText(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; }
+  // タブ
+  setText('tabBtn-0', t.tab0); setText('tabBtn-1', t.tab1); setText('tabBtn-2', t.tab2);
+  // シミュレーターモードボタン
+  setText('simModeBtn-usd', t.simMode_usd); setText('simModeBtn-jpy', t.simMode_jpy);
+  // 為替レート
+  var rb = document.querySelector('.rate-btn'); if (rb) rb.textContent = t.rateUpdate;
+  setText('rateUnit', t.rateUnit); setText('rateHint', t.rateHint);
+  // 投資額ラベル
+  var pl = document.getElementById('principalLabel');
+  if (pl) pl.innerHTML = '<span class="step-badge">' + t.principalLabel + '</span>';
+  // プランラベル
+  setText('planLabel', t.planLabel);
+  // プランオプション
+  var ps = document.getElementById('planSelect');
+  if (ps && ps.options.length >= 6) {
+    ps.options[0].text = t.plan360; ps.options[1].text = t.plan180;
+    ps.options[2].text = t.plan90;  ps.options[3].text = t.plan30;
+    ps.options[4].text = t.planDaily; ps.options[5].text = t.planNo;
+  }
+  // 詳細設定アコーディオン
+  setText('detailAccLabel', t.detailLabel);
+  // 入力ラベル
+  setText('labelDays', t.labelDays);
+  // 実行ボタン
+  setText('simRunBtn', t.btnSim);
+  // 注釈
+  setText('simFootnote', t.simFootnote);
+  // サマリーヘッダー
+  setText('simSummaryHeader', t.simSummaryHeader);
+  // カードタイトル
+  setText('cardTitleMilestone', t.cardMilestone);
+  setText('cardTitleChart', t.cardChart);
+  setText('cardTitleTable', t.cardTable);
+  // グラフヒント
+  setText('chartHint', t.chartHint);
+  // テーブル
+  setText('tableBadge', t.tableBadge);
+  setText('thDate', t.thDate);
+  // ドキュメントタブ
+  setText('docsBtn-0', t.docs0); setText('docsBtn-1', t.docs1);
+  setText('docsBtn-2', t.docs2); setText('docsBtn-3', t.docs3);
+  // ニュースサブタブ
+  setText('nstBtn-0', t.news0); setText('nstBtn-1', t.news1); setText('nstBtn-2', t.news2);
+  // グラフ凡例（描画済みなら即更新）
+  var cl = document.getElementById('chartLegend');
+  if (cl && cl.children.length > 0) {
+    var tc2 = getTC();
+    cl.innerHTML =
+      '<div class="legend-item"><div class="legend-line" style="background:'+tc2.comp+'"></div>'+t.compound+'</div>' +
+      '<div class="legend-item"><div class="legend-line" style="height:2px;border-top:2px dashed '+tc2.simple+';background:none;width:18px"></div>'+t.simple+'</div>';
+  }
+  // マイルストーンリスト（描画済みなら再描画）
+  if (milestoneList.length > 0 && t.ms) {
+    var msLabels = t.ms;
+    milestoneList.forEach(function(m, i) { if (msLabels[i]) m.label = msLabels[i]; });
+    renderMilestonePage();
+  }
+  // テーブル（描画済みなら再描画）
+  if (lastRows.length > 0) renderTable(lastRows, fullTableVisible, lastJpyRate);
 }
 
 // ===== セクション並び替え =====
@@ -5361,7 +5465,7 @@ window.onload = function() {
   // 言語復元
   try {
     var savedLang = localStorage.getItem('sim_lang');
-    if (savedLang && LANGS.indexOf(savedLang) >= 0) applyLang(savedLang);
+    if (savedLang && LANGS.indexOf(savedLang) >= 0) changeLang(savedLang);
   } catch(e) {}
   // カード順序復元
   restoreCardOrder();
