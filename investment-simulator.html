@@ -69,8 +69,23 @@
     .title-row {
       display: flex; align-items: center; justify-content: space-between; gap: 10px;
     }
-    h1 { font-size: 1.1rem; font-weight: 900; color: #000; letter-spacing: -0.01em; line-height: 1.15; }
+    h1 {
+      font-size: 1.1rem; font-weight: 900; color: #000;
+      letter-spacing: -0.01em; line-height: 1.15;
+      cursor: pointer; user-select: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: opacity 0.15s;
+    }
+    h1:hover { opacity: 0.72; }
+    h1:active { opacity: 0.5; transform: scale(0.97); }
     body.dark h1 { color: #fff; }
+    .home-icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: #3a82c4; color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(58,130,196,0.35);
+    }
     .site-subtitle { display: block; font-size: 0.58rem; font-weight: 400; color: #0097c7; letter-spacing: 0.14em; margin-top: 1px; }
     .theme-row { flex-shrink:0; display:flex; align-items:center; gap:8px; }
 
@@ -1082,7 +1097,10 @@
 <!-- ヘッダー -->
 <div class="header">
   <div class="title-row">
-    <h1>投資シミュレーター<span class="site-subtitle">INVESTMENT SIMULATOR</span></h1>
+    <h1 onclick="goHome()" title="ホームに戻る">
+      <span class="home-icon">🏠</span>
+      投資シミュレーター<span class="site-subtitle">INVESTMENT SIMULATOR</span>
+    </h1>
     <div class="theme-row">
       <select id="langSelect" class="lang-select" onchange="changeLang(this.value)" title="言語切替">
         <option value="ja">🌐 日本語</option>
@@ -2899,6 +2917,15 @@ function fmtYAxisJPY(v) {
   if (v >= 1000000)   return '¥' + (v / 10000).toFixed(1) + '万';
   if (v >= 10000)     return '¥' + Math.round(v / 10000) + '万';
   return '¥' + commaInt(v);
+}
+
+// ===== ホーム画面へ戻る =====
+function goHome() {
+  if (history.length > 1) {
+    history.back();
+  } else {
+    location.href = './';
+  }
 }
 
 // ===== ダークモードトグル =====
