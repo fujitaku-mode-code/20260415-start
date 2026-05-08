@@ -119,28 +119,52 @@
       display: flex; align-items: center; gap: 6px;
     }
     /* ===== 結果カード：simSummaryBox と同書体・色違い ===== */
-    #milestoneCard { border-left: 5px solid #7c3aed; }
-    #chartCard     { border-left: 5px solid #d97706; }
-    #tableCard     { border-left: 5px solid #0891b2; }
+    #milestoneCard, #chartCard, #tableCard {
+      border-left: none; padding-left: 30px; position: relative;
+    }
     #milestoneCard .card-title {
-      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; color: #7c3aed;
+      font-size: 0.85rem; font-weight: 800; letter-spacing: 0.08em; color: #7c3aed;
     }
     #chartCard .card-title {
-      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; color: #d97706;
+      font-size: 0.85rem; font-weight: 800; letter-spacing: 0.08em; color: #d97706;
     }
     #tableCard .card-title {
-      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; color: #0891b2;
+      font-size: 0.85rem; font-weight: 800; letter-spacing: 0.08em; color: #0891b2;
     }
     #milestoneCard .card-title-icon { background: rgba(124,58,237,0.12) !important; }
     #chartCard     .card-title-icon { background: rgba(217,119,6,0.12)  !important; }
     #tableCard     .card-title-icon { background: rgba(8,145,178,0.12)  !important; }
+    /* ===== ドラッグハンドル（左カラーライン） ===== */
+    .card-drag-grip {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 18px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+      cursor: grab; user-select: none; -webkit-user-select: none;
+      border-radius: 0; z-index: 1; touch-action: none;
+    }
+    .card-drag-grip:active { cursor: grabbing; }
+    .card-drag-grip::before, .card-drag-grip::after {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 20px;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.8) 1.5px, transparent 1.5px);
+      background-size: 4px 7px;
+      background-repeat: repeat-y;
+    }
+    #milestoneCard .card-drag-grip { background: #7c3aed; }
+    #chartCard     .card-drag-grip { background: #d97706; }
+    #tableCard     .card-drag-grip { background: #0891b2; }
+    .card-drag-grip:hover { filter: brightness(1.15); }
     /* ダークモード対応 */
-    body.dark #milestoneCard { border-left-color: #a78bfa; }
-    body.dark #chartCard     { border-left-color: #fbbf24; }
-    body.dark #tableCard     { border-left-color: #38bdf8; }
+    body.dark #milestoneCard .card-drag-grip { background: #7c3aed; }
+    body.dark #chartCard     .card-drag-grip { background: #d97706; }
+    body.dark #tableCard     .card-drag-grip { background: #0891b2; }
     body.dark #milestoneCard .card-title { color: #a78bfa; }
     body.dark #chartCard     .card-title { color: #fbbf24; }
     body.dark #tableCard     .card-title { color: #38bdf8; }
+    /* ドラッグ中 */
+    .card-dragging { opacity: 0.5; box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+    .card-drag-over { border-top: 2.5px dashed #3a82c4 !important; }
     .card-title-icon {
       width: 22px; height: 22px; border-radius: 6px;
       display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;
@@ -1348,7 +1372,13 @@
 <div id="simResultsSection" class="sim-results-section hidden">
 
   <!-- 期間別シミュレーション -->
-  <div class="card" id="milestoneCard" draggable="true" ondragstart="cardDragStart(event,'milestoneCard')" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'milestoneCard')">
+  <div class="card" id="milestoneCard" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'milestoneCard')">
+    <div class="card-drag-grip" title="ドラッグして並び替え"
+         draggable="true"
+         ondragstart="cardDragStart(event,'milestoneCard')"
+         ontouchstart="gripTouchStart(event,'milestoneCard')"
+         ontouchmove="gripTouchMove(event)"
+         ontouchend="gripTouchEnd(event)"></div>
     <div class="card-title">
       <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📅</span>
       <span id="cardTitleMilestone" data-i18n="cardMilestone">期間別シミュレーション</span>
@@ -1357,7 +1387,13 @@
   </div>
 
   <!-- グラフ -->
-  <div class="card" id="chartCard" draggable="true" ondragstart="cardDragStart(event,'chartCard')" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'chartCard')">
+  <div class="card" id="chartCard" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'chartCard')">
+    <div class="card-drag-grip" title="ドラッグして並び替え"
+         draggable="true"
+         ondragstart="cardDragStart(event,'chartCard')"
+         ontouchstart="gripTouchStart(event,'chartCard')"
+         ontouchmove="gripTouchMove(event)"
+         ontouchend="gripTouchEnd(event)"></div>
     <div class="card-title" style="justify-content:space-between;align-items:center">
       <div style="display:flex;align-items:center;gap:6px">
         <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📉</span>
@@ -1379,7 +1415,13 @@
   </div>
 
   <!-- 日別明細 -->
-  <div class="card" id="tableCard" draggable="true" ondragstart="cardDragStart(event,'tableCard')" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'tableCard')">
+  <div class="card" id="tableCard" ondragover="cardDragOver(event)" ondrop="cardDrop(event,'tableCard')">
+    <div class="card-drag-grip" title="ドラッグして並び替え"
+         draggable="true"
+         ondragstart="cardDragStart(event,'tableCard')"
+         ontouchstart="gripTouchStart(event,'tableCard')"
+         ontouchmove="gripTouchMove(event)"
+         ontouchend="gripTouchEnd(event)"></div>
     <div class="card-title" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;min-width:0">
         <span class="card-title-icon" style="background:rgba(128,128,128,0.1)">📋</span>
@@ -5636,17 +5678,20 @@ function cardDragStart(e, id) {
   dragSrcId = id;
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/plain', id);
-  e.currentTarget.style.opacity = '0.5';
-  e.currentTarget.ondragend = function() { e.currentTarget.style.opacity = ''; };
+  var card = document.getElementById(id);
+  if (card) { setTimeout(function(){ card.classList.add('card-dragging'); }, 0); }
 }
-function cardDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+function cardDragOver(e) {
+  e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+  var tgt = e.currentTarget;
+  document.querySelectorAll('.card-drag-over').forEach(function(c){ c.classList.remove('card-drag-over'); });
+  if (tgt && CARD_IDS.indexOf(tgt.id) >= 0) tgt.classList.add('card-drag-over');
+}
 function cardDrop(e, targetId) {
   e.preventDefault();
   var srcId = dragSrcId || e.dataTransfer.getData('text/plain');
-  if (!srcId || srcId === targetId) {
-    document.querySelectorAll('#simResultsSection .card').forEach(function(c) { c.style.opacity = ''; });
-    return;
-  }
+  document.querySelectorAll('.card-dragging,.card-drag-over').forEach(function(c){ c.classList.remove('card-dragging','card-drag-over'); });
+  if (!srcId || srcId === targetId) { dragSrcId = null; return; }
   var section = document.getElementById('simResultsSection');
   var src = document.getElementById(srcId);
   var tgt = document.getElementById(targetId);
@@ -5655,9 +5700,42 @@ function cardDrop(e, targetId) {
   var tgtIdx = Array.prototype.indexOf.call(section.children, tgt);
   if (srcIdx < tgtIdx) section.insertBefore(src, tgt.nextSibling);
   else section.insertBefore(src, tgt);
-  document.querySelectorAll('#simResultsSection .card').forEach(function(c) { c.style.opacity = ''; });
-  document.querySelectorAll('#sortPanelRows .sort-row').forEach(function(r) { r.style.opacity = ''; });
   dragSrcId = null;
+  saveCardOrder();
+  renderSortPanel();
+}
+
+// ===== タッチドラッグ（スマホ対応・左ハンドルから） =====
+var TDRG = { active:false, cardId:null };
+function gripTouchStart(e, cardId) {
+  e.preventDefault();
+  TDRG.active = true; TDRG.cardId = cardId;
+  var card = document.getElementById(cardId);
+  if (card) card.classList.add('card-dragging');
+}
+function gripTouchMove(e) {
+  if (!TDRG.active) return;
+  e.preventDefault();
+  var y = e.touches[0].clientY;
+  var section = document.getElementById('simResultsSection');
+  var cards = Array.prototype.slice.call(section.children).filter(function(c){ return CARD_IDS.indexOf(c.id) >= 0 && c.id !== TDRG.cardId; });
+  var dragCard = document.getElementById(TDRG.cardId);
+  document.querySelectorAll('.card-drag-over').forEach(function(c){ c.classList.remove('card-drag-over'); });
+  for (var i = 0; i < cards.length; i++) {
+    var rect = cards[i].getBoundingClientRect();
+    if (y < rect.top + rect.height * 0.5) {
+      section.insertBefore(dragCard, cards[i]);
+      cards[i].classList.add('card-drag-over');
+      return;
+    }
+  }
+  if (cards.length > 0) section.appendChild(dragCard);
+}
+function gripTouchEnd(e) {
+  if (!TDRG.active) return;
+  TDRG.active = false;
+  document.querySelectorAll('.card-dragging,.card-drag-over').forEach(function(c){ c.classList.remove('card-dragging','card-drag-over'); });
+  TDRG.cardId = null;
   saveCardOrder();
   renderSortPanel();
 }
