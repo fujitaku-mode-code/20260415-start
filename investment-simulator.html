@@ -714,11 +714,49 @@
     .sort-row-btn:hover { background:rgba(255,255,255,0.38); }
     .sort-row-btn:active { transform:scale(0.9); }
     .sort-row-btn:disabled { opacity:0.2; cursor:default; transform:none; }
-    /* ===== 左右2カラムラッパー ===== */
-    #simHeaderRow {
-      display: flex; gap: 10px; margin-bottom: 14px; align-items: flex-start;
+    /* ===== サマリー枠ラッパー ===== */
+    #simHeaderRow { margin-bottom: 14px; }
+    /* ===== サマリー内インライン並び替えパネル ===== */
+    .sort-inline {
+      border-left: 1.5px solid rgba(58,130,196,0.25);
+      padding-left: 12px; flex-shrink: 0; min-width: 100px;
     }
-    #simSummaryBox { align-self: flex-start; }
+    .sort-inline-title {
+      font-size: 0.62rem; font-weight: 800; color: #3a82c4;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 5px; display: flex; align-items: center; gap: 4px;
+    }
+    .sort-inline-rows { display: flex; flex-direction: column; gap: 3px; }
+    .sort-inline-row {
+      display: flex; align-items: center; gap: 5px;
+      padding: 2px 4px; border-radius: 4px; cursor: default;
+      transition: background 0.12s;
+    }
+    .sort-inline-row:hover { background: rgba(58,130,196,0.07); }
+    .sort-inline-num   { font-size: 0.58rem; font-weight: 700; color: rgba(58,130,196,0.4); min-width: 12px; flex-shrink:0; }
+    .sort-inline-emoji { font-size: 0.8rem; flex-shrink: 0; }
+    .sort-inline-name  { font-size: 0.65rem; font-weight: 700; color: #3a82c4; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sort-inline-btns  { display: flex; gap: 2px; flex-shrink: 0; }
+    .sort-inline-btn {
+      width: 18px; height: 18px; border: 1px solid rgba(58,130,196,0.35);
+      border-radius: 3px; background: transparent; color: #3a82c4;
+      font-size: 0.5rem; cursor: pointer; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.12s, color 0.12s;
+    }
+    .sort-inline-btn:hover   { background: #3a82c4; color: #fff; border-color: #3a82c4; }
+    .sort-inline-btn:active  { opacity: 0.7; }
+    .sort-inline-btn:disabled { opacity: 0.2; cursor: default; }
+    .sort-inline-save { font-size: 0.5rem; color: rgba(58,130,196,0.4); margin-top: 4px; transition: color 0.3s; }
+    /* ダークモード */
+    body.dark .sort-inline { border-left-color: rgba(147,197,253,0.2); }
+    body.dark .sort-inline-title,
+    body.dark .sort-inline-name { color: #93c5fd; }
+    body.dark .sort-inline-num  { color: rgba(147,197,253,0.4); }
+    body.dark .sort-inline-btn  { border-color: rgba(147,197,253,0.3); color: #93c5fd; }
+    body.dark .sort-inline-btn:hover { background: #3a82c4; color: #fff; }
+    body.dark .sort-inline-row:hover { background: rgba(147,197,253,0.07); }
+    body.dark .sort-inline-save { color: rgba(147,197,253,0.4); }
     /* コンパクト版ソートパネル（右カラム用） */
     .sort-panel-compact {
       flex: 0 0 42%; min-width: 110px;
@@ -1284,28 +1322,25 @@
   <div id="simFootnote" style="font-size:0.65rem;color:var(--muted);margin-top:5px;text-align:left">※設定額以上で累積利益を全額元本へ追加</div>
 </div>
 
-<!-- 左右2カラム（サマリー + 並び替え）→シミュレーション実行後に表示 -->
+<!-- サマリー枠（並び替えも内包）→シミュレーション実行後に表示 -->
 <div id="simHeaderRow" class="hidden">
-  <!-- 左：投資条件サマリー -->
-  <div id="simSummaryBox" style="flex:1;min-width:0;border:1.5px solid #3a82c4;border-left:5px solid #3a82c4;border-radius:0;background:#fff;overflow:hidden;">
-    <div style="padding:10px 14px 12px">
-      <div id="simSummaryHeader" style="font-size:0.72rem;font-weight:800;color:#3a82c4;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">運用シミュレーション対象</div>
-      <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.1">
-        <span id="simSummaryAmt" style="font-size:1.9rem;font-weight:900;color:#3a82c4;letter-spacing:-0.03em"></span>
-        <span id="simSummarySub" style="font-size:0.82rem;font-weight:600;color:#3a82c4;opacity:0.65"></span>
-      </div>
-    </div>
-  </div>
-  <!-- 右：表示順序変更（コンパクト） -->
-  <div class="sort-panel sort-panel-compact" id="sortPanel">
-    <div class="sort-panel-head">
-      <div class="sort-panel-icon">⇅</div>
+  <div id="simSummaryBox" style="border:1.5px solid #3a82c4;border-left:5px solid #3a82c4;border-radius:0;background:#fff;overflow:hidden;">
+    <div style="padding:10px 14px 12px;display:flex;gap:14px;align-items:flex-start">
+      <!-- 左：投資条件サマリー -->
       <div style="flex:1;min-width:0">
-        <div class="sort-panel-title" id="sortPanelTitle">表示順序</div>
-        <div id="sortSaveBadge" style="font-size:0.55rem;font-weight:700;color:rgba(255,255,255,0.55);margin-top:1px;transition:color 0.3s">💾 自動保存</div>
+        <div id="simSummaryHeader" style="font-size:0.72rem;font-weight:800;color:#3a82c4;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">運用シミュレーション対象</div>
+        <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.1">
+          <span id="simSummaryAmt" style="font-size:1.9rem;font-weight:900;color:#3a82c4;letter-spacing:-0.03em"></span>
+          <span id="simSummarySub" style="font-size:0.82rem;font-weight:600;color:#3a82c4;opacity:0.65"></span>
+        </div>
+      </div>
+      <!-- 右：表示順序（インライン統合） -->
+      <div class="sort-inline" id="sortPanel">
+        <div class="sort-inline-title" id="sortPanelTitle">⇅ 表示順序</div>
+        <div class="sort-inline-rows" id="sortPanelRows"><!-- JS で動的生成 --></div>
+        <div class="sort-inline-save" id="sortSaveBadge">💾 自動保存</div>
       </div>
     </div>
-    <div class="sort-rows" id="sortPanelRows"><!-- JS で動的生成 --></div>
   </div>
 </div>
 
@@ -5558,9 +5593,9 @@ function moveCard(cardId, dir) {
 
 // ===== 並び替えパネル描画 =====
 var CARD_META = {
-  milestoneCard: { emoji:'📅', nameKey:'cardMilestone', nameJa:'期間別シミュレーション' },
-  chartCard:     { emoji:'📉', nameKey:'cardChart',     nameJa:'残高推移グラフ' },
-  tableCard:     { emoji:'📋', nameKey:'cardTable',     nameJa:'日別明細' }
+  milestoneCard: { emoji:'📅', nameKey:'cardMilestone', nameJa:'期間別シミュレーション', shortJa:'期間別' },
+  chartCard:     { emoji:'📉', nameKey:'cardChart',     nameJa:'残高推移グラフ',         shortJa:'グラフ' },
+  tableCard:     { emoji:'📋', nameKey:'cardTable',     nameJa:'日別明細',               shortJa:'日別明細' }
 };
 
 function renderSortPanel() {
@@ -5573,28 +5608,28 @@ function renderSortPanel() {
   });
   var t = i18n[gLang] || i18n.ja;
   panel.innerHTML = cards.map(function(card, i) {
-    var meta = CARD_META[card.id] || { emoji:'□', nameJa: card.id };
-    var name = t[meta.nameKey] || meta.nameJa;
+    var meta = CARD_META[card.id] || { emoji:'□', nameJa: card.id, shortJa: card.id };
+    var name = meta.shortJa || meta.nameJa;
     var isFirst = (i === 0), isLast = (i === cards.length - 1);
-    return '<div class="sort-row" draggable="true"' +
+    return '<div class="sort-inline-row" draggable="true"' +
         ' ondragstart="cardDragStart(event,\'' + card.id + '\')"' +
         ' ondragover="cardDragOver(event)"' +
         ' ondrop="cardDrop(event,\'' + card.id + '\')">' +
-      '<span class="sort-row-num">' + (i+1) + '.</span>' +
-      '<span class="sort-row-emoji">' + meta.emoji + '</span>' +
-      '<span class="sort-row-name">' + name + '</span>' +
-      '<div class="sort-row-btns">' +
-        '<button class="sort-row-btn" onclick="moveCard(\'' + card.id + '\',-1)" ' + (isFirst?'disabled':'') + ' title="上へ">▲</button>' +
-        '<button class="sort-row-btn" onclick="moveCard(\'' + card.id + '\',1)" '  + (isLast?'disabled':'')  + ' title="下へ">▼</button>' +
+      '<span class="sort-inline-num">' + (i+1) + '.</span>' +
+      '<span class="sort-inline-emoji">' + meta.emoji + '</span>' +
+      '<span class="sort-inline-name">' + name + '</span>' +
+      '<div class="sort-inline-btns">' +
+        '<button class="sort-inline-btn" onclick="moveCard(\'' + card.id + '\',-1)" ' + (isFirst?'disabled':'') + ' title="上へ">▲</button>' +
+        '<button class="sort-inline-btn" onclick="moveCard(\'' + card.id + '\',1)" '  + (isLast?'disabled':'')  + ' title="下へ">▼</button>' +
       '</div>' +
     '</div>';
   }).join('');
   // パネルタイトルをi18n対応（コンパクト版は短いラベル）
   var pt = document.getElementById('sortPanelTitle');
-  if (pt) pt.textContent = (gLang === 'ja') ? '表示順序' :
-                            (gLang === 'en') ? 'Order' :
-                            (gLang === 'es') ? 'Orden' :
-                            (gLang === 'zh') ? '排序' : '순서';
+  if (pt) pt.textContent = (gLang === 'ja') ? '⇅ 表示順序' :
+                            (gLang === 'en') ? '⇅ Order' :
+                            (gLang === 'es') ? '⇅ Orden' :
+                            (gLang === 'zh') ? '⇅ 排序' : '⇅ 순서';
 }
 
 function cardDragStart(e, id) {
